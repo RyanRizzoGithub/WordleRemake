@@ -1,1 +1,1 @@
-# 335Final-Wordle
+# Wordle
