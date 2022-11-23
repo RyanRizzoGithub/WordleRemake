@@ -11,6 +11,7 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Canvas;
@@ -252,10 +253,12 @@ public class WordleUI {
 	
 	public void startGame() {
 		Composite upperComp = new Composite(gameShell, SWT.NO_FOCUS);
+		upperComp.setBackground(display.getSystemColor(SWT.COLOR_BLACK));
 	    //Composite lowerComp = new Composite(gameShell, SWT.NO_FOCUS);
 		
 		canvas = new Canvas(upperComp, SWT.NONE);
 		canvas.setSize(600, 1000);
+		canvas.setBackground(display.getSystemColor(SWT.COLOR_BLACK));
 	
 		
 		canvas.addPaintListener(e -> {
@@ -273,7 +276,9 @@ public class WordleUI {
 		});
 		
 		 canvas.addKeyListener(new KeyListener() {
-	        	public void keyPressed(KeyEvent e) {      		        		
+	        	public void keyPressed(KeyEvent e) { 
+	        		String[] qwerty = {"q","w","e","r","t","y","u","i","o","p","a","s","d","f","g","h",
+							"j","k","l","z","x","c","v","b","n","m","`"};
 	        		// If ENTER key
 	        		if (e.keyCode == 13) {
 	        			if (col != 5) {
@@ -284,7 +289,7 @@ public class WordleUI {
 	        				row++;
 	        				col = 0;
 	        				
-	        				/*
+	        				
 	        				// @Katelen Tellez added
 	        				// process input in the WORDLE class
 	        				guessResults = game.makeAGuess(input);
@@ -307,7 +312,7 @@ public class WordleUI {
 	        					System.out.println();
 	        				}
 	        				System.out.println();
-	        				*/
+	        				
 	        			}
 	        			
 	        		// If DELETE key
@@ -320,8 +325,12 @@ public class WordleUI {
 	        		// If CHARACTER
 	        		} else {
 	        			if (col != 5 && row != 6) {
-	        				input[col][row] = e.character;    			
-	        				col++;
+	        				for (int i=0; i<qwerty.length; i++) {
+	        					if (e.character == qwerty[i].charAt(0)) {
+	        						input[col][row] = e.character;    			
+	    	        				col++;
+	        					}
+	        				}
 	        			}
 	        		}
 	        		canvas.redraw();
@@ -335,32 +344,23 @@ public class WordleUI {
 				String[] qwerty = {"q","w","e","r","t","y","u","i","o","p","a","s","d","f","g","h",
 						"j","k","l","z","x","c","v","b","n","m","`"};
 				int index = -1;
+				// If Q-P
 				if (e.y > 500 && e.y < 552 && e.x > 65 && e.x < 512) {
 					index = ((e.x - 65) / 45);
 				}
 				
+				// If A-L
 				if (e.y > 560 && e.y < 612 && e.x > 88 && e.x < 582) {
 					index = 10 + ((e.x - 88) / 45);
 				}
 				
+				// If Z-M
 				if (e.y > 622 && e.y < 670 && e.x > 134 && e.x < 444) {
 					index = 19 + ((e.x - 134) / 45);
 				}
 				
 				// If ENTER key
 				if (e.y > 622 && e.y < 670 && e.x > 65 && e.x < 128) {
-					index = 30;
-				}
-				
-				// If DELETE key
-				if (e.y > 622 && e.y < 670 && e.x > 450 && e.x < 512) {
-					index = 31;
-				}
-				System.out.println("x: " + e.x);
-				System.out.println("y: " + e.y);
-				System.out.println("index: " + index);
-				
-				if (index == 30) {
 					if (col != 5) {
         				// TODO: Warning message
         				System.out.println("Not enough letters");
@@ -371,15 +371,16 @@ public class WordleUI {
         			}
 				}
 				
-				if (index == 31) {
+				// If DELETE key
+				if (e.y > 622 && e.y < 670 && e.x > 450 && e.x < 512) {
 					if (col > 0) {
         				col--;
         				input[col][row] = '?';
         			}
 				}
-				
+
+				// Handle character
 				if (index >= 0 && index < 30) {
-					System.out.println("character: " + qwerty[index]);
 					if (col != 5 && row != 6) {
         				input[col][row] = qwerty[index].toUpperCase().charAt(0);    			
         				col++;
@@ -445,18 +446,21 @@ public class WordleUI {
 			for (int j=0; j<6; j++) {
 				// Check if cell is occupied
 				if (input[x][j] != '?') {
-					// Draw the character
-					e.gc.setForeground(display.getSystemColor(SWT.COLOR_GRAY));
-					e.gc.drawText(Character.toString(input[x][j]).toUpperCase(), 136 + (70 * x), 65 + (70 * j), true);	
 					
 					// Update the square
-					if (rowSubmitted[j] == true) {
-						e.gc.setForeground(display.getSystemColor(SWT.COLOR_WHITE));
-					} else {
-						e.gc.setForeground(display.getSystemColor(SWT.COLOR_RED));
-					}
-					Rectangle rect = new Rectangle(119 + (70 * x), 59 + (70 * j), 62, 62);
-					e.gc.drawRectangle(rect);
+					Image character = new Image(gameShell.getDisplay(), "./images/" + input[x][j] + "/" + input[x][j] + "Black.png");
+					if (rowSubmitted[j] == true) {		
+						 if (game.checkChar(input[x][j], x) == -1 ) {
+							 character = new Image(gameShell.getDisplay(), "./images/" + input[x][j] + "/" + input[x][j] + "Gray.png");
+						 }
+						 if (game.checkChar(input[x][j], x) == 0 ) {
+							 character = new Image(gameShell.getDisplay(), "./images/" + input[x][j] + "/" + input[x][j] + "Yellow.png");
+						 }
+						 if (game.checkChar(input[x][j], x) == 1 ) {
+							 character = new Image(gameShell.getDisplay(), "./images/" + input[x][j] + "/" + input[x][j] + "Green.png");
+						 }
+					} 
+					e.gc.drawImage(character, 120 + (70 * x), 60 + (70 * j));
 				}
 			}
 		}
@@ -479,29 +483,8 @@ public class WordleUI {
 		// Iterate over 5 columns and 6 rows
 		for (int i=0; i<5; i++) {
 			for (int j=0; j<6; j++) {
-				
-				// Draw a smaller square to represent character info
-				if (rowSubmitted[j] == true) {
-					 if (game.checkChar(input[i][j], i) == -1 ) {
-							e.gc.setForeground(display.getSystemColor(SWT.COLOR_DARK_GRAY));
-					 }
-					 if (game.checkChar(input[i][j], i) == 0 ) {
-							e.gc.setForeground(display.getSystemColor(SWT.COLOR_YELLOW));
-					 }
-					 if (game.checkChar(input[i][j], i) == 1 ) {
-					 		e.gc.setForeground(display.getSystemColor(SWT.COLOR_GREEN));
-					 }
-				} else {
-					e.gc.setForeground(display.getSystemColor(SWT.COLOR_BLACK));
-				}
-				// Draw inner square
-				Rectangle rect = new Rectangle(121 + (70 * i), 61 + (70 * j), 58, 58);
-				e.gc.fillRectangle(rect);
-				
-				// Draw the outter square
-				rect = new Rectangle(120 + (70 * i), 60 + (70 * j), 60, 60);
-				e.gc.setForeground(display.getSystemColor(SWT.COLOR_GRAY));
-				e.gc.drawRectangle(rect);				
+				Image empty = new Image(gameShell.getDisplay(), "./images/empty.png");
+				e.gc.drawImage(empty, 120 + (70 * i), 60 + (70 * j));
 			}
 		}
 		// Restore color
@@ -521,52 +504,74 @@ public class WordleUI {
 		Color currColor = e.gc.getForeground();
 		
 		// Create a index variable
-		int i=0;
+		//int i=0;
+		int y=0;
+		int x=0;
+		int offset=65;
 		
 		// Create array containing all characters in the order they appear on keyboard
 		String[] qwerty = {"q","w","e","r","t","y","u","i","o","p","a","s","d","f","g","h",
-				"j","k","l","z","x","c","v","b","n","m","`"};
+				"j","k","l","z","x","c","v","b","n","m"};
 		
 		// Setup the font for each character
 		Font font = new Font(gameShell.getDisplay(), new FontData("Times New Roman", 18, SWT.BOLD));
 		e.gc.setFont(font);
-		e.gc.setForeground(display.getSystemColor(SWT.COLOR_WHITE));
 		
-		// Draw the first row of keys
-		while (!qwerty[i].equals("a")) {
-			e.gc.fillRoundRectangle(65 + (45 * i), 500, 40, 50, 10, 10);
-			e.gc.drawText(qwerty[i], 80 + (45 * i), 515, true);
-			i++;
+		for (int i=0; i<qwerty.length; i++) {
+			if (qwerty[i].equals("a")) {
+				y++;
+				x=0;
+				offset = 88;
+			}
+			if (qwerty[i].equals("z")) {
+				y++;
+				x=0;
+				offset = 133;
+			}
+			//System.out.println(game.getCharStatus().get("p"));
+			Color charColor = display.getSystemColor(SWT.COLOR_DARK_GRAY);
+			if (game.getCharStatus().get(qwerty[i]) == -1) {
+				charColor = new Color(58,58,60);
+			}
+			if (game.getCharStatus().get(qwerty[i]) == 0) {
+				charColor = new Color(181,158,68);
+			}
+			if (game.getCharStatus().get(qwerty[i]) == 1) {
+				charColor = new Color(85,140,81);
+			}
+
+			e.gc.setBackground(charColor);
+			e.gc.setForeground(display.getSystemColor(SWT.COLOR_GRAY));
+			e.gc.fillRoundRectangle((45 * x) + offset, 500 + (60 * y), 40, 50, 10, 10);
+			e.gc.drawRoundRectangle((45 * x) + offset, 500 + (60 * y), 40, 50, 10, 10);
+			
+			e.gc.setForeground(display.getSystemColor(SWT.COLOR_WHITE));
+			e.gc.drawText(qwerty[i], 15 + (45 * x) + offset, 515 + (60 * y), true);
+			x++;
 		}
-		
-		// Draw the second row of keys
-		while (!qwerty[i].equals("z")) {
-			e.gc.fillRoundRectangle(88 + (45 * ( i- 10)), 560, 40, 50, 10, 10);
-			e.gc.drawText(qwerty[i], 103 + (45 * (i - 10)), 575, true);
-			i++;
-		}
-		
-		// Draw the third row of keys
-		while (!qwerty[i].equals("`")) {
-			e.gc.fillRoundRectangle(133 + (45 * ( i- 19)), 620, 40, 50, 10, 10);
-			e.gc.drawText(qwerty[i], 148 + (45 * (i - 19)), 635, true);
-			i++;
-		}
-		
 		// Setup font for Enter & Delete
 		font = new Font(gameShell.getDisplay(), new FontData("Times New Roman", 14, SWT.BOLD));
 		e.gc.setFont(font);
 		
 		// Draw the Enter key
+		e.gc.setForeground(display.getSystemColor(SWT.COLOR_GRAY));
+		e.gc.setBackground(display.getSystemColor(SWT.COLOR_DARK_GRAY));
 		e.gc.fillRoundRectangle(64, 620, 64, 50, 10, 10);
+		e.gc.drawRoundRectangle(64, 620, 64, 50, 10, 10);
+		
+		
+		e.gc.setForeground(display.getSystemColor(SWT.COLOR_WHITE));
 		e.gc.drawText("ENTER", 72, 638, true);
 		
-		// Draw the Delete key
-		e.gc.fillRoundRectangle(448, 620, 64, 50, 10, 10);
-		e.gc.drawText("DELETE", 452, 638, true);
 		
-		// Restore color
-		e.gc.setForeground(currColor);
+		// Draw the Delete key
+		e.gc.setForeground(display.getSystemColor(SWT.COLOR_GRAY));
+		e.gc.setBackground(display.getSystemColor(SWT.COLOR_DARK_GRAY));
+		e.gc.fillRoundRectangle(448, 620, 64, 50, 10, 10);
+		e.gc.drawRoundRectangle(448, 620, 64, 50, 10, 10);
+		
+		e.gc.setForeground(display.getSystemColor(SWT.COLOR_WHITE));
+		e.gc.drawText("DELETE", 452, 638, true);
 	}
 	
 	/* - - - - - - DRAW ANIMATION - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

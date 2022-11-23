@@ -1,3 +1,5 @@
+import java.util.HashMap;
+
 // import java.util.ArrayList;
 
 // @Katelen Tellez added (below)
@@ -11,6 +13,9 @@ public class WordleGame {
 	private boolean guessCorrect;
 	private int [] guessResults;
 	private boolean [] charFoundStatus = new boolean [5];;
+	
+	// Ryan
+	private HashMap<String,Integer> charStatus;
 	
 	public WordleGame() {
 		
@@ -30,6 +35,12 @@ public class WordleGame {
 		// a 1 indicates character is in the word but not in the right index
 		// a -1 indicates character is not in the word
 		guessResults = new int [5];
+		charStatus = new HashMap<String, Integer>();
+		String[] qwerty = {"q","w","e","r","t","y","u","i","o","p","a","s","d","f","g","h",
+				"j","k","l","z","x","c","v","b","n","m"};
+		for (int i=0; i<qwerty.length; i++) {
+			charStatus.put(qwerty[i], -2);
+		}
 	}
 	
 	/*
@@ -139,6 +150,16 @@ public class WordleGame {
 		} if (word.charAt(index) == c) {
 			result++;
 		}
+		
+		// Update charStatus
+		if (result > charStatus.get(String.valueOf(c).toLowerCase())) {
+			charStatus.put(String.valueOf(c).toLowerCase(), result);
+		}
+		System.out.println("char: " + c + " index: " + index + " result: " + result);
 		return result;
+	}
+	
+	public HashMap<String, Integer> getCharStatus() {
+		return this.charStatus;
 	}
 }
