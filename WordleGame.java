@@ -66,7 +66,7 @@ public class WordleGame {
 				System.out.println(stats.getStats()[i]);
 			}
 			
-			System.exit(0);
+			// System.exit(0);
 		}
 	}
 
