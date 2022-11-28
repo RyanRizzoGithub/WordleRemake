@@ -53,6 +53,7 @@ public class WordleGame {
 		if(gameIsOver()) {
 			System.out.println("Game is over.");
 			
+			System.out.println("Statistics:");
 			stats.addGame(result);
 			stats.addPlayed();
 			stats.calcCurStreak();
@@ -62,11 +63,19 @@ public class WordleGame {
 				stats.addWinningGuess(guess);
 			stats.updateStats();
 			
-			for(int i = 0; i < stats.getStats().length; i++) {
-				System.out.println(stats.getStats()[i]);
-			}
+			System.out.println("Played: " +stats.getStats()[0]);
+			System.out.println("Win %: " +stats.getStats()[1]+ "%");
+			System.out.println("Current Streak: " +stats.getStats()[2]);
+			System.out.println("Max Streak: " +stats.getStats()[3]);
+			System.out.println("Guess Distribution:");
+			System.out.println("1: " +stats.getStats()[4]);
+			System.out.println("2: " +stats.getStats()[5]);
+			System.out.println("3: " +stats.getStats()[6]);
+			System.out.println("4: " +stats.getStats()[7]);
+			System.out.println("5: " +stats.getStats()[8]);
+			System.out.println("6: " +stats.getStats()[9]);
 			
-			// System.exit(0);
+			System.exit(0);
 		}
 	}
 
