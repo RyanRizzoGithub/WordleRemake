@@ -2,15 +2,11 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import  java.io.*;
-import java.net.URL;
+
 public class Wordle {
-	public static void main(String[] args) {
-		WordleGame game = new WordleGame();
-		WordleUI ui = new WordleUI(game);
-		
+	public static void main(String[] args) {		
 		playClip();
-		ui.startMenu();
-		ui.startGame();
+		WordleUI.startMenu();
 	}
 	
 
