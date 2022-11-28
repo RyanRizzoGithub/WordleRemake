@@ -6,7 +6,7 @@
 
 import java.util.ArrayList;
 
-public class Player {
+public class Player implements Comparable<Player> {
 	private String name;
 	private int gamesPlayed;
 	private double winPercentage;
@@ -37,6 +37,13 @@ public class Player {
 	public void addGame(boolean result, int moves) {
 		this.historyMoves.add(moves);
 		this.historyWins.add(result);
+		this.gamesPlayed += 1;
+		
+		if (result) {
+			increaseStreak();
+		} else {
+			resetStreak();
+		}
 		setWinPercentage();
 	}
 	
@@ -45,12 +52,18 @@ public class Player {
 	 */
 	private void setWinPercentage() {
 		int wins = 0;
-		for (boolean r : historyWins) {
+		for (Boolean r : historyWins) {
 			if (r) {
 				wins++;
 			}
 		}
-		this.winPercentage = wins / this.historyWins.size();
+		if (wins == 0) {
+			System.out.println("ZERO WINS");
+			this.winPercentage = 0.0;
+		} else {
+
+			this.winPercentage = ((double)wins / (double)this.historyWins.size()) * 100.0;
+		}
 	}
 	
 	/**
@@ -116,6 +129,27 @@ public class Player {
 	 */
 	public double getWinPercentage() {
 		return this.winPercentage;
+	}
+
+
+	@Override
+	public int compareTo(Player o) {
+		if (this.getMaxStreak() > o.getMaxStreak()) {
+			return 1;
+		}
+		if (this.getMaxStreak() < o.getMaxStreak()) {
+			return -1;
+		}
+		//If max streak is a tie, compare win percentage 
+		if (this.getMaxStreak() == o.getMaxStreak()) {
+			if (this.getWinPercentage() > o.getWinPercentage()) {
+				return 1;
+			}
+			if (this.getWinPercentage() < o.getWinPercentage()) {
+				return -1;
+			}
+		}
+		return 0;
 	}
 	
 
