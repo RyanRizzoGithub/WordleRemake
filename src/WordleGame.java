@@ -6,7 +6,7 @@ import java.util.HashMap;
 public class WordleGame {
 	
 	// private HashMap dictionary;
-	private String word;
+	String word;
 	// private ArrayList usedWords;
 	private String guess;
 	private int guessNum;
@@ -16,13 +16,16 @@ public class WordleGame {
 	
 	// Ryan
 	private HashMap<String,Integer> charStatus;
+	private WordleDictionary dic;
+	
+	
 	
 	public WordleGame() {
 		
 		// initialize dictionary?
 		// generate random word from dictionary (no repeats)
-		
-		word = "PARTY";
+		dic = new WordleDictionary();
+		word = dic.getRandomWord();
 		guess = "";
 		guessNum = 0;
 		guessCorrect = false;

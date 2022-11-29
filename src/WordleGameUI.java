@@ -24,6 +24,7 @@ public class WordleGameUI {
 	private int col;
 	private char[][] input;
 	private boolean[] rowSubmitted;
+	private WordleDictionary dic;
 	
 	// @Katelen Tellez added
 	private WordleGame game;
@@ -38,6 +39,8 @@ public class WordleGameUI {
 	    shell.setText("Wordle");
 		shell.setSize(600,1000);
 		shell.setLayout( new GridLayout());	
+		shell.setBackground(new Color(0, 0, 0));
+		dic = new WordleDictionary();
 		
 		this.game = game;
 		
@@ -89,34 +92,48 @@ public class WordleGameUI {
 	        			if (col != 5) {
 	        				// TODO: Warning message
 	        				System.out.println("Not enough letters");
-	        			} else {
-	        				rowSubmitted[row] = true;
-	        				row++;
-	        				col = 0;
-	        				
-	        				
-	        				// @Katelen Tellez added
-	        				// process input in the WORDLE class
-	        				guessResults = game.makeAGuess(input);
-	        				for(int i = 0; i < 5; i ++) {
-	        					allGuesses[guessNum][i] = guessResults[i];
+	        			} 
+	        			else {
+	        				String guess = "";
+	        				for (int i=0; i<5; i++) {
+	        					guess = guess + Character.toString(input[i][guessNum]).toUpperCase();
 	        				}
-	        				guessNum++;
-	        				
-	        				System.out.println("Guess Results: ");
-	        				for(int g = 0; g < 5; g++) {
-	        					System.out.println(guessResults[g]);
-	        				}
-	        				
-	        				System.out.print("All Guesses: ");
-	        				for(int g = 0; g < 6; g++) {
+	        				if (guess.equals(game.word)) {
 	        					
-	        					for(int c = 0; c < 5; c++) {
-	        						System.out.print(allGuesses[g][c] + " ");
-	        					}
-	        					System.out.println();
 	        				}
-	        				System.out.println();
+	        				
+	        				// Check if word is in guess dictionary
+	        				else if (dic.guesses.contains(guess)) {
+		        				rowSubmitted[row] = true;
+		        				row++;
+		        				col = 0;
+		        				
+		        				// @Katelen Tellez added
+		        				// process input in the WORDLE class
+		        				guessResults = game.makeAGuess(input);
+		        				for(int i = 0; i < 5; i ++) {
+		        					allGuesses[guessNum][i] = guessResults[i];
+		        				}
+		        				guessNum++;
+		        				
+		        				System.out.println("Guess Results: ");
+		        				for(int g = 0; g < 5; g++) {
+		        					System.out.println(guessResults[g]);
+		        				}
+		        				
+		        				System.out.print("All Guesses: ");
+		        				for(int g = 0; g < 6; g++) {
+		        					
+		        					for(int c = 0; c < 5; c++) {
+		        						System.out.print(allGuesses[g][c] + " ");
+		        					}
+		        					System.out.println();
+		        				}
+		        				System.out.println();
+	        				} else {
+	        					System.out.println("Invalid word: " + guess);
+	        					// TODO: shake animation and warning
+	        				}
 	        				
 	        			}
 	        			
@@ -328,6 +345,7 @@ public class WordleGameUI {
 			x++;
 		}
 		// Setup font for Enter & Delete
+		font = new Font(shell.getDisplay(), new FontData("Times New Roman", 14, SWT.BOLD));
 		e.gc.setFont(font);
 		
 		// Draw the Enter key
