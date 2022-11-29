@@ -96,6 +96,7 @@ public class WordleLoginUI {
 		submitLogin.setText("Submit");
 		new Label(leftComp, SWT.NONE);
 		
+		@SuppressWarnings("unused")
 		Label label = new Label(leftComp, SWT.NONE);
 		new Label(leftComp, SWT.NONE);
 		

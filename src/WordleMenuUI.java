@@ -15,6 +15,7 @@ public class WordleMenuUI {
 	private Canvas canvas;
 	private Display display;
 	private boolean[] hovered;
+	private int theme;
 	
 	public WordleMenuUI() {
 		display = Display.getDefault();
@@ -22,7 +23,7 @@ public class WordleMenuUI {
 		shell.setText("WordleMenu");
 		shell.setSize(600, 1000);
 		shell.setLayout( new GridLayout());
-		
+		theme = 0;
 		hovered = new boolean[6];
 		for (int i=0; i<6; i++) {
 			hovered[i] = false;
@@ -35,10 +36,13 @@ public class WordleMenuUI {
 		canvas = new Canvas(menuComp, SWT.NONE);
 		canvas.setSize(600, 1000);
 		
+		
 		canvas.addPaintListener(e -> {
 			// Set the color of the background and font
-			e.gc.setBackground(display.getSystemColor(SWT.COLOR_DARK_GRAY));
-			
+			shell.setBackground(WordleUI.getThemeColors(theme)[WordleUI.BACKGROUND_COLOR]);
+			canvas.setBackground(WordleUI.getThemeColors(theme)[WordleUI.BACKGROUND_COLOR]);
+			e.gc.setBackground(WordleUI.getThemeColors(theme)[WordleUI.KEY_FILL_COLOR]);
+			e.gc.setForeground(WordleUI.getThemeColors(theme)[WordleUI.KEY_CHAR_COLOR]);
 			
 			// Draw the user profile
 			Font font = new Font(shell.getDisplay(), new FontData("Times New Roman", 18, SWT.NONE));
@@ -177,13 +181,27 @@ public class WordleMenuUI {
 				// If play button
 				if (e.x > 200 && e.x < 400 && e.y > 230 && e.y < 280) {
 					shell.setVisible(false);
-					WordleUI.startGame();
+					WordleUI.startGame(theme);
 				}
 				
 				// If Login button
 				else if (e.x > 210 && e.x < 390 && e.y > 300 && e.y < 350) {
-					WordleUI.startLogin();;
+					WordleUI.startLogin();
 				}
+				
+				// If Mode button
+				else if (e.x > 210 && e.x < 390 && e.y > 370 && e.y < 420) {
+					WordleUI.startMode();
+				}
+				
+				// If theme button
+				else if (e.x > 210 && e.x < 390 && e.y > 510 && e.y < 560) {
+					theme++;
+					if (theme > 4) {
+						theme = 0;
+					}			
+				}
+				
 				
 				canvas.redraw();
 			}

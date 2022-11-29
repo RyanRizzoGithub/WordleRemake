@@ -39,11 +39,9 @@ public class WordleGameUI {
 	    shell.setText("Wordle");
 		shell.setSize(600,1000);
 		shell.setLayout( new GridLayout());	
-		shell.setBackground(new Color(0, 0, 0));
 		dic = new WordleDictionary();
 		
 		this.game = game;
-		
 		row = 0;
 		col = 0;
 		
@@ -61,19 +59,22 @@ public class WordleGameUI {
 	
 	public void start() {
 		Composite upperComp = new Composite(shell, SWT.NO_FOCUS);
-		upperComp.setBackground(display.getSystemColor(SWT.COLOR_BLACK));
+		upperComp.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
 	    //Composite lowerComp = new Composite(gameShell, SWT.NO_FOCUS);
 		
 		canvas = new Canvas(upperComp, SWT.NONE);
 		canvas.setSize(600, 1000);
-		canvas.setBackground(display.getSystemColor(SWT.COLOR_BLACK));
 	
 		
 		canvas.addPaintListener(e -> {
 			// Set the color of the background
-			e.gc.setBackground(display.getSystemColor(SWT.COLOR_DARK_GRAY));
+			canvas.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
+			shell.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
+			
+			e.gc.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
 			
 			// Draw the title
+			e.gc.setForeground(WordleUI.getThemeColors(game.getTheme())[WordleUI.KEY_CHAR_COLOR]);
 			Font font = new Font(shell.getDisplay(), new FontData("Times New Roman", 40, SWT.BOLD));
 			e.gc.setFont(font);
 			e.gc.drawText("Wordle", 234, 5, true);
@@ -232,9 +233,6 @@ public class WordleGameUI {
 	 * (Ryan Rizzo)
 	 */
 	private void drawUserInput(PaintEvent e) {
-		// Save color
-		Color currColor = e.gc.getForeground();
-		
 		// Set the correct font
 		Font font = new Font(shell.getDisplay(), new FontData("Times New Roman", 40, SWT.BOLD));
 		e.gc.setFont(font);		
@@ -263,8 +261,6 @@ public class WordleGameUI {
 				}
 			}
 		}
-		// Restore color
-		e.gc.setForeground(currColor);
 	}
 	
 	
@@ -276,9 +272,6 @@ public class WordleGameUI {
 	 * (Ryan Rizzo)
 	 */
 	private void drawInputRectangles(PaintEvent e) {
-		// Save color
-		Color currColor = e.gc.getForeground();
-		
 		// Iterate over 5 columns and 6 rows
 		for (int i=0; i<5; i++) {
 			for (int j=0; j<6; j++) {
@@ -286,9 +279,6 @@ public class WordleGameUI {
 				e.gc.drawImage(empty, 120 + (70 * i), 60 + (70 * j));
 			}
 		}
-		// Restore color
-		e.gc.setForeground(currColor);
-		
 		canvas.redraw();
 	}
 	
@@ -324,7 +314,7 @@ public class WordleGameUI {
 				offset = 133;
 			}
 			//System.out.println(game.getCharStatus().get("p"));
-			Color charColor = display.getSystemColor(SWT.COLOR_DARK_GRAY);
+			Color charColor = WordleUI.getThemeColors(game.getTheme())[WordleUI.KEY_FILL_COLOR];
 			if (game.getCharStatus().get(qwerty[i]) == -1) {
 				charColor = new Color(58,58,60);
 			}
@@ -336,11 +326,11 @@ public class WordleGameUI {
 			}
 
 			e.gc.setBackground(charColor);
-			e.gc.setForeground(display.getSystemColor(SWT.COLOR_GRAY));
+			e.gc.setForeground(WordleUI.getThemeColors(game.getTheme())[WordleUI.KEY_EDGE_COLOR]);
 			e.gc.fillRoundRectangle((45 * x) + offset, 500 + (60 * y), 40, 50, 10, 10);
 			e.gc.drawRoundRectangle((45 * x) + offset, 500 + (60 * y), 40, 50, 10, 10);
 			
-			e.gc.setForeground(display.getSystemColor(SWT.COLOR_WHITE));
+			e.gc.setForeground(WordleUI.getThemeColors(game.getTheme())[WordleUI.KEY_CHAR_COLOR]);
 			e.gc.drawText(qwerty[i], 15 + (45 * x) + offset, 515 + (60 * y), true);
 			x++;
 		}
@@ -349,23 +339,23 @@ public class WordleGameUI {
 		e.gc.setFont(font);
 		
 		// Draw the Enter key
-		e.gc.setForeground(display.getSystemColor(SWT.COLOR_GRAY));
-		e.gc.setBackground(display.getSystemColor(SWT.COLOR_DARK_GRAY));
+		e.gc.setForeground(WordleUI.getThemeColors(game.getTheme())[WordleUI.KEY_EDGE_COLOR]);
+		e.gc.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.KEY_FILL_COLOR]);
 		e.gc.fillRoundRectangle(64, 620, 64, 50, 10, 10);
 		e.gc.drawRoundRectangle(64, 620, 64, 50, 10, 10);
 		
 		
-		e.gc.setForeground(display.getSystemColor(SWT.COLOR_WHITE));
+		e.gc.setForeground(WordleUI.getThemeColors(game.getTheme())[WordleUI.KEY_CHAR_COLOR]);
 		e.gc.drawText("ENTER", 72, 638, true);
 		
 		
 		// Draw the Delete key
-		e.gc.setForeground(display.getSystemColor(SWT.COLOR_GRAY));
-		e.gc.setBackground(display.getSystemColor(SWT.COLOR_DARK_GRAY));
+		e.gc.setForeground(WordleUI.getThemeColors(game.getTheme())[WordleUI.KEY_EDGE_COLOR]);
+		e.gc.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.KEY_FILL_COLOR]);
 		e.gc.fillRoundRectangle(448, 620, 64, 50, 10, 10);
 		e.gc.drawRoundRectangle(448, 620, 64, 50, 10, 10);
 		
-		e.gc.setForeground(display.getSystemColor(SWT.COLOR_WHITE));
+		e.gc.setForeground(WordleUI.getThemeColors(game.getTheme())[WordleUI.KEY_CHAR_COLOR]);
 		e.gc.drawText("DELETE", 452, 638, true);
 	}
 	

@@ -17,10 +17,11 @@ public class WordleGame {
 	// Ryan
 	private HashMap<String,Integer> charStatus;
 	private WordleDictionary dic;
+	private int theme;
 	
 	
 	
-	public WordleGame() {
+	public WordleGame(int theme) {
 		
 		// initialize dictionary?
 		// generate random word from dictionary (no repeats)
@@ -29,6 +30,7 @@ public class WordleGame {
 		guess = "";
 		guessNum = 0;
 		guessCorrect = false;
+		this.theme = theme;
 		
 		// prevents double chars from being found when there are none
 		for(int i = 0; i < 5; i++)
@@ -164,5 +166,9 @@ public class WordleGame {
 	
 	public HashMap<String, Integer> getCharStatus() {
 		return this.charStatus;
+	}
+	
+	public int getTheme() {
+		return this.theme;
 	}
 }
