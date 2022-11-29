@@ -12,7 +12,10 @@ public class WordleGame {
 	private int guessNum;
 	private boolean guessCorrect;
 	private int [] guessResults;
-	private boolean [] charFoundStatus = new boolean [5];;
+	private boolean [] charFoundStatus = new boolean [5];
+	private boolean gameOver;
+	private boolean result;
+	
 	
 	// Ryan
 	private HashMap<String,Integer> charStatus;
@@ -27,10 +30,13 @@ public class WordleGame {
 		// generate random word from dictionary (no repeats)
 		dic = new WordleDictionary();
 		word = dic.getRandomWord();
+		word = "PARTY";
 		guess = "";
 		guessNum = 0;
 		guessCorrect = false;
+		gameOver = false;
 		this.theme = theme;
+		result = false; // loss by default
 		
 		// prevents double chars from being found when there are none
 		for(int i = 0; i < 5; i++)
@@ -47,16 +53,6 @@ public class WordleGame {
 			charStatus.put(qwerty[i], -2);
 		}
 	}
-	
-	/*
-	private String getRandWord(HashMap dict) {
-		// generate random word from dictionary
-		// check if it's been used in this session
-		// if not, add to usedWords
-		// if it has, generate new word
-		// return generated word
-	}
-	*/
 	
 	public int[] makeAGuess(char[][] input) {
 		
@@ -97,7 +93,6 @@ public class WordleGame {
 							break;
 						}
 					}
-						
 					else if(wordChar == guessChar) {
 						
 						if(charFoundStatus[wordIdx] == false) {
@@ -106,7 +101,6 @@ public class WordleGame {
 							break;
 						}
 					}
-					
 					else if(charFoundStatus[wordIdx] == false){
 						guessResults[guessIdx] = -1;
 					}
@@ -130,11 +124,7 @@ public class WordleGame {
 	}
 	
 	public boolean gameIsOver() {
-		
-		if(guessNum == 5) {
-			return true;
-		}
-		return guessCorrect;
+		return gameOver;
 	}
 	
 	public boolean guessIsCorrect() {
@@ -170,5 +160,9 @@ public class WordleGame {
 	
 	public int getTheme() {
 		return this.theme;
+	}
+	
+	public void setOver() {
+		this.gameOver = true;
 	}
 }

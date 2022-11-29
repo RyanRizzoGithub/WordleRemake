@@ -39,6 +39,7 @@ public class WordleGameUI {
 	    shell.setText("Wordle");
 		shell.setSize(600,1000);
 		shell.setLayout( new GridLayout());	
+		
 		dic = new WordleDictionary();
 		
 		this.game = game;
@@ -55,6 +56,7 @@ public class WordleGameUI {
 		for (int i=0; i<6; i++) {
 			rowSubmitted[i] = false;
 		}
+		shell.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
 	}
 	
 	public void start() {
@@ -64,24 +66,32 @@ public class WordleGameUI {
 		
 		canvas = new Canvas(upperComp, SWT.NONE);
 		canvas.setSize(600, 1000);
+		canvas.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
 	
 		
 		canvas.addPaintListener(e -> {
-			// Set the color of the background
-			canvas.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
-			shell.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
-			
-			e.gc.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
-			
-			// Draw the title
-			e.gc.setForeground(WordleUI.getThemeColors(game.getTheme())[WordleUI.KEY_CHAR_COLOR]);
-			Font font = new Font(shell.getDisplay(), new FontData("Times New Roman", 40, SWT.BOLD));
-			e.gc.setFont(font);
-			e.gc.drawText("Wordle", 234, 5, true);
-			
-			drawInputRectangles(e);
-			drawUserInput(e);
-			drawKeyboard(e);
+			if (game.gameIsOver()) {
+				e.gc.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
+				e.gc.fillRectangle(0, 0, 600, 100);
+				System.out.println("Game Over");
+				e.gc.drawText("Game over!", 200, 100);
+			} else {
+				// Set the color of the background
+				canvas.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
+				shell.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
+				
+				e.gc.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
+				
+				// Draw the title
+				e.gc.setForeground(WordleUI.getThemeColors(game.getTheme())[WordleUI.KEY_CHAR_COLOR]);
+				Font font = new Font(shell.getDisplay(), new FontData("Times New Roman", 40, SWT.BOLD));
+				e.gc.setFont(font);
+				e.gc.drawText("Wordle", 234, 5, true);
+				
+				drawInputRectangles(e);
+				drawUserInput(e);
+				drawKeyboard(e);
+			}
 		});
 		
 		 canvas.addKeyListener(new KeyListener() {
@@ -100,7 +110,7 @@ public class WordleGameUI {
 	        					guess = guess + Character.toString(input[i][guessNum]).toUpperCase();
 	        				}
 	        				if (guess.equals(game.word)) {
-	        					
+	        					game.setOver();
 	        				}
 	        				
 	        				// Check if word is in guess dictionary
@@ -187,10 +197,49 @@ public class WordleGameUI {
 					if (col != 5) {
         				// TODO: Warning message
         				System.out.println("Not enough letters");
-        			} else {
-        				rowSubmitted[row] = true;
-        				row++;
-        				col = 0;
+        			} 
+        			else {
+        				String guess = "";
+        				for (int i=0; i<5; i++) {
+        					guess = guess + Character.toString(input[i][guessNum]).toUpperCase();
+        				}
+        				if (guess.equals(game.word)) {
+        					
+        				}
+        				
+        				// Check if word is in guess dictionary
+        				else if (dic.guesses.contains(guess)) {
+	        				rowSubmitted[row] = true;
+	        				row++;
+	        				col = 0;
+	        				
+	        				// @Katelen Tellez added
+	        				// process input in the WORDLE class
+	        				guessResults = game.makeAGuess(input);
+	        				for(int i = 0; i < 5; i ++) {
+	        					allGuesses[guessNum][i] = guessResults[i];
+	        				}
+	        				guessNum++;
+	        				
+	        				System.out.println("Guess Results: ");
+	        				for(int g = 0; g < 5; g++) {
+	        					System.out.println(guessResults[g]);
+	        				}
+	        				
+	        				System.out.print("All Guesses: ");
+	        				for(int g = 0; g < 6; g++) {
+	        					
+	        					for(int c = 0; c < 5; c++) {
+	        						System.out.print(allGuesses[g][c] + " ");
+	        					}
+	        					System.out.println();
+	        				}
+	        				System.out.println();
+        				} else {
+        					System.out.println("Invalid word: " + guess);
+        					// TODO: shake animation and warning
+        				}
+        				
         			}
 				}
 				

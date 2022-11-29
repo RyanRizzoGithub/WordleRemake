@@ -28,6 +28,7 @@ public class WordleMenuUI {
 		for (int i=0; i<6; i++) {
 			hovered[i] = false;
 		}
+		shell.setBackground(WordleUI.getThemeColors(theme)[WordleUI.BACKGROUND_COLOR]);
 	}
 	
 	public void start() {
