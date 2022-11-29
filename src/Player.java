@@ -5,6 +5,7 @@
  */
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Player implements Comparable<Player> {
 	private String name;
@@ -12,9 +13,14 @@ public class Player implements Comparable<Player> {
 	private double winPercentage;
 	private int currentStreak;
 	private int maxStreak;
-	private boolean darkMode;
+	private int theme;
 	private ArrayList<Boolean> historyWins;
 	private ArrayList<Integer> historyMoves;
+	private Random rand;
+	
+	private int shirt;
+	private int face;
+	private int background;
 	
 	public Player(String name) {
 		this.historyWins = new ArrayList<>();
@@ -23,8 +29,17 @@ public class Player implements Comparable<Player> {
 		this.winPercentage = 0.0;
 		this.currentStreak = 0;
 		this.maxStreak = 0;
-		this.darkMode = false;
+		this.theme = 0;
 		
+		this.rand = new Random();
+		this.setRandomPrefs();
+		
+	}
+	
+	private void setRandomPrefs() {
+		this.shirt = rand.nextInt(16);
+		this.face = rand.nextInt(16);
+		this.background = rand.nextInt(16);
 	}
 	
 
@@ -47,6 +62,16 @@ public class Player implements Comparable<Player> {
 		setWinPercentage();
 	}
 	
+	public int[] getGuessDistribution() {
+		int[] guessDistr = {0,0,0,0,0,0};
+		
+		for (int num : historyMoves) {
+			guessDistr[num - 1]++;
+		}
+		return guessDistr;
+	}
+	
+	
 	/**
 	 * Calculates the win percentage and updates winPercentage
 	 */
@@ -58,7 +83,6 @@ public class Player implements Comparable<Player> {
 			}
 		}
 		if (wins == 0) {
-			System.out.println("ZERO WINS");
 			this.winPercentage = 0.0;
 		} else {
 
@@ -66,12 +90,40 @@ public class Player implements Comparable<Player> {
 		}
 	}
 	
+	public void savePlayer() {
+		
+	}
+	
 	/**
 	 * Sets the dark mode boolean
 	 * @param flag
 	 */
-	public void setDarkModePreference(boolean flag) {
-		this.darkMode = flag;
+	public void setDarkModePreference(int theme) {
+		this.theme = theme;
+	}
+	
+	public void setFace(int face) {
+		this.face = face;
+	}
+	
+	public void setShirt(int shirt) {
+		this.shirt = shirt;
+	}
+	
+	public void setBackground(int background) {
+		this.background = background;
+	}
+	
+	public int getBackground() {
+		return this.background;
+	}
+	
+	public int getFace() {
+		return this.face;
+	}
+	
+	public int getShirt() {
+		return this.shirt;
 	}
 	
 	/**
@@ -86,7 +138,9 @@ public class Player implements Comparable<Player> {
 	 */
 	public void increaseStreak() {
 		this.currentStreak += 1;
-		this.maxStreak += 1;
+		if (currentStreak > maxStreak) {
+			this.maxStreak = this.currentStreak;
+		}
 	}
 	
 	/**
@@ -99,8 +153,8 @@ public class Player implements Comparable<Player> {
 	/**
 	 * @return Dark Mode boolean
 	 */
-	public boolean getDarkModePreference() {
-		return this.darkMode;
+	public int getThemePreference() {
+		return this.theme;
 	}
 	
 	/**
