@@ -37,8 +37,8 @@ public class WordleGameUI {
 		display = Display.getDefault();
 		shell = new Shell(display);
 	    shell.setText("Wordle");
-		shell.setSize(600,1000);
 		shell.setLayout( new GridLayout());	
+		shell.setBounds(WordleUI.SHELL_X, WordleUI.SHELL_Y, WordleUI.SHELL_WIDTH, WordleUI.SHELL_HEIGHT);
 		
 		dic = new WordleDictionary();
 		
@@ -59,6 +59,35 @@ public class WordleGameUI {
 		shell.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
 	}
 	
+	// TODO:
+	/*
+	public WordleGameUI(WordleGame game, WordlePlayer player) {
+		display = Display.getDefault();
+		shell = new Shell(display);
+	    shell.setText("Wordle");
+		shell.setLayout( new GridLayout());	
+		shell.setBounds(WordleUI.SHELL_X, WordleUI.SHELL_Y, WordleUI.SHELL_WIDTH, WordleUI.SHELL_HEIGHT);
+		
+		dic = new WordleDictionary();
+		
+		this.game = game;
+		row = 0;
+		col = 0;
+		
+		input = new char[5][6];
+		for (int i=0; i<5; i++) {
+			for (int j=0; j<6; j++) {
+				input[i][j] = '?';
+			}
+		}
+		rowSubmitted = new boolean[6];
+		for (int i=0; i<6; i++) {
+			rowSubmitted[i] = false;
+		}
+		shell.setBackground(WordleUI.getThemeColors(player.getTheme())[WordleUI.BACKGROUND_COLOR]);
+	}
+	*/
+	
 	public void start() {
 		Composite upperComp = new Composite(shell, SWT.NO_FOCUS);
 		upperComp.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
@@ -70,6 +99,18 @@ public class WordleGameUI {
 	
 		
 		canvas.addPaintListener(e -> {
+			// Draw back button
+			e.gc.setForeground(WordleUI.getThemeColors(game.getTheme())[WordleUI.KEY_EDGE_COLOR]);
+			e.gc.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.KEY_FILL_COLOR]);
+			
+			e.gc.drawRoundRectangle(15, 15, 75, 25, 10, 10);
+			e.gc.fillRoundRectangle(15, 15, 75, 25, 10, 10);
+			
+			e.gc.setForeground(WordleUI.getThemeColors(game.getTheme())[WordleUI.KEY_CHAR_COLOR]);
+			e.gc.drawText("Back", 38, 20);
+			
+			
+			
 			if (game.gameIsOver()) {
 				e.gc.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
 				e.gc.fillRectangle(0, 0, 600, 100);
@@ -147,16 +188,24 @@ public class WordleGameUI {
 	        				}
 	        				
 	        			}
-	        			
+	        		} 	
 	        		// If DELETE key
-	        		} else if (e.keyCode == 8) {
+	        		else if (e.keyCode == 8) {
 	        			if (col > 0) {
 	        				col--;
 	        				input[col][row] = '?';
 	        			}
-	        			
+	        		}	
+	        		// If ESCAPE key	
+	        		else if (e.keyCode == 27) {
+	        			setVisible(false);
+						// TODO: WordleMenuUI = new WordleMenuUI(WordlePlayer player);
+						WordleMenuUI menuUI = new WordleMenuUI();
+						WordleUI.startMenu(menuUI);
+	        		}
+	        		
 	        		// If CHARACTER
-	        		} else {
+	        		else {
 	        			if (col != 5 && row != 6) {
 	        				for (int i=0; i<qwerty.length; i++) {
 	        					if (e.character == qwerty[i].charAt(0)) {
@@ -249,6 +298,14 @@ public class WordleGameUI {
         				col--;
         				input[col][row] = '?';
         			}
+				}
+				
+				// If BACK button
+				if (e.y > 15 && e.y < 40 && e.x > 15 && e.x < 90) {
+					setVisible(false);
+					// TODO: WordleMenuUI = new WordleMenuUI(WordlePlayer player);
+					WordleMenuUI menuUI = new WordleMenuUI();
+					WordleUI.startMenu(menuUI);
 				}
 
 				// Handle character
@@ -431,5 +488,9 @@ public class WordleGameUI {
 				}
 			}
 		}).start();
+	}
+	
+	public void setVisible(boolean vis) {
+		shell.setVisible(vis);
 	}
 }

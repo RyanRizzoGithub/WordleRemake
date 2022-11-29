@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 public class WordleMenuUI {
+	
 	private Shell shell;
 	private Canvas canvas;
 	private Display display;
@@ -21,8 +22,10 @@ public class WordleMenuUI {
 		display = Display.getDefault();
 		shell = new Shell(display);
 		shell.setText("WordleMenu");
-		shell.setSize(600, 1000);
 		shell.setLayout( new GridLayout());
+		shell.setBounds(WordleUI.SHELL_X, WordleUI.SHELL_Y, WordleUI.SHELL_WIDTH, WordleUI.SHELL_HEIGHT);
+		
+		
 		theme = 0;
 		hovered = new boolean[6];
 		for (int i=0; i<6; i++) {
@@ -31,7 +34,27 @@ public class WordleMenuUI {
 		shell.setBackground(WordleUI.getThemeColors(theme)[WordleUI.BACKGROUND_COLOR]);
 	}
 	
+	// TODO:
+	/*
+	public WordleMenuUI(WordlePlayer player) {
+		display = Display.getDefault();
+		shell = new Shell(display);
+		shell.setText("WordleMenu");
+		shell.setLayout( new GridLayout());
+		shell.setBounds(WordleUI.SHELL_X, WordleUI.SHELL_Y, WordleUI.SHELL_WIDTH, WordleUI.SHELL_HEIGHT);
+		
+		
+		theme = player.getTheme();
+		hovered = new boolean[6];
+		for (int i=0; i<6; i++) {
+			hovered[i] = false;
+		}
+		shell.setBackground(WordleUI.getThemeColors(theme)[WordleUI.BACKGROUND_COLOR]);
+	}
+	*/
+	
 	public void start() {
+		System.out.println("start");
 		Composite menuComp = new Composite(shell, SWT.NO_FOCUS);
 		
 		canvas = new Canvas(menuComp, SWT.NONE);
@@ -181,8 +204,10 @@ public class WordleMenuUI {
 			public void mouseDown(MouseEvent e) {
 				// If play button
 				if (e.x > 200 && e.x < 400 && e.y > 230 && e.y < 280) {
-					shell.setVisible(false);
-					WordleUI.startGame(theme);
+					setVisible(false);
+					WordleGame newGame = new WordleGame(theme);
+					WordleGameUI gameUI = new WordleGameUI(newGame);
+					WordleUI.startGame(gameUI);
 				}
 				
 				// If Login button
@@ -217,5 +242,9 @@ public class WordleMenuUI {
 		while(shell.isVisible())
 			if(!display.readAndDispatch()) {		
 			}
+	}
+	
+	public void setVisible(boolean vis) {
+		shell.setVisible(vis);
 	}
 }

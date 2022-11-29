@@ -5,9 +5,7 @@ import java.util.HashMap;
 // @Katelen Tellez added (below)
 public class WordleGame {
 	
-	// private HashMap dictionary;
 	String word;
-	// private ArrayList usedWords;
 	private String guess;
 	private int guessNum;
 	private boolean guessCorrect;
@@ -26,11 +24,9 @@ public class WordleGame {
 	
 	public WordleGame(int theme) {
 		
-		// initialize dictionary?
 		// generate random word from dictionary (no repeats)
 		dic = new WordleDictionary();
 		word = dic.getRandomWord();
-		word = "PARTY";
 		guess = "";
 		guessNum = 0;
 		guessCorrect = false;
@@ -42,9 +38,9 @@ public class WordleGame {
 		for(int i = 0; i < 5; i++)
 			charFoundStatus[i] = false;
 		
-		// a 0 indicates character is in the word and in the right index
-		// a 1 indicates character is in the word but not in the right index
-		// a -1 indicates character is not in the word
+		//  0 indicates character is in the word and in the right index
+		//  1 indicates character is in the word but not in the right index
+		// -1 indicates character is not in the word
 		guessResults = new int [5];
 		charStatus = new HashMap<String, Integer>();
 		String[] qwerty = {"q","w","e","r","t","y","u","i","o","p","a","s","d","f","g","h",

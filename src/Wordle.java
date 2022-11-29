@@ -6,7 +6,8 @@ import  java.io.*;
 public class Wordle {
 	public static void main(String[] args) {		
 		playClip();
-		WordleUI.startMenu();
+		WordleMenuUI menuUI = new WordleMenuUI();
+		WordleUI.startMenu(menuUI);
 	}
 	
 
