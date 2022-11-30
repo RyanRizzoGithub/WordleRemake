@@ -12,7 +12,6 @@ public class WordleGame {
 	private int [] guessResults;
 	private boolean [] charFoundStatus = new boolean [5];
 	private boolean gameOver;
-	private boolean result;
 	
 	
 	// Ryan
@@ -32,7 +31,6 @@ public class WordleGame {
 		guessCorrect = false;
 		gameOver = false;
 		this.theme = theme;
-		result = false; // loss by default
 		
 		// prevents double chars from being found when there are none
 		for(int i = 0; i < 5; i++)

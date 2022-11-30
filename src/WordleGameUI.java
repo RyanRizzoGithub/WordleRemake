@@ -1,5 +1,3 @@
-import java.util.LinkedList;
-import java.util.Random;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -99,12 +97,14 @@ public class WordleGameUI {
 	
 		
 		canvas.addPaintListener(e -> {
+			drawAnimation(e);
+			
 			// Draw back button
 			e.gc.setForeground(WordleUI.getThemeColors(game.getTheme())[WordleUI.KEY_EDGE_COLOR]);
 			e.gc.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.KEY_FILL_COLOR]);
 			
 			e.gc.drawRoundRectangle(15, 15, 75, 25, 10, 10);
-			e.gc.fillRoundRectangle(15, 15, 75, 25, 10, 10);
+			e.gc.fillRoundRectangle(16, 16, 74, 24, 10, 10);
 			
 			e.gc.setForeground(WordleUI.getThemeColors(game.getTheme())[WordleUI.KEY_CHAR_COLOR]);
 			e.gc.drawText("Back", 38, 20);
@@ -128,6 +128,7 @@ public class WordleGameUI {
 				Font font = new Font(shell.getDisplay(), new FontData("Times New Roman", 40, SWT.BOLD));
 				e.gc.setFont(font);
 				e.gc.drawText("Wordle", 234, 5, true);
+				
 				
 				drawInputRectangles(e);
 				drawUserInput(e);
@@ -227,19 +228,13 @@ public class WordleGameUI {
 						"j","k","l","z","x","c","v","b","n","m","`"};
 				int index = -1;
 				// If Q-P
-				if (e.y > 500 && e.y < 552 && e.x > 65 && e.x < 512) {
-					index = ((e.x - 65) / 45);
-				}
+				if (e.y > 500 && e.y < 552 && e.x > 65 && e.x < 512) index = ((e.x - 65) / 45);
 				
 				// If A-L
-				if (e.y > 560 && e.y < 612 && e.x > 88 && e.x < 582) {
-					index = 10 + ((e.x - 88) / 45);
-				}
+				if (e.y > 560 && e.y < 612 && e.x > 88 && e.x < 582) index = 10 + ((e.x - 88) / 45);
 				
 				// If Z-M
-				if (e.y > 622 && e.y < 670 && e.x > 134 && e.x < 444) {
-					index = 19 + ((e.x - 134) / 45);
-				}
+				if (e.y > 622 && e.y < 670 && e.x > 134 && e.x < 444) index = 19 + ((e.x - 134) / 45);
 				
 				// If ENTER key
 				if (e.y > 622 && e.y < 670 && e.x > 65 && e.x < 128) {
@@ -450,7 +445,6 @@ public class WordleGameUI {
 		e.gc.fillRoundRectangle(64, 620, 64, 50, 10, 10);
 		e.gc.drawRoundRectangle(64, 620, 64, 50, 10, 10);
 		
-		
 		e.gc.setForeground(WordleUI.getThemeColors(game.getTheme())[WordleUI.KEY_CHAR_COLOR]);
 		e.gc.drawText("ENTER", 72, 638, true);
 		
@@ -471,23 +465,14 @@ public class WordleGameUI {
 	 * @param e, the paint event which calls this function
 	 * (Ryan Rizzo)
 	 */
-	@SuppressWarnings("unused")
-	private void drawAnimation(PaintEvent e) {
-		new Thread(new Runnable() {
-			public void run() {
-				Random rand = new Random();
-				String[] qwerty = {"q","w","e","r","t","y","u","i","o","p","a","s","d","f","g","h",
-						"j","k","l","z","x","c","v","b","n","m","`"};
-				LinkedList<String[]> memo = new LinkedList<String[]>();
-				for (int i = 0; i < 100; i++) {
-					String selectChar = qwerty[rand.nextInt(0, 27)];
-					String selectX = String.valueOf(rand.nextInt(0, 600));
-					String order = String.valueOf(i);
-					String[] memoEntry = {selectChar, selectX, "0", order};
-					memo.add(memoEntry);
-				}
-			}
-		}).start();
+
+private void drawAnimation(PaintEvent e) {
+		int time = Math.abs(((int) System.currentTimeMillis()/100));
+		System.out.println(WordleUI.SHELL_HEIGHT - ((time - 400) % WordleUI.SHELL_HEIGHT));
+		
+		Image background = new Image(shell.getDisplay(), "./images/background.png");
+		e.gc.drawImage(background, 0,WordleUI.SHELL_HEIGHT - (WordleUI.SHELL_HEIGHT + time) % (WordleUI.SHELL_HEIGHT * 2));
+		e.gc.drawImage(background, 0,(WordleUI.SHELL_HEIGHT - 1500) - (WordleUI.SHELL_HEIGHT + time) % (WordleUI.SHELL_HEIGHT * 2));
 	}
 	
 	public void setVisible(boolean vis) {

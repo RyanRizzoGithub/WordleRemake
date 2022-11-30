@@ -4,7 +4,7 @@ import org.eclipse.swt.widgets.Display;
 public interface WordleUI {
 	// Constant for shell bounds
 	public static final int SHELL_WIDTH = 600;
-	public static final int SHELL_HEIGHT = 1000;
+	public static final int SHELL_HEIGHT = 750;
 	public static final int SHELL_X = (Display.getDefault().getBounds().width / 2) - 300;
 	public static final int SHELL_Y = (Display.getDefault().getBounds().height / 2) - 500;
 	

@@ -1,7 +1,7 @@
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import  java.io.*;
+import java.io.*;
 
 public class Wordle {
 	public static void main(String[] args) {		
