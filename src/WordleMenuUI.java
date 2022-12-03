@@ -156,13 +156,9 @@ public class WordleMenuUI {
 				if (e.x > 200 && e.x < 400 && e.y > 230 && e.y < 280) {
 					setVisible(false);
 					WordleGame newGame;
-					try {
-						newGame = new WordleGame("WOTD");
-						WordleGameUI gameUI = new WordleGameUI(newGame);
-						WordleUI.startGame(gameUI);
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
+					newGame = new WordleGame(0);
+					WordleGameUI gameUI = new WordleGameUI(newGame);
+					WordleUI.startGame(gameUI);
 				}
 				
 				// If LOGIN button

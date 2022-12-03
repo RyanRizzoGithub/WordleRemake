@@ -50,6 +50,7 @@ public class Wordle {
 					ios = new ObjectInputStream(new FileInputStream(file));
 					WordlePlayer temp = (WordlePlayer) ios.readObject();
 					players.add(temp);
+					System.out.println("ADDING " + temp.getName());
 				} catch (IOException | ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
