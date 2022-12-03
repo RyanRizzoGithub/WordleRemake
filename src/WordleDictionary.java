@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Random;
@@ -15,9 +16,9 @@ public class WordleDictionary {
 		answers = new HashSet<String>();
 		guesses = new HashSet<String>();
 		
-		loadWords("src/wordle-allowed-guesses.txt", guesses);
-		loadWords("src/wordle-answers-alphabetical.txt", answers);
-		loadWords("src/wordle-answers-alphabetical.txt", guesses);
+		loadWords("txt/wordle-allowed-guesses.txt", guesses);
+		loadWords("txt/wordle-answers-alphabetical.txt", answers);
+		loadWords("txt/wordle-answers-alphabetical.txt", guesses);
 		
 		guessesArray = guesses.toArray(new String[guesses.size()]);
 	}
@@ -50,6 +51,55 @@ public class WordleDictionary {
 		}
 	}
 	
+	public String getWOTD() throws IOException {
+		WordOfTheDay WOTD = new WordOfTheDay();
+		return WOTD.getWOTD();
+	}
 	
+	// Ryan Rizzo
+	private class WordOfTheDay {
+		private HashSet<String> wordsUsed;
+		private String prevDate;
+		private String wordOfTheDay;
+		
+		public WordOfTheDay() throws IOException {
+			wordsUsed = new HashSet<String>();
+			loadWords("txt/wordle-WOTD-used.txt", wordsUsed);
+			
+			FileReader dateFile = new FileReader("./txt/wordle-WOTD-date.txt");
+			BufferedReader dateReader = new BufferedReader(dateFile);
+			prevDate = dateReader.readLine();
+			dateReader.close();
+			
+			if (!prevDate.equals(java.time.LocalDate.now().toString())) {
+				String newWord = getRandomWord();
+				while (wordsUsed.contains(newWord)) {
+					newWord = getRandomWord();
+				}
+				FileWriter wordWriter = new FileWriter("./txt/wordle-WOTD-word.txt");
+			    wordWriter.write(newWord);
+			    wordWriter.close();
+			    
+			    FileWriter usedWriter = new FileWriter("./txt/wordle-WOTD-used.txt");
+			    usedWriter.append(newWord);
+			    usedWriter.close();
+			    
+			    FileWriter dateWriter = new FileWriter("./txt/wordle-WOTD-date.txt");
+			    dateWriter.write(java.time.LocalDate.now().toString());
+			    dateWriter.close();
+			}
+			FileReader wordFile = new FileReader("./txt/wordle-WOTD-word.txt");
+			BufferedReader wordReader = new BufferedReader(wordFile);
+			wordOfTheDay = wordReader.readLine();
+			wordReader.close();
+			
+		}
+		
+		private String getWOTD() {
+			return wordOfTheDay;
+		}
+		
+		
+	}
 
 }

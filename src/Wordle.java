@@ -2,11 +2,23 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class Wordle {
-	public static void main(String[] args) {		
+	
+	protected static WordlePlayer player;
+	protected static ArrayList<WordlePlayer> players = new ArrayList<>();
+	
+	public static void main(String[] args) {	
+		player = new WordlePlayer("Guest",  "Password",new File( "./txt/guest.txt"));
+		player.setBackground(0);
+		player.setShirt(1);
+		player.setFace(2);
 		playClip();
-		WordleMenuUI menuUI = new WordleMenuUI();
+		loadPlayers();
+		printPlayers();
+		WordleMenuUI menuUI = new WordleMenuUI(WordleUI.DARK_THEME);
 		WordleUI.startMenu(menuUI);
 	}
 	
@@ -26,4 +38,32 @@ public class Wordle {
 			}
 		}).start();
     }
+	
+	private static void loadPlayers() {
+		File dir = new File("./Players/");
+		File[] files = dir.listFiles();
+		
+		if (files != null) {
+			for(File file : files) {
+				ObjectInputStream ios;
+				try {
+					ios = new ObjectInputStream(new FileInputStream(file));
+					WordlePlayer temp = (WordlePlayer) ios.readObject();
+					players.add(temp);
+				} catch (IOException | ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		}
+		
+		Collections.sort(players);
+	}
+	
+	public static void printPlayers() {
+		for (WordlePlayer p : players) {
+			p.printStats();
+		}
+	}
 }

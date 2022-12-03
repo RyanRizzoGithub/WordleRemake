@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -19,40 +21,20 @@ public class WordleMenuUI {
 	private boolean[] hovered;
 	private int theme;
 	
-	public WordleMenuUI() {
+	public WordleMenuUI(int theme) {
 		display = Display.getDefault();
 		shell = new Shell(display);
 		shell.setText("WordleMenu");
 		shell.setLayout( new GridLayout());
 		shell.setBounds(WordleUI.SHELL_X, WordleUI.SHELL_Y, WordleUI.SHELL_WIDTH, WordleUI.SHELL_HEIGHT);
 		
-		
-		theme = 0;
+		this.theme = theme;
 		hovered = new boolean[6];
 		for (int i=0; i<6; i++) {
 			hovered[i] = false;
 		}
 		shell.setBackground(WordleUI.getThemeColors(theme)[WordleUI.BACKGROUND_COLOR]);
 	}
-	
-	// TODO:
-	/*
-	public WordleMenuUI(WordlePlayer player) {
-		display = Display.getDefault();
-		shell = new Shell(display);
-		shell.setText("WordleMenu");
-		shell.setLayout( new GridLayout());
-		shell.setBounds(WordleUI.SHELL_X, WordleUI.SHELL_Y, WordleUI.SHELL_WIDTH, WordleUI.SHELL_HEIGHT);
-		
-		
-		theme = player.getTheme();
-		hovered = new boolean[6];
-		for (int i=0; i<6; i++) {
-			hovered[i] = false;
-		}
-		shell.setBackground(WordleUI.getThemeColors(theme)[WordleUI.BACKGROUND_COLOR]);
-	}
-	*/
 	
 	public void start() {
 		System.out.println("start");
@@ -70,12 +52,28 @@ public class WordleMenuUI {
 			e.gc.setBackground(WordleUI.getThemeColors(theme)[WordleUI.KEY_FILL_COLOR]);
 			e.gc.setForeground(WordleUI.getThemeColors(theme)[WordleUI.KEY_CHAR_COLOR]);
 			
+			
+			
 			// Draw the user profile
 			Font font = new Font(shell.getDisplay(), new FontData("Times New Roman", 18, SWT.NONE));
 			e.gc.setFont(font);
-			e.gc.drawText("Logged in as: Guest", 228, 65, true);
+			
+			e.gc.setBackground(WordleUI.getProfileColors()[Wordle.player.getBackground()]);
+			e.gc.fillRoundRectangle(251, 101, 99, 99, 15, 15);
+			
+			e.gc.setBackground(WordleUI.getProfileColors()[Wordle.player.getShirt()]);
+			e.gc.fillArc(254, 150, 94, 100, 0, 180);
+			
+			e.gc.setBackground(WordleUI.getProfileColors()[Wordle.player.getFace()]);
+			e.gc.fillOval(270, 110, 60, 60);
+			
 			e.gc.drawRoundRectangle(250, 100, 100, 100, 15, 15);
-			e.gc.drawRoundRectangle(251, 101, 98, 98, 15, 15);
+			
+			String name = "Guest";
+			if (Wordle.player != null) {
+				name = Wordle.player.getName();
+			}
+			e.gc.drawText("Logged in as: " + name, 228, 65, true);
 			
 			// Draw the title
 			font = new Font(shell.getDisplay(), new FontData("Times New Roman", 40, SWT.BOLD));
@@ -157,9 +155,14 @@ public class WordleMenuUI {
 				// If play button
 				if (e.x > 200 && e.x < 400 && e.y > 230 && e.y < 280) {
 					setVisible(false);
-					WordleGame newGame = new WordleGame(theme);
-					WordleGameUI gameUI = new WordleGameUI(newGame);
-					WordleUI.startGame(gameUI);
+					WordleGame newGame;
+					try {
+						newGame = new WordleGame("WOTD");
+						WordleGameUI gameUI = new WordleGameUI(newGame);
+						WordleUI.startGame(gameUI);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
 				}
 				
 				// If LOGIN button
@@ -170,10 +173,17 @@ public class WordleMenuUI {
 				
 				// If THEME button
 				else if (e.x > 210 && e.x < 390 && e.y > 510 && e.y < 560) theme++;
+				
+				// If help button
+				else if (e.x > 210 && e.x < 390 && e.y > 580 && e.y < 630) WordleUI.startHelp();
 
 				if (theme > 4) {
 					theme = 0;
 				}
+				if (Wordle.player != null) {
+					Wordle.player.setTheme(theme);
+				}
+				
 			}
 			
 			public void mouseDoubleClick(MouseEvent e) {}
@@ -197,7 +207,6 @@ public class WordleMenuUI {
 	 */
 	private void drawAnimation(PaintEvent e) {
 		int time = Math.abs(((int) System.currentTimeMillis()/100));
-		System.out.println(WordleUI.SHELL_HEIGHT - ((time - 400) % WordleUI.SHELL_HEIGHT));
 		
 		Image background = new Image(shell.getDisplay(), "./images/background.png");
 		e.gc.drawImage(background, 0,WordleUI.SHELL_HEIGHT - (WordleUI.SHELL_HEIGHT + time) % (WordleUI.SHELL_HEIGHT * 2));
