@@ -1,14 +1,15 @@
+import java.io.IOException;
 import java.util.HashMap;
 
-// import java.util.ArrayList;
 
 // @Katelen Tellez added (below)
 public class WordleGame {
 	
-	String word;
+	private String word;
+	private String secondWord;
 	private String guess;
 	private int guessNum;
-	private boolean guessCorrect; 
+	private boolean guessCorrect;
 	private int [] guessResults;
 	private boolean [] charFoundStatus = new boolean [5];
 	private boolean gameOver;
@@ -17,20 +18,32 @@ public class WordleGame {
 	// Ryan
 	private HashMap<String,Integer> charStatus;
 	private WordleDictionary dic;
+	private String mode;
 	private int theme;
 	
 	
 	
-	public WordleGame(int theme) {
+	public WordleGame(String mode) throws IOException {
 		
 		// generate random word from dictionary (no repeats)
 		dic = new WordleDictionary();
-		word = "PARTY";//dic.getRandomWord();
 		guess = "";
 		guessNum = 0;
 		guessCorrect = false;
 		gameOver = false;
-		this.theme = theme;
+		this.theme = Wordle.player.getTheme();
+		this.mode = mode;
+		
+		if (mode.equals("Survival")) {
+			word = dic.getRandomWord();
+		}
+		if (mode.equals("WOTD")) {
+			word =  "PARTY";//dic.getWOTD();
+		}
+		if (mode.equals("DORDLE")) {
+			word = dic.getRandomWord();
+			secondWord = dic.getRandomWord();
+		}
 		
 		// prevents double chars from being found when there are none
 		for(int i = 0; i < 5; i++)
@@ -57,17 +70,15 @@ public class WordleGame {
 			guess = guess + Character.toString(input[i][guessNum]).toUpperCase();
 		}
 		
-		//System.out.println("Guess: " + guess);
+		System.out.println("Guess: " + guess);
 		
 		// did the user guess the word correctly?
 		if(guess.equals(word)) {
 			guessCorrect = true;
-			
 			for(int i = 0; i < 5; i++) {
 				guessResults[i] = 0;
 				charFoundStatus[i] = true;
 			}
-			setOver();
 		}
 		
 		// if they did not, compare each character of the guess to the word
@@ -146,7 +157,26 @@ public class WordleGame {
 		if (result > charStatus.get(String.valueOf(c).toLowerCase())) {
 			charStatus.put(String.valueOf(c).toLowerCase(), result);
 		}
-		//System.out.println("char: " + c + " index: " + index + " result: " + result);
+		return result;
+	}
+	
+	public int checkSecondChar(char c, int index) {
+		c = Character.toUpperCase(c);
+		
+		int result = -1;
+		for (int i=0; i<secondWord.length(); i++) {
+			if (secondWord.charAt(i) == c) {
+				result++;
+				break;
+			}
+		} if (secondWord.charAt(index) == c) {
+			result++;
+		}
+		
+		// Update charStatus
+		if (result > charStatus.get(String.valueOf(c).toLowerCase())) {
+			charStatus.put(String.valueOf(c).toLowerCase(), result);
+		}
 		return result;
 	}
 	
@@ -158,11 +188,19 @@ public class WordleGame {
 		return this.theme;
 	}
 	
+	public String getMode() {
+		return this.mode;
+	}
+	
 	public void setOver() {
 		this.gameOver = true;
-		if (Wordle.player != null) {
-			Wordle.player.addGame(guessCorrect, guessNum+1);
-			Wordle.player.printStats();
-		}
+	}
+	
+	public String getWord() {
+		return word;
+	}
+	
+	public String getSecondWord() {
+		return secondWord;
 	}
 }

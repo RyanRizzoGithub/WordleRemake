@@ -5,7 +5,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
-import com.swtdesigner.*;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class WordleModeUI {
 

@@ -49,6 +49,11 @@ public interface WordleUI {
 		loginUI.start();
 	}
 	
+	public static void endGame() {
+		WordleEndUI endUI = new WordleEndUI();
+		endUI.start();
+	}
+	
 	/* - - - - - - START LEADERBOARD - - - - - - - - - - - - - - - - - - - - - - - - -
 	 * This method is responsible for starting the user login interface
 	 * Author: Gregory Jenkins
@@ -69,6 +74,12 @@ public interface WordleUI {
 		WordleModeUI modeUI = new WordleModeUI();
 		// Open the interface
 		modeUI.start();
+	}
+	
+	public static void startHelp() {
+		// Create a new help page ui
+		WordleHelpUI helpUI = new WordleHelpUI();
+		helpUI.start();
 	}
 	
 	/* - - - - - - GET THEME COLORS - - - - - - - - - - - - - - - - - - -
@@ -110,6 +121,27 @@ public interface WordleUI {
 			colors[KEY_FILL_COLOR] = new Color(148, 246, 247);		// Light Blue
 			colors[KEY_CHAR_COLOR] = new Color(213, 106, 235);		// Purple
 		}
+		return colors;
+	}
+	
+	public static Color[] getProfileColors() {
+		Color[] colors = new Color[16];
+		colors[0] = new Color(237, 126, 119);
+		colors[1] = new Color(237, 170, 119);
+		colors[2] = new Color(237, 211, 119);
+		colors[3] = new Color(213, 237, 119);
+		colors[4] = new Color(174, 237, 119);
+		colors[5] = new Color(119, 237, 150);
+		colors[6] = new Color(119, 237, 196);
+		colors[7] = new Color(119, 217, 237);
+		colors[8] = new Color(119, 147, 237);
+		colors[9] = new Color(139, 119, 237);
+		colors[10] = new Color(188, 119, 237);
+		colors[11] = new Color(223, 119, 237);
+		colors[12] = new Color(237, 119, 215);
+		colors[13] = new Color(237, 119, 176);
+		colors[14] = new Color(255, 255, 255);
+		colors[15] = new Color(0, 0, 0);
 		return colors;
 	}
 }

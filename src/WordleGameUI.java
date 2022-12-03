@@ -27,7 +27,7 @@ public class WordleGameUI {
 	// @Katelen Tellez added
 	private WordleGame game;
 	private int [] guessResults = null;
-	private int[][] allGuesses = new int [6][5];
+	private int[][] allGuesses = new int [7][5];
 	private int guessNum = 0;
 		
 	
@@ -44,47 +44,18 @@ public class WordleGameUI {
 		row = 0;
 		col = 0;
 		
-		input = new char[5][6];
+		input = new char[5][7];
 		for (int i=0; i<5; i++) {
-			for (int j=0; j<6; j++) {
+			for (int j=0; j<7; j++) {
 				input[i][j] = '?';
 			}
 		}
-		rowSubmitted = new boolean[6];
+		rowSubmitted = new boolean[7];
 		for (int i=0; i<6; i++) {
 			rowSubmitted[i] = false;
 		}
 		shell.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
 	}
-	
-	// TODO:
-	/*
-	public WordleGameUI(WordleGame game, WordlePlayer player) {
-		display = Display.getDefault();
-		shell = new Shell(display);
-	    shell.setText("Wordle");
-		shell.setLayout( new GridLayout());	
-		shell.setBounds(WordleUI.SHELL_X, WordleUI.SHELL_Y, WordleUI.SHELL_WIDTH, WordleUI.SHELL_HEIGHT);
-		
-		dic = new WordleDictionary();
-		
-		this.game = game;
-		row = 0;
-		col = 0;
-		
-		input = new char[5][6];
-		for (int i=0; i<5; i++) {
-			for (int j=0; j<6; j++) {
-				input[i][j] = '?';
-			}
-		}
-		rowSubmitted = new boolean[6];
-		for (int i=0; i<6; i++) {
-			rowSubmitted[i] = false;
-		}
-		shell.setBackground(WordleUI.getThemeColors(player.getTheme())[WordleUI.BACKGROUND_COLOR]);
-	}
-	*/
 	
 	public void start() {
 		Composite upperComp = new Composite(shell, SWT.NO_FOCUS);
@@ -94,7 +65,6 @@ public class WordleGameUI {
 		canvas = new Canvas(upperComp, SWT.NONE);
 		canvas.setSize(600, 1000);
 		canvas.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
-	
 		
 		canvas.addPaintListener(e -> {
 			drawAnimation(e);
@@ -111,12 +81,6 @@ public class WordleGameUI {
 			
 			
 			
-			if (game.gameIsOver()) {
-				e.gc.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
-				e.gc.fillRectangle(0, 0, 600, 100);
-				//System.out.println("Game Over");
-				e.gc.drawText("Game over!", 200, 100);
-			} else {
 				// Set the color of the background
 				canvas.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
 				shell.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
@@ -129,14 +93,13 @@ public class WordleGameUI {
 				e.gc.setFont(font);
 				e.gc.drawText("Wordle", 234, 5, true);
 				
-				
 				drawInputRectangles(e);
 				drawUserInput(e);
 				drawKeyboard(e);
-			}
+		
 		});
 		
-		 canvas.addKeyListener(new KeyListener() {
+		canvas.addKeyListener(new KeyListener() {
 	        	public void keyPressed(KeyEvent e) { 
 	        		String[] qwerty = {"q","w","e","r","t","y","u","i","o","p","a","s","d","f","g","h",
 							"j","k","l","z","x","c","v","b","n","m","`"};
@@ -144,14 +107,14 @@ public class WordleGameUI {
 	        		if (e.keyCode == 13) {
 	        			if (col != 5) {
 	        				// TODO: Warning message
-	        				//System.out.println("Not enough letters");
+	        				System.out.println("Not enough letters");
 	        			} 
 	        			else {
 	        				String guess = "";
 	        				for (int i=0; i<5; i++) {
 	        					guess = guess + Character.toString(input[i][guessNum]).toUpperCase();
 	        				}
-	        				if (guess.equals(game.word)) {
+	        				if (guess.equals(game.getWord())) {
 	        					game.setOver();
 	        				}
 	        				
@@ -169,22 +132,22 @@ public class WordleGameUI {
 		        				}
 		        				guessNum++;
 		        				
-		        				//System.out.println("Guess Results: ");
+		        				System.out.println("Guess Results: ");
 		        				for(int g = 0; g < 5; g++) {
-		        					////System.out.println(guessResults[g]);
+		        					System.out.println(guessResults[g]);
 		        				}
 		        				
-		        				//System.out.print("All Guesses: ");
+		        				System.out.print("All Guesses: ");
 		        				for(int g = 0; g < 6; g++) {
 		        					
 		        					for(int c = 0; c < 5; c++) {
-		        						////System.out.print(allGuesses[g][c] + " ");
+		        						System.out.print(allGuesses[g][c] + " ");
 		        					}
-		        					////System.out.println();
+		        					System.out.println();
 		        				}
-		        				////System.out.println();
+		        				System.out.println();
 	        				} else {
-	        					////System.out.println("Invalid word: " + guess);
+	        					System.out.println("Invalid word: " + guess);
 	        					// TODO: shake animation and warning
 	        				}
 	        				
@@ -201,13 +164,13 @@ public class WordleGameUI {
 	        		else if (e.keyCode == 27) {
 	        			setVisible(false);
 						// TODO: WordleMenuUI = new WordleMenuUI(WordlePlayer player);
-						WordleMenuUI menuUI = new WordleMenuUI();
+						WordleMenuUI menuUI = new WordleMenuUI(Wordle.player.getTheme());
 						WordleUI.startMenu(menuUI);
 	        		}
 	        		
 	        		// If CHARACTER
 	        		else {
-	        			if (col != 5 && row != 6) {
+	        			if (col != 5 && row != 7) {
 	        				for (int i=0; i<qwerty.length; i++) {
 	        					if (e.character == qwerty[i].charAt(0)) {
 	        						input[col][row] = e.character;    			
@@ -240,14 +203,14 @@ public class WordleGameUI {
 				if (e.y > 622 && e.y < 670 && e.x > 65 && e.x < 128) {
 					if (col != 5) {
         				// TODO: Warning message
-        				//System.out.println("Not enough letters");
+        				System.out.println("Not enough letters");
         			} 
         			else {
         				String guess = "";
         				for (int i=0; i<5; i++) {
         					guess = guess + Character.toString(input[i][guessNum]).toUpperCase();
         				}
-        				if (guess.equals(game.word)) {
+        				if (guess.equals(game.getWord())) {
         					
         				}
         				
@@ -265,22 +228,22 @@ public class WordleGameUI {
 	        				}
 	        				guessNum++;
 	        				
-	        				//System.out.println("Guess Results: ");
+	        				System.out.println("Guess Results: ");
 	        				for(int g = 0; g < 5; g++) {
-	        					////System.out.println(guessResults[g]);
+	        					System.out.println(guessResults[g]);
 	        				}
 	        				
-	        				//System.out.print("All Guesses: ");
+	        				System.out.print("All Guesses: ");
 	        				for(int g = 0; g < 6; g++) {
 	        					
 	        					for(int c = 0; c < 5; c++) {
-	        						////System.out.print(allGuesses[g][c] + " ");
+	        						System.out.print(allGuesses[g][c] + " ");
 	        					}
-	        					////System.out.println();
+	        					System.out.println();
 	        				}
-	        				////System.out.println();
+	        				System.out.println();
         				} else {
-        					//System.out.println("Invalid word: " + guess);
+        					System.out.println("Invalid word: " + guess);
         					// TODO: shake animation and warning
         				}
         				
@@ -299,7 +262,7 @@ public class WordleGameUI {
 				if (e.y > 15 && e.y < 40 && e.x > 15 && e.x < 90) {
 					setVisible(false);
 					// TODO: WordleMenuUI = new WordleMenuUI(WordlePlayer player);
-					WordleMenuUI menuUI = new WordleMenuUI();
+					WordleMenuUI menuUI = new WordleMenuUI(Wordle.player.getTheme());
 					WordleUI.startMenu(menuUI);
 				}
 
@@ -320,7 +283,10 @@ public class WordleGameUI {
 		// Event loop
 		shell.open();
 		while( !shell.isDisposed())
-			if(!display.readAndDispatch()) {		
+			if(!display.readAndDispatch()) {	
+				if (game.gameIsOver()) {
+					WordleUI.endGame();
+				}
 			}
 		display.dispose();
 	}
@@ -338,27 +304,67 @@ public class WordleGameUI {
 		Font font = new Font(shell.getDisplay(), new FontData("Times New Roman", 40, SWT.BOLD));
 		e.gc.setFont(font);		
 		
-		
-		// Iterate over each cell in the input array
-		for (int x=0; x<5; x++) {
-			for (int j=0; j<6; j++) {
-				// Check if cell is occupied
-				if (input[x][j] != '?') {
-					
-					// Update the square
-					Image character = new Image(shell.getDisplay(), "./images/" + input[x][j] + "/" + input[x][j] + "Black.png");
-					if (rowSubmitted[j] == true) {		
-						 if (game.checkChar(input[x][j], x) == -1 ) {
-							 character = new Image(shell.getDisplay(), "./images/" + input[x][j] + "/" + input[x][j] + "Gray.png");
-						 }
-						 if (game.checkChar(input[x][j], x) == 0 ) {
-							 character = new Image(shell.getDisplay(), "./images/" + input[x][j] + "/" + input[x][j] + "Yellow.png");
-						 }
-						 if (game.checkChar(input[x][j], x) == 1 ) {
-							 character = new Image(shell.getDisplay(), "./images/" + input[x][j] + "/" + input[x][j] + "Green.png");
-						 }
-					} 
-					e.gc.drawImage(character, 120 + (70 * x), 60 + (70 * j));
+		if (game.getMode() == "DORDLE") {
+			// Iterate over each cell in the input array
+			for (int x=0; x<5; x++) {
+				for (int j=0; j<7; j++) {
+					// Check if cell is occupied
+					if (input[x][j] != '?') {
+						// Update the left side
+						Image character = new Image(shell.getDisplay(), "./images/" + input[x][j] + "/" + input[x][j] + "Black.png");
+						if (rowSubmitted[j] == true) {		
+							 if (game.checkChar(input[x][j], x) == -1 ) {
+								 character = new Image(shell.getDisplay(), "./images/" + input[x][j] + "/" + input[x][j] + "Gray.png");
+							 }
+							 if (game.checkChar(input[x][j], x) == 0 ) {
+								 character = new Image(shell.getDisplay(), "./images/" + input[x][j] + "/" + input[x][j] + "Yellow.png");
+							 }
+							 if (game.checkChar(input[x][j], x) == 1 ) {
+								 character = new Image(shell.getDisplay(), "./images/" + input[x][j] + "/" + input[x][j] + "Green.png");
+							 }
+						} 
+						int width = character.getImageData().width;
+						int height = character.getImageData().height;
+						e.gc.drawImage(character, 0, 0, width, height, 30 + (50 * x), 60 + (50 * j), (int) (width * 0.8), (int) (height * 0.8));
+						
+						// Update the right side
+						if (rowSubmitted[j] == true) {		
+							 if (game.checkSecondChar(input[x][j], x) == -1 ) {
+								 character = new Image(shell.getDisplay(), "./images/" + input[x][j] + "/" + input[x][j] + "Gray.png");
+							 }
+							 if (game.checkSecondChar(input[x][j], x) == 0 ) {
+								 character = new Image(shell.getDisplay(), "./images/" + input[x][j] + "/" + input[x][j] + "Yellow.png");
+							 }
+							 if (game.checkSecondChar(input[x][j], x) == 1 ) {
+								 character = new Image(shell.getDisplay(), "./images/" + input[x][j] + "/" + input[x][j] + "Green.png");
+							 }
+						} 
+						e.gc.drawImage(character, 0, 0, width, height, 315 + (50 * x), 60 + (50 * j), (int) (width * 0.8), (int) (height * 0.8));
+					}
+				}
+			}
+		} else {
+	 		// Iterate over each cell in the input array
+			for (int x=0; x<5; x++) {
+				for (int j=0; j<6; j++) {
+					// Check if cell is occupied
+					if (input[x][j] != '?') {
+						
+						// Update the square
+						Image character = new Image(shell.getDisplay(), "./images/" + input[x][j] + "/" + input[x][j] + "Black.png");
+						if (rowSubmitted[j] == true) {		
+							 if (game.checkChar(input[x][j], x) == -1 ) {
+								 character = new Image(shell.getDisplay(), "./images/" + input[x][j] + "/" + input[x][j] + "Gray.png");
+							 }
+							 if (game.checkChar(input[x][j], x) == 0 ) {
+								 character = new Image(shell.getDisplay(), "./images/" + input[x][j] + "/" + input[x][j] + "Yellow.png");
+							 }
+							 if (game.checkChar(input[x][j], x) == 1 ) {
+								 character = new Image(shell.getDisplay(), "./images/" + input[x][j] + "/" + input[x][j] + "Green.png");
+							 }
+						} 
+						e.gc.drawImage(character, 120 + (70 * x), 60 + (70 * j));
+					}
 				}
 			}
 		}
@@ -373,11 +379,31 @@ public class WordleGameUI {
 	 * (Ryan Rizzo)
 	 */
 	private void drawInputRectangles(PaintEvent e) {
-		// Iterate over 5 columns and 6 rows
-		for (int i=0; i<5; i++) {
-			for (int j=0; j<6; j++) {
-				Image empty = new Image(shell.getDisplay(), "./images/empty.png");
-				e.gc.drawImage(empty, 120 + (70 * i), 60 + (70 * j));
+		if (game.getMode() == "DORDLE") {
+			// Iterate over 5 columns and 6 rows
+			for (int i=0; i<5; i++) {
+				for (int j=0; j<7; j++) {
+					Image empty = new Image(shell.getDisplay(), "./images/empty.png");
+					int width = empty.getImageData().width;
+					int height = empty.getImageData().height;
+					e.gc.drawImage(empty, 0, 0, width, height, 30 + (50 * i), 60 + (50 * j), (int) (width * 0.8), (int) (height * 0.8));
+				}
+			}
+			for (int i=0; i<5; i++) {
+				for (int j=0; j<7; j++) {
+					Image empty = new Image(shell.getDisplay(), "./images/empty.png");
+					int width = empty.getImageData().width;
+					int height = empty.getImageData().height;
+					e.gc.drawImage(empty, 0, 0, width, height, 315 + (50 * i), 60 + (50 * j), (int) (width * 0.8), (int) (height * 0.8));
+				}
+			}
+		} else {
+			// Iterate over 5 columns and 6 rows
+			for (int i=0; i<5; i++) {
+				for (int j=0; j<6; j++) {
+					Image empty = new Image(shell.getDisplay(), "./images/empty.png");
+					e.gc.drawImage(empty, 120 + (70 * i), 60 + (70 * j));
+				}
 			}
 		}
 		canvas.redraw();
@@ -414,7 +440,7 @@ public class WordleGameUI {
 				x=0;
 				offset = 133;
 			}
-			////System.out.println(game.getCharStatus().get("p"));
+			//System.out.println(game.getCharStatus().get("p"));
 			Color charColor = WordleUI.getThemeColors(game.getTheme())[WordleUI.KEY_FILL_COLOR];
 			if (game.getCharStatus().get(qwerty[i]) == -1) {
 				charColor = new Color(58,58,60);
@@ -468,7 +494,6 @@ public class WordleGameUI {
 
 private void drawAnimation(PaintEvent e) {
 		int time = Math.abs(((int) System.currentTimeMillis()/100));
-		////System.out.println(WordleUI.SHELL_HEIGHT - ((time - 400) % WordleUI.SHELL_HEIGHT));
 		
 		Image background = new Image(shell.getDisplay(), "./images/background.png");
 		e.gc.drawImage(background, 0,WordleUI.SHELL_HEIGHT - (WordleUI.SHELL_HEIGHT + time) % (WordleUI.SHELL_HEIGHT * 2));

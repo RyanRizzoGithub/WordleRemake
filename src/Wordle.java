@@ -10,11 +10,15 @@ public class Wordle {
 	protected static WordlePlayer player;
 	protected static ArrayList<WordlePlayer> players = new ArrayList<>();
 	
-	public static void main(String[] args) {		
+	public static void main(String[] args) {	
+		player = new WordlePlayer("Guest",  "Password",new File( "./txt/guest.txt"));
+		player.setBackground(0);
+		player.setShirt(1);
+		player.setFace(2);
 		playClip();
 		loadPlayers();
 		printPlayers();
-		WordleMenuUI menuUI = new WordleMenuUI();
+		WordleMenuUI menuUI = new WordleMenuUI(WordleUI.DARK_THEME);
 		WordleUI.startMenu(menuUI);
 	}
 	

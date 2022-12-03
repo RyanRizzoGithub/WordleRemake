@@ -21,7 +21,6 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
-import com.swtdesigner.*;
 
 
 public class WordleLeaderboardUI {
@@ -71,38 +70,21 @@ public class WordleLeaderboardUI {
 		shell.setText("Leaderboard");
 		shell.setLayout(new GridLayout(2, false));
 
-		Composite comp = new Composite(shell, SWT.NONE);
+		Composite comp = new Composite(shell, SWT.CENTER);
 		GridLayout grid = new GridLayout();
 		grid.numColumns = 1;
 		comp.setLayout(grid);
 		
-		Canvas canvas = new Canvas(comp, SWT.NONE);
+		//Canvas canvas = new Canvas(comp, SWT.NONE);
 		
-		int playerCount = 0;
+		int place = 0;
 		
 		for (WordlePlayer p : Wordle.players) {
-			playerCount++;
+			place++;
 			
-			Label label = new Label(comp, SWT.RIGHT);
-			label.setText("" + p.getName());
+			Label label = new Label(comp, SWT.CENTER);
+			label.setText(place + ":\t" + p.getName());
 			
-			final int innerPlayerCount = playerCount;
-			
-			canvas.addPaintListener(e -> {
-				e.gc.setBackground(new Color(50, 50, 50));
-
-				// Set color of background
-				canvas.setBackground(colors[p.getBackground()]);
-
-				// Set the color of the shirt
-				e.gc.setBackground(colors[p.getShirt()]);
-				e.gc.fillOval(35, (80 + 50 * innerPlayerCount), 120, 120);
-
-				// Set the color of the face
-				e.gc.setBackground(colors[p.getFace()]);
-				e.gc.fillOval(60, 30 + (50 * innerPlayerCount), 70, 70);
-
-			});
 		}
 
 /*
@@ -137,3 +119,7 @@ public class WordleLeaderboardUI {
 */
 	}	
 }
+
+
+
+
