@@ -1,7 +1,65 @@
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class Wordle {
-	public static void main(String[] args) {
-		WordleUI ui = new WordleUI();
-		ui.start();
+	
+	protected static WordlePlayer player;
+	protected static ArrayList<WordlePlayer> players = new ArrayList<>();
+	
+	public static void main(String[] args) {		
+		playClip();
+		loadPlayers();
+		printPlayers();
+		WordleMenuUI menuUI = new WordleMenuUI();
+		WordleUI.startMenu(menuUI);
+	}
+	
+
+	public static void playClip() {
+		new Thread(new Runnable() {
+			public void run() {
+		    	try {
+		    		File f = new File("./Audio/Theme.wav");
+		    		AudioInputStream audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());  
+		    		Clip clip = AudioSystem.getClip();
+		    		clip.open(audioIn);
+		    		clip.loop(Clip.LOOP_CONTINUOUSLY);
+		    	} catch (Exception e){
+		    		
+		    	}
+			}
+		}).start();
+    }
+	
+	private static void loadPlayers() {
+		File dir = new File("./Players/");
+		File[] files = dir.listFiles();
+		
+		if (files != null) {
+			for(File file : files) {
+				ObjectInputStream ios;
+				try {
+					ios = new ObjectInputStream(new FileInputStream(file));
+					WordlePlayer temp = (WordlePlayer) ios.readObject();
+					players.add(temp);
+				} catch (IOException | ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		}
+		
+		Collections.sort(players);
+	}
+	
+	public static void printPlayers() {
+		for (WordlePlayer p : players) {
+			p.printStats();
+		}
 	}
 }
