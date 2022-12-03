@@ -172,6 +172,11 @@ public class WordleMenuUI {
 				// If MODE button
 				else if (e.x > 210 && e.x < 390 && e.y > 370 && e.y < 420) WordleUI.startMode();
 				
+				// If LEADERBOARD button
+				else if (e.x > 210 && e.x < 390 && e.y > 440 && e.y < 490) {
+					WordleUI.startLeaderboard();
+				}
+				
 				// If THEME button
 				else if (e.x > 210 && e.x < 390 && e.y > 510 && e.y < 560) theme++;
 
