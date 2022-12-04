@@ -11,7 +11,7 @@ public class Wordle {
 	protected static ArrayList<WordlePlayer> players = new ArrayList<>();
 	
 	public static void main(String[] args) {	
-		player = new WordlePlayer("Guest",  "Password",new File( "./txt/guest.txt"));
+		player = new WordlePlayer("Guest",  "Password", new File( "./txt/guest.txt"));
 		player.setBackground(0);
 		player.setShirt(1);
 		player.setFace(2);

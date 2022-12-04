@@ -3,9 +3,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 public class WordleModeUI {
 
@@ -49,11 +50,12 @@ public class WordleModeUI {
 		shell.setLayout(new GridLayout(2, false));
 		
 		Label lblMode = new Label(shell, SWT.NONE);
-		lblMode.setFont(SWTResourceManager.getFont(".AppleSystemUIFont", 14, SWT.BOLD));
+		Font font = new Font(shell.getDisplay(), new FontData(".AppleSystemUIFont", 14, SWT.BOLD));
+		lblMode.setFont(font);
 		lblMode.setText("Mode...");
 		
 		Label lblDescription = new Label(shell, SWT.NONE);
-		lblDescription.setFont(SWTResourceManager.getFont(".AppleSystemUIFont", 14, SWT.BOLD));
+		lblDescription.setFont(font);
 		GridData gd_lblDescription = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_lblDescription.widthHint = 396;
 		lblDescription.setLayoutData(gd_lblDescription);

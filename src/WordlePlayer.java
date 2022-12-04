@@ -33,8 +33,12 @@ public class WordlePlayer implements Comparable<WordlePlayer>, Serializable {
 	public WordlePlayer(String name, String password, File file) {
 		this.file = file;
 		
+		if (name.compareTo("Guest") == 0) {
+			file.delete();
+		}
+		
 		try {
-			if (file.createNewFile()) {
+			if ((name.compareTo("guest") != 0 || name.compareTo("Guest") != 0) && file.createNewFile()) {
 				this.historyWins = new ArrayList<>();
 				this.historyMoves = new ArrayList<>();
 				this.name = name;
