@@ -38,11 +38,10 @@ public class WordleEndUI {
 
 	public void start() {
 		Display display = Display.getDefault();
+		gameUI = WordleGame.getGameUI();
 		createContents();
 		shell.open();
 		shell.layout();
-
-		gameUI = WordleGame.getGameUI();
 
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
@@ -67,7 +66,25 @@ public class WordleEndUI {
 		displayStats();
 		displayGuessDistr();
 		createButtons();
+		
+		if(!Wordle.player.wonLastGame()) {
+			displayWord();
+		}
 
+	}
+	
+	/*
+	 * This method displays the word if the user lost the game.
+	 */
+	private void displayWord() {
+		
+		Font font = new Font(shell.getDisplay(), new FontData("Arial", 15, SWT.BOLD));
+
+		// statistics label
+		Label statsLabel = new Label(canvas, SWT.FILL);
+		statsLabel.setText("Word: " + gameUI.getWord().toUpperCase());
+		statsLabel.setBounds(200, 350, 500, 50);
+		statsLabel.setFont(font);
 	}
 
 	/*

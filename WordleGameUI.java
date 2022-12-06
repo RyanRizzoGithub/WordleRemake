@@ -294,13 +294,14 @@ public class WordleGameUI {
 				if(flag && game.gameIsOver()) {
 					flag = false;
 					WordleUI.endGame();
-					String copyString = generateShareString();
-					StringSelection stringSelectionObj = new StringSelection(copyString);
-					Clipboard clipboardObj = Toolkit.getDefaultToolkit().getSystemClipboard();
-					clipboardObj.setContents(stringSelectionObj, null);
 				}
 			}
 		display.dispose();
+	}
+	
+	// @Katelen Tellez added
+	public String getWord() {
+		return game.word;
 	}
 
 
