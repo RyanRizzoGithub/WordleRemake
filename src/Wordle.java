@@ -38,6 +38,10 @@ public class Wordle {
 		}).start();
     }
 	
+	/**
+	 * Loads all the player profiles
+	 * @author Gregory Jenkins
+	 */
 	public static void loadPlayers() {
 		File dir = new File("./Players/");
 		File[] files = dir.listFiles();
@@ -60,6 +64,10 @@ public class Wordle {
 		Collections.sort(players);
 	}
 	
+	/**
+	 * Prints the stats of all players to the console.
+	 * Used for testing.
+	 */
 	public static void printPlayers() {
 		for (WordlePlayer p : players) {
 			p.printStats();
