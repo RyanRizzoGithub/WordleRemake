@@ -5,11 +5,22 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * AUTHOR(S):	Gregory Jenkins & Ryan Rizzo
+ * FILE:		Wordle.java
+ * CLASS:		CSC 335 - Final Project
+ * DATE:		12/6/22
+ * PURPOSE:		Houses the main method and some helper functions
+ */
 public class Wordle {
-	
 	protected static WordlePlayer player;
 	protected static ArrayList<WordlePlayer> players = new ArrayList<>();
 	
+	/** - - - - - - MAIN - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	 * Initializes and starts the game
+	 * @param String[] args
+	 * @author Ryan Rizzo
+	 */
 	public static void main(String[] args) {	
 		player = new WordlePlayer("Guest",  "Password",new File( "./txt/guest.txt"));
 		player.setBackground(0);
@@ -21,7 +32,10 @@ public class Wordle {
 		WordleUI.startMenu(menuUI);
 	}
 	
-
+	/** - - - - - - PLAY CLIP - - - - - - - - - - - - - - - - - - - - - - - - - -
+	 * Plays the OST in the background continuously
+	 * @author Ryan Rizzo
+	 */
 	public static void playClip() {
 		new Thread(new Runnable() {
 			public void run() {
@@ -38,7 +52,7 @@ public class Wordle {
 		}).start();
     }
 	
-	/**
+	/** - - - - - - LOAD PLAYERS - - - - - - - - - - - - - - - - - - - - - - - -
 	 * Loads all the player profiles
 	 * @author Gregory Jenkins
 	 */
@@ -61,13 +75,12 @@ public class Wordle {
 				
 			}
 		}
-		
 		Collections.sort(players);
 	}
 	
-	/**
+	/** - - - - - - PRINT PLAYERS - - - - - - - - - - - - - - - - - - - - - -
 	 * Prints the stats of all players to the console.
-	 * Used for testing.
+	 * @author Gregory Jenkins
 	 */
 	public static void printPlayers() {
 		for (WordlePlayer p : players) {
