@@ -168,10 +168,6 @@ public class WordleGame {
 		return guessIsCorrect;
 	}
 	
-	public boolean guessIsCorrect() {
-		return guessCorrect;
-	}
-	
 	/** - - - - - - CHECK CHAR - - - - - - - - - - - - - - - - - - - - - - - -
 	 * Checks the validity of a single character for the first word
 	 * @param char c
