@@ -33,6 +33,7 @@ public class WordleGameUI {
 	// @Qianwen Wang added
 	private Animate animate = new Animate();
 	private int x = 0;
+	private int curX = 0;
 
 	public WordleGameUI(WordleGame game) {
 		display = Display.getDefault();
@@ -141,7 +142,9 @@ public class WordleGameUI {
 						if (guess.equals(game.word)) {
 							// @Qianwen Wang added
 							// TODO: add wave, mode 4
-							game.setOver();
+							animate.setWin(row);
+							if(x - curX >=60)
+								game.setOver();
 						}
 
 						// Check if word is in guess dictionary
@@ -150,8 +153,9 @@ public class WordleGameUI {
 							// @Qianwen Wang added
 							// Add mode 3, fold animation
 							for (int i = 0; i < 5; i++) {
-								animate.updateValid(row, i);
+								animate.updateValid(i, row);
 							}
+							curX = x;
 
 							rowSubmitted[row] = true;
 							row++;
@@ -185,10 +189,8 @@ public class WordleGameUI {
 							// @Qianwen Wang added
 							// Add mode 2, shake
 							for (int i = 0; i < 5; i++) {
-								animate.updateInvalid(col - 1, i);
+								animate.updateInvalid(i, row);
 							}
-
-							// TODO: shake animation and warning
 						}
 					}
 				}
@@ -213,6 +215,7 @@ public class WordleGameUI {
 						for (int i = 0; i < qwerty.length; i++) {
 							if (e.character == qwerty[i].charAt(0)) {
 								input[col][row] = e.character;
+
 								// @Qianwen Wang added
 								animate.add(col, row);
 								col++;
@@ -264,7 +267,7 @@ public class WordleGameUI {
 							// @Qianwen Wang added
 							// Add mode 3, fold animation
 							for (int i = 0; i < 5; i++) {
-								animate.updateValid(row, i);
+								animate.updateValid(i, row);
 							}
 
 							rowSubmitted[row] = true;
@@ -297,7 +300,7 @@ public class WordleGameUI {
 							// @Qianwen Wang added
 							// Add mode 2, shake
 							for (int i = 0; i < 5; i++) {
-								animate.updateInvalid(col, i);
+								animate.updateInvalid(i, row);
 							}
 							System.out.println("Invalid word: " + guess);
 							// TODO: shake animation and warning
@@ -360,71 +363,73 @@ public class WordleGameUI {
 		display.timerExec(-1, runnable);
 		display.dispose();
 	}
-	/* - - - - - - DRAW USER INPUT - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	 * This function is responsible displaying each word that the user has guessed on the
-	 * interface
+
+	/*
+	 * - - - - - - DRAW USER INPUT - - - - - - - - - - - - - - - - - - - - - - - - -
+	 * - - - - - - - - - - This function is responsible displaying each word that
+	 * the user has guessed on the interface
 	 * 
-	 * @param e, the paint event which calls this function
-	 * (Ryan Rizzo)
+	 * @param e, the paint event which calls this function (Ryan Rizzo)
 	 */
 	private void drawUserInput(PaintEvent e) {
 		// Set the correct font
 		Font font = new Font(shell.getDisplay(), new FontData("Times New Roman", 40, SWT.BOLD));
-		e.gc.setFont(font);		
-		
-		
+		e.gc.setFont(font);
+
 		// Iterate over each cell in the input array
-		for (int x=0; x<5; x++) {
-			for (int j=0; j<6; j++) {
+		for (int x = 0; x < 5; x++) {
+			for (int j = 0; j < 6; j++) {
 				// Check if cell is occupied
 				if (input[x][j] != '?') {
-					
-					// Update the square
-					Image character = new Image(shell.getDisplay(), "./images/" + input[x][j] + "/" + input[x][j] + "Black.png");
-					if (rowSubmitted[j] == true) {		
-						 if (game.checkChar(input[x][j], x) == -1 ) {
-							 character = new Image(shell.getDisplay(), "./images/" + input[x][j] + "/" + input[x][j] + "Gray.png");
-						 }
-						 if (game.checkChar(input[x][j], x) == 0 ) {
-							 character = new Image(shell.getDisplay(), "./images/" + input[x][j] + "/" + input[x][j] + "Yellow.png");
-						 }
-						 if (game.checkChar(input[x][j], x) == 1 ) {
-							 character = new Image(shell.getDisplay(), "./images/" + input[x][j] + "/" + input[x][j] + "Green.png");
-						 }
-					} 
-					animate.draw(x,j);
-					e.gc.drawImage(character, 0, 0, 60, 60, 120 + (70 * x) - animate.get1(x, j) /3, 60 + (70 * j) - animate.get2(x, j) / 3, 60 + animate.get3(x, j) / 2, 60 + animate.get4(x, j) / 2);
 
-					//e.gc.drawImage(character, 120 + (70 * x), 60 + (70 * j));
+					// Update the square
+					Image character = new Image(shell.getDisplay(),
+							"./images/" + input[x][j] + "/" + input[x][j] + "Black.png");
+					if (rowSubmitted[j] == true) {
+						if (game.checkChar(input[x][j], x) == -1) {
+							character = new Image(shell.getDisplay(),
+									"./images/" + input[x][j] + "/" + input[x][j] + "Gray.png");
+						}
+						// @Qianwen Wang added
+						if (animate.getCurRow() == j) {
+							if(this.x - curX > 4 ) {
+							
+							if (game.checkChar(input[x][j], x) == 0) {
+								character = new Image(shell.getDisplay(),
+										"./images/" + input[x][j] + "/" + input[x][j] + "Yellow.png");
+							}
+							if (game.checkChar(input[x][j], x) == 1) {
+								character = new Image(shell.getDisplay(),
+										"./images/" + input[x][j] + "/" + input[x][j] + "Green.png");
+							}
+							}
+						}
+						else {
+							
+							if (game.checkChar(input[x][j], x) == 0) {
+								character = new Image(shell.getDisplay(),
+										"./images/" + input[x][j] + "/" + input[x][j] + "Yellow.png");
+							}
+							if (game.checkChar(input[x][j], x) == 1) {
+								character = new Image(shell.getDisplay(),
+										"./images/" + input[x][j] + "/" + input[x][j] + "Green.png");
+							}
+							
+						}
+					}
+					// @Qianwen Wang
+					animate.draw(x, j);
+					e.gc.drawImage(character, 0, 0, 60, 60, 
+							120 + (70 * x) + animate.get1(x, j),
+							60 + (70 * j) + animate.get2(x, j), 
+							60 + animate.get3(x, j), 
+							60 + animate.get4(x, j));
+
+					// e.gc.drawImage(character, 120 + (70 * x), 60 + (70 * j));
 				}
 			}
 		}
 	}
-					/*
-					 * if (animate.getState(x, j) == 2 && j ==5) { e.gc.drawImage(img[0], 0, 0, 60,
-					 * 60, 120 + (70 * x) - animate.get1(x, 0), 60 + (70 * 0), 60, 60);
-					 * e.gc.drawImage(img[1], 0, 0, 60, 60, 120 + (70 * x) - animate.get1(x, 1), 60
-					 * + (70 * 1), 60, 60); e.gc.drawImage(img[2], 0, 0, 60, 60, 120 + (70 * x) -
-					 * animate.get1(x, 2), 60 + (70 * 2), 60, 60); e.gc.drawImage(img[3], 0, 0, 60,
-					 * 60, 120 + (70 * x) - animate.get1(x, 3), 60 + (70 * 3), 60, 60);
-					 * e.gc.drawImage(img[4], 0, 0, 60, 60, 120 + (70 * x) - animate.get1(x, 4), 60
-					 * + (70 * 4), 60, 60); }
-					 */
-
-					//mode 1
-					// if (animate.getState(x, j) == 1) {
-					//.gc.drawImage(character, 0, 0, 60, 60, 120 + (70 * x) - animate.get1(x, j) /3, 60 + (70 * j) - animate.get2(x, j) / 3, 60 + animate.get3(x, j) / 2, 60 + animate.get4(x, j) / 2);
-					// e.gc.drawImage(character, 120 + (70 * x) , 60 + (70 * j));
-					// }
-					// else {
-					// e.gc.drawImage(character, 120 + (70 * x)+this.x, 60 + (70 * j));
-					// }
-					// e.gc.drawImage(character, 120 + (70 * x), 60 + (70 * j));
-					
-					//e.gc.drawImage(character, 0, 0, 60, 60, 120 + (70 * x) + animate.get1(x, j),
-					//		60 + (70 * j) + animate.get2(x, j), 60 + animate.get3(x, j), 60 + animate.get4(x, j));
-
-
 	/*
 	 * - - - - - - DRAW INPUT RECTANGLES - - - - - - - - - - - - - - - - - - - - - -
 	 * - - - - - - - - - - - This function is responsible displaying the rectangles
@@ -552,22 +557,43 @@ public class WordleGameUI {
  * 
  * @param e, the paint event which calls this function (Qianwen Wang)
  */
+
 class Animate {
 	// 1:mode 1, 2:mode 2, 3:mode 3, 4: mode 4,
 	// for mode 1 --> 5: mode 1 start to move, 6: mode 1 move back, 7: mode 1 finish
 	// move
-	// for mode 2 --> 8: mode 2 start to move, 9: mode 2 move back
+	// for mode 2 --> 8: mode 2 start to move, 9: mode 2 move right, 10: mode 2 move
+	// back
+	// for mode 3 --> 12: mode 2 start to fold,
 	private int[][] states;
 	private int[][] initialStates;
-	private int x = 0;
-
-	private int state = 0;
 	private int[][][] movement;
+	private int curRow = 0;
+	private int[] count = new int[5];
 
 	public Animate() {
-		states = new int[6][5];
-		movement = new int[6][5][4];
-		initialStates = new int[6][5];
+		states = new int[5][6];
+		movement = new int[5][6][4];
+		initialStates = new int[5][6];
+	}
+
+	public void setWin(int row) {
+		states[0][row] = 4;
+		states[1][row] = 4;
+		states[2][row] = 4;
+		states[3][row] = 4;
+		states[4][row] = 4;
+		initialStates[0][row] = 4;
+		curRow = row;
+		count[0] = 0;
+		count[1] = 0;
+		count[2] = 0;
+		count[3] = 0;
+		count[4] = 0;
+	}
+
+	public int getCurRow() {
+		return curRow;
 	}
 
 	public int getState(int col, int row) {
@@ -586,13 +612,16 @@ class Animate {
 	}
 
 	public void updateValid(int col, int row) {
-		// states[col][row] = 3;
-		// initialStates[col][row] = 3;
+		states[col][row] = 3;
+		initialStates[col][row] = 3;
+		curRow = row;
 	}
 
 	public void updateInvalid(int col, int row) {
 		states[col][row] = 2;
 		initialStates[col][row] = 2;
+		curRow = row;
+
 	}
 
 	public void draw(int col, int row) {
@@ -601,44 +630,297 @@ class Animate {
 			states[col][row] = 5;
 		}
 		if (states[col][row] == 5) {
-			if (movement[col][row][0] >= 12) {
+			if (movement[col][row][0] <= -6) {
 				states[col][row] = 6;
 			}
-			movement[col][row][0] = movement[col][row][0] + 3;
-			movement[col][row][1] = movement[col][row][1] + 3;
-			movement[col][row][2] = movement[col][row][2] + 3;
-			movement[col][row][3] = movement[col][row][3] + 3;
+			movement[col][row][0] = movement[col][row][0] - 1;
+			movement[col][row][1] = movement[col][row][1] - 1;
+			movement[col][row][2] = movement[col][row][2] + 2;
+			movement[col][row][3] = movement[col][row][3] + 2;
 		}
 		if (states[col][row] == 6) {
-			if (movement[col][row][0] <= 0) {
+			if (movement[col][row][0] >= 0) {
 				states[col][row] = 7;
 			}
-			movement[col][row][0] = movement[col][row][0] - 3;
-			movement[col][row][1] = movement[col][row][1] - 3;
-			movement[col][row][2] = movement[col][row][2] - 3;
-			movement[col][row][3] = movement[col][row][3] - 3;
+			movement[col][row][0] = movement[col][row][0] + 1;
+			movement[col][row][1] = movement[col][row][1] + 1;
+			movement[col][row][2] = movement[col][row][2] - 2;
+			movement[col][row][3] = movement[col][row][3] - 2;
 		}
-		// mode 2: not valid words --> shake left and right 5 times
+		// mode 2: not valid words --> shake left and right
 		if (states[col][row] == 2) {
 			states[col][row] = 8;
 		}
+		// move to left
 		if (states[col][row] == 8) {
-			if (movement[col][row][0] >= 10) {
+			if (movement[0][curRow][0] <= -3) {
 				states[col][row] = 9;
 			}
-			movement[col][row][0] = movement[col][row][0] + 10;
-			movement[col][row][1] = 0;
-			movement[col][row][2] = 0;
-			movement[col][row][3] = 0;
-		} else if (states[col][row] == 9) {
-			if (movement[col][row][0] <= 0) {
+			movement[0][curRow][0] = movement[0][curRow][0] - 1;
+			movement[0][curRow][1] = 0;
+			movement[0][curRow][2] = 0;
+			movement[0][curRow][3] = 0;
+
+			movement[1][curRow][0] = movement[0][curRow][0] - 1;
+			movement[1][curRow][1] = 0;
+			movement[1][curRow][2] = 0;
+			movement[1][curRow][3] = 0;
+
+			movement[2][curRow][0] = movement[0][curRow][0] - 1;
+			movement[2][curRow][1] = 0;
+			movement[2][curRow][2] = 0;
+			movement[2][curRow][3] = 0;
+
+			movement[3][curRow][0] = movement[0][curRow][0] - 1;
+			movement[3][curRow][1] = 0;
+			movement[3][curRow][2] = 0;
+			movement[3][curRow][3] = 0;
+
+			movement[4][curRow][0] = movement[0][curRow][0] - 1;
+			movement[4][curRow][1] = 0;
+			movement[4][curRow][2] = 0;
+			movement[4][curRow][3] = 0;
+
+		}
+		// move to right
+		else if (states[col][row] == 9) {
+			if (movement[0][curRow][0] >= 3) {
 				states[col][row] = 10;
 			}
-			movement[col][row][0] = movement[col][row][0] - 10;
-			movement[col][row][1] = 0;
-			movement[col][row][2] = 0;
-			movement[col][row][3] = 0;
+			movement[0][curRow][0] = movement[0][curRow][0] + 1;
+			movement[0][curRow][1] = 0;
+			movement[0][curRow][2] = 0;
+			movement[0][curRow][3] = 0;
+
+			movement[1][curRow][0] = movement[0][curRow][0] + 1;
+			movement[1][curRow][1] = 0;
+			movement[1][curRow][2] = 0;
+			movement[1][curRow][3] = 0;
+
+			movement[2][curRow][0] = movement[0][curRow][0] + 1;
+			movement[2][curRow][1] = 0;
+			movement[2][curRow][2] = 0;
+			movement[2][curRow][3] = 0;
+
+			movement[3][curRow][0] = movement[0][curRow][0] + 1;
+			movement[3][curRow][1] = 0;
+			movement[3][curRow][2] = 0;
+			movement[3][curRow][3] = 0;
+
+			movement[4][curRow][0] = movement[0][curRow][0] + 1;
+			movement[4][curRow][1] = 0;
+			movement[4][curRow][2] = 0;
+			movement[4][curRow][3] = 0;
 		}
+		// move back
+		else if (states[col][row] == 10) {
+			movement[0][curRow][0] = movement[0][curRow][0] - 1;
+			movement[0][curRow][1] = 0;
+			movement[0][curRow][2] = 0;
+			movement[0][curRow][3] = 0;
+
+			movement[1][curRow][0] = movement[0][curRow][0] - 1;
+			movement[1][curRow][1] = 0;
+			movement[1][curRow][2] = 0;
+			movement[1][curRow][3] = 0;
+
+			movement[2][curRow][0] = movement[0][curRow][0] - 1;
+			movement[2][curRow][1] = 0;
+			movement[2][curRow][2] = 0;
+			movement[2][curRow][3] = 0;
+
+			movement[3][curRow][0] = movement[0][curRow][0] - 1;
+			movement[3][curRow][1] = 0;
+			movement[3][curRow][2] = 0;
+			movement[3][curRow][3] = 0;
+
+			movement[4][curRow][0] = movement[0][curRow][0] - 1;
+			movement[4][curRow][1] = 0;
+			movement[4][curRow][2] = 0;
+			movement[4][curRow][3] = 0;
+			if (movement[0][curRow][0] <= 5) {
+				states[col][row] = 11;
+				// setZero();
+			}
+		}
+
+		// mode 3:valid words --> fold
+		if (states[col][row] == 3) {
+			states[0][row] = 12;
+			states[1][row] = 12;
+			states[2][row] = 12;
+			states[3][row] = 12;
+			states[4][row] = 12;
+			setZero();
+		}
+		if (states[col][row] == 12) {
+			if (movement[0][curRow][1] >= 30) {
+				states[0][row] = 13;
+				states[1][row] = 13;
+				states[2][row] = 13;
+				states[3][row] = 13;
+				states[4][row] = 13;
+			}
+			// fold
+			movement[0][curRow][0] = 0;
+			movement[0][curRow][1] = movement[0][curRow][1] + 3;
+			movement[0][curRow][2] = 0;
+			movement[0][curRow][3] = movement[0][curRow][3] - 6;
+
+			movement[1][curRow][0] = 0;
+			movement[1][curRow][1] = movement[1][curRow][1] + 3;
+			movement[1][curRow][2] = 0;
+			movement[1][curRow][3] = movement[1][curRow][3] - 6;
+
+			movement[2][curRow][0] = 0;
+			movement[2][curRow][1] = movement[2][curRow][1] + 3;
+			movement[2][curRow][2] = 0;
+			movement[2][curRow][3] = movement[2][curRow][3] - 6;
+
+			movement[3][curRow][0] = 0;
+			movement[3][curRow][1] = movement[3][curRow][1] + 3;
+			movement[3][curRow][2] = 0;
+			movement[3][curRow][3] = movement[3][curRow][3] - 6;
+
+			movement[4][curRow][0] = 0;
+			movement[4][curRow][1] = movement[4][curRow][1] + 3;
+			movement[4][curRow][2] = 0;
+			movement[4][curRow][3] = movement[4][curRow][3] - 6;
+		}
+		if(states[col][row] == 13) {
+			if (movement[0][curRow][1] <= 3) {
+				states[0][row] = 14;
+				states[1][row] = 14;
+				states[2][row] = 14;
+				states[3][row] = 14;
+				states[4][row] = 14;
+			}
+			// fold
+			movement[0][curRow][0] = 0;
+			movement[0][curRow][1] = movement[0][curRow][1] - 3;
+			movement[0][curRow][2] = 0;
+			movement[0][curRow][3] = movement[0][curRow][3] + 6;
+
+			movement[1][curRow][0] = 0;
+			movement[1][curRow][1] = movement[1][curRow][1] - 3;
+			movement[1][curRow][2] = 0;
+			movement[1][curRow][3] = movement[1][curRow][3] + 6;
+
+			movement[2][curRow][0] = 0;
+			movement[2][curRow][1] = movement[2][curRow][1] - 3;
+			movement[2][curRow][2] = 0;
+			movement[2][curRow][3] = movement[2][curRow][3] + 6;
+
+			movement[3][curRow][0] = 0;
+			movement[3][curRow][1] = movement[3][curRow][1] - 3;
+			movement[3][curRow][2] = 0;
+			movement[3][curRow][3] = movement[3][curRow][3] + 6;
+
+			movement[4][curRow][0] = 0;
+			movement[4][curRow][1] = movement[4][curRow][1] - 3;
+			movement[4][curRow][2] = 0;
+			movement[4][curRow][3] = movement[4][curRow][3] + 6;
+		}
+		//mode 4
+		if (states[col][row] == 4) {
+			states[0][row] = 15;
+			states[1][row] = 15;
+			states[2][row] = 15;
+			states[3][row] = 15;
+			states[4][row] = 15;
+			setZero();
+		}
+		if(states[col][row] == 15) {
+			//1
+			if (count[0] == 0) {
+				movement[0][curRow][1] = movement[0][curRow][1] - 1;
+				if (movement[0][curRow][1] <= -10) {
+					count[0] = 1;
+				}
+			}else if (count[0] == 1) {
+				movement[0][curRow][1] = movement[0][curRow][1] + 1;
+				if (movement[0][curRow][1] >= 0) {
+					count[0] = 2;
+				}
+			}
+			//2
+			if (count[0] == 2) {
+				movement[1][curRow][1] = movement[1][curRow][1] + 1;
+				if (movement[1][curRow][1] >= 10) {
+					count[0] = 3;
+				}
+			}else if (count[0] == 3) {
+				movement[1][curRow][1] = movement[1][curRow][1] - 1;
+				if (movement[1][curRow][1] <= 0) {
+					count[0] = 4;
+				}
+			}
+			//3
+			if (count[0] == 4) {
+				movement[2][curRow][1] = movement[2][curRow][1] + 1;
+				if (movement[2][curRow][1] >= 10) {
+					count[0] = 5;
+				}
+			}else if (count[0] == 5) {
+				movement[2][curRow][1] = movement[2][curRow][1] - 1;
+				if (movement[2][curRow][1] <= 0) {
+					count[0] = 6;
+				}
+			}
+			//4
+			if (count[0] == 6) {
+				movement[3][curRow][1] = movement[3][curRow][1] + 1;
+				if (movement[3][curRow][1] >= 10) {
+					count[0] = 7;
+				}
+			}else if (count[0] == 7) {
+				movement[3][curRow][1] = movement[3][curRow][1] - 1;
+				if (movement[3][curRow][1] <= 0) {
+					count[0] = 8;
+				}
+			}
+			//5
+			if (count[0] == 8) {
+				movement[4][curRow][1] = movement[4][curRow][1] + 1;
+				if (movement[4][curRow][1] >= 10) {
+					count[0] = 9;
+				}
+			}else if (count[0] == 9) {
+				movement[4][curRow][1] = movement[4][curRow][1] - 1;
+				if (movement[4][curRow][1] <= 0) {
+					count[0] = 10;
+				}
+			}
+		}
+		
+	}
+
+	private void setZero() {
+		movement[0][curRow][0] = 0;
+		movement[0][curRow][1] = 0;
+		movement[0][curRow][2] = 0;
+		movement[0][curRow][3] = 0;
+
+		movement[1][curRow][0] = 0;
+		movement[1][curRow][1] = 0;
+		movement[1][curRow][2] = 0;
+		movement[1][curRow][3] = 0;
+
+		movement[2][curRow][0] = 0;
+		movement[2][curRow][1] = 0;
+		movement[2][curRow][2] = 0;
+		movement[2][curRow][3] = 0;
+
+		movement[3][curRow][0] = 0;
+		movement[3][curRow][1] = 0;
+		movement[3][curRow][2] = 0;
+		movement[3][curRow][3] = 0;
+
+		movement[4][curRow][0] = 0;
+		movement[4][curRow][1] = 0;
+		movement[4][curRow][2] = 0;
+		movement[4][curRow][3] = 0;
+
 	}
 
 	public int get1(int col, int row) {
