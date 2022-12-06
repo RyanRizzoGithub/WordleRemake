@@ -1,5 +1,5 @@
 
-/*
+/**
  * This class displays the player statistics, can start a new game, 
  * can return to the main menu, and can utilize the share function.
  * 
@@ -8,29 +8,15 @@
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Composite;
-
 import java.io.IOException;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
 
 public class WordleEndUI {
@@ -38,6 +24,11 @@ public class WordleEndUI {
 	protected Shell shell;
 	private WordleGameUI gameUI;
 	private Canvas canvas;
+	private String word;
+	
+	public WordleEndUI(String word) {
+		this.word = word;
+	}
 
 	public void start() {
 		Display display = Display.getDefault();
@@ -45,7 +36,9 @@ public class WordleEndUI {
 		shell.open();
 		shell.layout();
 
+		System.out.println("GETTING THE GAME UI");
 		gameUI = WordleGame.getGameUI();
+		System.out.println("GOT THE GAME UI");
 
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
@@ -54,7 +47,7 @@ public class WordleEndUI {
 		}
 	}
 
-	/*
+	/**
 	 * This method creates the displayed contents of the statistics page.
 	 */
 	protected void createContents() {
@@ -70,10 +63,29 @@ public class WordleEndUI {
 		displayStats();
 		displayGuessDistr();
 		createButtons();
+		
+		if(!Wordle.player.wonLastGame()) {
+			displayWord();
+		}
 
 	}
+	
+	/**
+	 * This method displays the word if the user lost the game.
+	 */
+	private void displayWord() {
+		System.out.println("DISPLAYING WORD");
+		
+		Font font = new Font(shell.getDisplay(), new FontData("Arial", 15, SWT.BOLD));
 
-	/*
+		// statistics label
+		Label statsLabel = new Label(canvas, SWT.FILL);
+		statsLabel.setText("Word: " + this.word.toUpperCase());
+		statsLabel.setBounds(200, 350, 500, 50);
+		statsLabel.setFont(font);
+	}
+
+	/**
 	 * This method displays the statistics of the current player.
 	 */
 	private void displayStats() {
@@ -98,7 +110,7 @@ public class WordleEndUI {
 
 		// player win %
 		Label winPercentage = new Label(canvas, SWT.NONE);
-		winPercentage.setText("" + Wordle.player.getWinPercentage());
+		winPercentage.setText("" + Math.round(Wordle.player.getWinPercentage()));
 		winPercentage.setBounds(170, 50, 125, 50);
 		winPercentage.setFont(font);
 
@@ -143,7 +155,7 @@ public class WordleEndUI {
 	}
 
 	// - - - - - - - - - - guess distribution labels - - - - - - - - - - - - - -
-	/*
+	/**
 	 * This method creates the labels for the guess distribution.
 	 */
 	private void displayGuessDistr() {
@@ -253,23 +265,23 @@ public class WordleEndUI {
 		});
 
 		// New Game Button
-				Button newGameButton = new Button(canvas, SWT.PUSH | SWT.CENTER);
-				newGameButton.setText("New Game");
-				newGameButton.setBounds(175, 400, 100, 50);
-				newGameButton.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event event) {
-						WordleGame newGame;
-						try {
-							newGame = new WordleGame("WOTD");
-							WordleGameUI gameUI = new WordleGameUI(newGame);
-							shell.dispose();
-							WordleUI.startGame(gameUI);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-						
-					}
-				});
+		Button newGameButton = new Button(canvas, SWT.PUSH | SWT.CENTER);
+		newGameButton.setText("New Game");
+		newGameButton.setBounds(175, 400, 100, 50);
+		newGameButton.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				WordleGame newGame;
+				try {
+					newGame = new WordleGame("WOTD");
+					WordleGameUI gameUI = new WordleGameUI(newGame);
+					shell.dispose();
+					WordleUI.startGame(gameUI);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+			}
+		});
 
 		// Share Button
 		Button shareButton = new Button(canvas, SWT.PUSH | SWT.CENTER);

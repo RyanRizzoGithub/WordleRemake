@@ -1,10 +1,3 @@
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-
 /**
  * AUTHOR(S):	Gregory Jenkins & Ryan Rizzo
  * FILE:		Wordle.java
@@ -12,9 +5,19 @@ import java.util.Collections;
  * DATE:		12/6/22
  * PURPOSE:		Houses the main method and some helper functions
  */
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class Wordle {
+	
 	protected static WordlePlayer player;
 	protected static ArrayList<WordlePlayer> players = new ArrayList<>();
+	
 	
 	/** - - - - - - MAIN - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	 * Initializes and starts the game
@@ -32,6 +35,7 @@ public class Wordle {
 		WordleUI.startMenu(menuUI);
 	}
 	
+
 	/** - - - - - - PLAY CLIP - - - - - - - - - - - - - - - - - - - - - - - - - -
 	 * Plays the OST in the background continuously
 	 * @author Ryan Rizzo
@@ -75,6 +79,7 @@ public class Wordle {
 				
 			}
 		}
+		
 		Collections.sort(players);
 	}
 	

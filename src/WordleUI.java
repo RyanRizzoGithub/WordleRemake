@@ -1,6 +1,3 @@
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.widgets.Display;
-
 /**
  * AUTHOR(S):	Ryan Rizzo
  * FILE:		WordleHelpUI.java
@@ -8,6 +5,10 @@ import org.eclipse.swt.widgets.Display;
  * DATE:		12/6/22
  * PURPOSE:		Interface for lanuching the different UI
  */
+
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Display;
+
 public interface WordleUI {
 	// Constant for shell bounds
 	public static final int SHELL_WIDTH = 600;
@@ -30,7 +31,7 @@ public interface WordleUI {
 	
 	/** - - - - - - START MENU - - - - - - - - - - - - - - - - - - - - - - - - -
 	 * This method is responsible for starting the menu user interface
-	 * @author Ryan Rizzo
+	 * Author: Ryan Rizzo
 	 */
 	public static void startMenu(WordleMenuUI menuUI) {
 		menuUI.start();
@@ -38,7 +39,7 @@ public interface WordleUI {
 	
 	/** - - - - - - START GAME - - - - - - - - - - - - - - - - - - - - - - - - -
 	 * This method is responsible for starting the game user interface
-	 * @author Ryan Rizzo
+	 * Author: Ryan Rizzo
 	 */
 	public static void startGame(WordleGameUI gameUI) {
 		gameUI.start();
@@ -47,7 +48,7 @@ public interface WordleUI {
 	
 	/** - - - - - - START LOGIN - - - - - - - - - - - - - - - - - - - - - - - - -
 	 * This method is responsible for starting the user login interface
-	 * @author Ryan Rizzo
+	 * Author: Ryan Rizzo
 	 */
 	public static void startLogin() {
 		// Create a new login ui
@@ -58,7 +59,7 @@ public interface WordleUI {
 	
 	/** - - - - - - START MODE - - - - - - - - - - - - - - - - - - - - - - - - - -
 	 * This method is responsible for starting the mode selection user interface
-	 * @author Ryan Rizzo
+	 * Author: Ryan Rizzo
 	 */
 	public static void startMode() {
 		// Create a new mode selection ui
@@ -81,14 +82,14 @@ public interface WordleUI {
 	 * This method is responsible for starting the end screen interface
 	 * @author Ryan Rizzo
 	 */
-	public static void startEnd() {
-		WordleEndUI endUI = new WordleEndUI();
+	public static void startEnd(String word) {
+		WordleEndUI endUI = new WordleEndUI(word);
 		endUI.start();
 	}
 	
 	/** - - - - - - START LEADERBOARD - - - - - - - - - - - - - - - - - - - - - - - - -
-	 * This method is responsible for starting the leaderboard user interface
-	 * @author Gregory Jenkins
+	 * This method is responsible for starting the user login interface
+	 * Author: Gregory Jenkins
 	 */
 	public static void startLeaderboard() {
 		// Create a new login ui
@@ -97,12 +98,12 @@ public interface WordleUI {
 		leaderboardUI.open();
 	}
 	
-	/** - - - - - - GET THEME COLORS - - - - - - - - - - - - - - - - - - - - - - - - -
+	/** - - - - - - GET THEME COLORS - - - - - - - - - - - - - - - - - - -
 	 * This method is responsible for setting the colors for the interfaces,
 	 * given the theme
 	 * @param theme, int which represents which themes is being used
 	 * @return colors, an array of Color objects
-	 * @author Ryan Rizzo
+	 * @author: Ryan Rizzo
 	 */
 	public static Color[] getThemeColors(int theme) {
 		Color[] colors = new Color[4];
@@ -144,7 +145,7 @@ public interface WordleUI {
 	 * This method is responsible for returning the array of colors which are 
 	 * used in each users profile image
 	 * @return colors, an array of Color objects
-	 * @author Ryan Rizzo
+	 * Author: Ryan Rizzo
 	 */
 	public static Color[] getProfileColors() {
 		Color[] colors = new Color[16];
@@ -167,4 +168,5 @@ public interface WordleUI {
 		return colors;
 	}
 }
+
 

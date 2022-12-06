@@ -1,7 +1,15 @@
+/**
+ * AUTHOR(S):		Qianwen Wang, Katelen Tellez & Ryan Rizzo
+ * FILE:		WordleGameUI.java
+ * CLASS:		CSC 335 - Final Project
+ * DATE:		12/6/22
+ * PURPOSE:		Responsible for displaying the game state
+ */
+
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.io.IOException;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -18,14 +26,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-
-/**
- * AUTHOR(S):		Qianwen Wang, Katelen Tellez & Ryan Rizzo
- * FILE:		WordleGameUI.java
- * CLASS:		CSC 335 - Final Project
- * DATE:		12/6/22
- * PURPOSE:		Responsible for displaying the game state
- */
 public class WordleGameUI {
 	// @Ryan Rizzo added
 	private Display display;
@@ -47,7 +47,7 @@ public class WordleGameUI {
 	private Animate animate = new Animate();
 	private int x = 0;
 	private int curX = 0;
-	
+
 	/** - - - - - - WORDLE GAME UI - - - - - - - - - - - - - - - - - - - - - - - - 
 	 * WordleGameUI Constructor
 	 * @param WordleGame game
@@ -79,7 +79,7 @@ public class WordleGameUI {
 		}
 		shell.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
 	}
-	
+
 	/** - - - - - - START - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	 * Generates the content and displays the game state
 	 * @authors Qianwen Wang & Ryan Rizzo
@@ -92,7 +92,7 @@ public class WordleGameUI {
 		canvas = new Canvas(upperComp, SWT.NONE);
 		canvas.setSize(600, 1000);
 		canvas.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
-		
+
 		canvas.addPaintListener(e -> {
 			drawAnimation(e);
 
@@ -123,8 +123,7 @@ public class WordleGameUI {
 			drawUserInput(e);
 			drawKeyboard(e);
 		});
-		
-		// Add key listener to take input from keyboard
+
 		canvas.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
 				String[] qwerty = { "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "a", "s", "d", "f", "g", "h", "j",
@@ -222,6 +221,7 @@ public class WordleGameUI {
 					if (col != 5 && row != 7) {
 						for (int i = 0; i < qwerty.length; i++) {
 							if (e.character == qwerty[i].charAt(0)) {
+								System.out.println("ADDING " + e.character + " to input[" + col + "][" + row + "]");
 								input[col][row] = e.character;
 
 								// @Qianwen Wang added
@@ -238,8 +238,7 @@ public class WordleGameUI {
 			public void keyReleased(KeyEvent e) {
 			}
 		});
-		
-		// Add mouse listener to take input from on-screen keyboard
+
 		canvas.addMouseListener(new MouseListener() {
 			public void mouseDown(MouseEvent e) {
 				String[] qwerty = { "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "a", "s", "d", "f", "g", "h", "j",
@@ -268,17 +267,7 @@ public class WordleGameUI {
 							guess = guess + Character.toString(input[i][guessNum]).toUpperCase();
 						}
 						if (guess.equals(game.getWord())) {
-							// @Qianwen Wang added
-							// add wave, mode 4
-							animate.setWin(row);
-							game.setOver();
-							game.setGuessCorrect();
-							
-							rowSubmitted[row] = true;
-							row++;
-							guessNum++;
-							game.addGuess();
-							
+
 						}
 
 						// Check if word is in guess dictionary
@@ -289,7 +278,6 @@ public class WordleGameUI {
 							for (int i = 0; i < 5; i++) {
 								animate.updateValid(i, row);
 							}
-							curX = x;
 
 							rowSubmitted[row] = true;
 							row++;
@@ -318,15 +306,15 @@ public class WordleGameUI {
 							}
 							System.out.println();
 						} else {
-							System.out.println("Invalid word: " + guess);
-							// TODO: shake animation and warning
-
 							// @Qianwen Wang added
 							// Add mode 2, shake
 							for (int i = 0; i < 5; i++) {
 								animate.updateInvalid(i, row);
 							}
+
+							System.out.println("Invalid word: " + guess);
 						}
+
 					}
 				}
 
@@ -360,8 +348,12 @@ public class WordleGameUI {
 				}
 				canvas.redraw();
 			}
-			public void mouseDoubleClick(MouseEvent e) {}
-			public void mouseUp(MouseEvent e) {}
+
+			public void mouseDoubleClick(MouseEvent e) {
+			}
+
+			public void mouseUp(MouseEvent e) {
+			}
 
 		});
 
@@ -376,19 +368,26 @@ public class WordleGameUI {
 		display.timerExec(10, runnable);
 		
 		boolean flag = true;
+		
 		while (!shell.isDisposed())
 			if (!display.readAndDispatch()) {
 				display.sleep();
 				x++;
 				if(flag && game.gameIsOver()) {
 					flag = false;
-					WordleUI.startEnd();
+					copyStats();
+					WordleUI.startEnd(game.getWord());
 				}
 				
 			}
 			
 		display.timerExec(-1, runnable);
 		display.dispose();
+	}
+	
+	// @Katelen Tellez added
+	public String getWord() {
+		return game.getWord();
 	}
 
 	/** - - - - - - DRAW USER INPUT - - - - - - - - - - - - - - - - - - - - - - - -
@@ -415,6 +414,7 @@ public class WordleGameUI {
 								character = new Image(shell.getDisplay(),
 										"./images/" + input[x][j] + "/" + input[x][j] + "Gray.png");
 							}
+
 							// @Qianwen Wang added
 							if (animate.getCurRow() == j) {
 								if (this.x - curX > 4) {
@@ -439,11 +439,15 @@ public class WordleGameUI {
 									character = new Image(shell.getDisplay(),
 											"./images/" + input[x][j] + "/" + input[x][j] + "Green.png");
 								}
+
 							}
+
 						}
 
 						int width = character.getImageData().width;
 						int height = character.getImageData().height;
+						// e.gc.drawImage(character, 0, 0, width, height, 30 + (50 * x), 60 + (50 * j),
+						// (int) (width * 0.8), (int) (height * 0.8));
 
 						// @Qianwen Wang
 						animate.setModel(height);
@@ -520,17 +524,7 @@ public class WordleGameUI {
 							// @Qianwen Wang added
 							if (animate.getCurRow() == j) {
 								if(this.x - curX > 4 ) {
-									if (game.checkChar(input[x][j], x) == 0) {
-										character = new Image(shell.getDisplay(),
-												"./images/" + input[x][j] + "/" + input[x][j] + "Yellow.png");
-									}
-									if (game.checkChar(input[x][j], x) == 1) {
-										character = new Image(shell.getDisplay(),
-												"./images/" + input[x][j] + "/" + input[x][j] + "Green.png");
-									}
-								}
-							}
-							else {
+								
 								if (game.checkChar(input[x][j], x) == 0) {
 									character = new Image(shell.getDisplay(),
 											"./images/" + input[x][j] + "/" + input[x][j] + "Yellow.png");
@@ -538,7 +532,20 @@ public class WordleGameUI {
 								if (game.checkChar(input[x][j], x) == 1) {
 									character = new Image(shell.getDisplay(),
 											"./images/" + input[x][j] + "/" + input[x][j] + "Green.png");
-								}	
+								}
+								}
+							}
+							else {
+								
+								if (game.checkChar(input[x][j], x) == 0) {
+									character = new Image(shell.getDisplay(),
+											"./images/" + input[x][j] + "/" + input[x][j] + "Yellow.png");
+								}
+								if (game.checkChar(input[x][j], x) == 1) {
+									character = new Image(shell.getDisplay(),
+											"./images/" + input[x][j] + "/" + input[x][j] + "Green.png");
+								}
+								
 							}
 						}
 						// @Qianwen Wang
@@ -593,13 +600,6 @@ public class WordleGameUI {
 		canvas.redraw();
 	}
 
-	/*
-	 * - - - - - - DRAW KEYBOARD - - - - - - - - - - - - - - - - - - - - - - - - - -
-	 * - - - - - - - - - This function is responsible displaying the keyboard on the
-	 * interface
-	 * 
-	 * @param e, the paint event which calls this function (Ryan Rizzo)
-	 */
 	/** - - - - - - DRAW KEYBOARD - - - - - - - - - - - - - - - - - - - - - - - - -
 	 * Displays the on-screen keyboard
 	 * @param PaintEvent e
@@ -688,7 +688,7 @@ public class WordleGameUI {
 		e.gc.drawImage(background, 0,
 				(WordleUI.SHELL_HEIGHT - 1500) - (WordleUI.SHELL_HEIGHT + time) % (WordleUI.SHELL_HEIGHT * 2));
 	}
-	
+
 	/** - - - - - - SET VISIBLE - - - - - - - - - - - - - - - - - - - - - - - -
 	 * Sets the visibility of the game ui
 	 * @param boolean vis
@@ -702,33 +702,25 @@ public class WordleGameUI {
 		
 		for (int j=0; j<7; j++) {
 			for (int x=0; x<5; x++) {
-				System.out.println("x: " + x + " j: " + j);
 				// Check if cell is occupied
 				if (input[x][j] != '?') {
-					System.out.println("NOT ?");
 
 					// Update the square
 					if (rowSubmitted[j] == true) {		
-						System.out.println("ROW SUBMITTED");
 						//Incorrect letter
 						if (game.checkChar(input[x][j], x) == -1 ) {
 							output += "⬜";
-							System.out.println("GRAY");
 						}
 						//Incorrect location
 						if (game.checkChar(input[x][j], x) == 0 ) {
 							output += "🟨";
-							System.out.println("YELLOW");
 						}
 						//Correct letter and location
 						if (game.checkChar(input[x][j], x) == 1 ) {
 							output += "🟩";
-							System.out.println("GREEN");
 						}
 					} 
-				} else {
-					System.out.println(input[x][j]);
-				}
+				} 
 			}
 			output += "\n";
 		}
@@ -748,11 +740,10 @@ public class WordleGameUI {
  * - - - - - - INPUT ANIMATOR - - - - - - - - - - - - - - - - - - - - - - - - -
  * - - - - - - - - - - This function is change the movement of keyboard mode 1:
  * enter the input -- get bigger and smaller mode 2: not valid words -- shake
- * left and right mode 3: enter valid words -- fold in the middle and
+ * left and right 5 times mode 3: enter valid words -- fold in the middle and
  * replace with new one that bigger from middle mode 4: when win -- wave
  * 
- * @param e, the paint event which calls this function 
- * (Qianwen Wang)
+ * @param e, the paint event which calls this function (Qianwen Wang)
  */
 
 class Animate {
@@ -767,6 +758,7 @@ class Animate {
 	private int[][][] movement;
 	private int curRow = 0;
 	private int[] count = new int[5];
+	private String model = "A";
 	private int size = 30;
 
 	public Animate() {
@@ -774,6 +766,7 @@ class Animate {
 		movement = new int[5][7][4];
 		initialStates = new int[5][7];
 	}
+
 	/**
 	 * set model for duoble screen
 	 * @param height
@@ -799,6 +792,7 @@ class Animate {
 		count[3] = 0;
 		count[4] = 0;
 	}
+
 	/**
 	 * get current row's index
 	 * @return
@@ -806,6 +800,11 @@ class Animate {
 	public int getCurRow() {
 		return curRow;
 	}
+
+	public int getState(int col, int row) {
+		return initialStates[col][row];
+	}
+
 	/**
 	 * add input state to list and set up their movement
 	 * @param col
@@ -821,6 +820,7 @@ class Animate {
 			movement[col][row][3] = 0;
 		}
 	}
+
 	/**
 	 * update if the word is valid
 	 * @param col
@@ -831,6 +831,7 @@ class Animate {
 		initialStates[col][row] = 3;
 		curRow = row;
 	}
+
 	/**
 	 * update if the word is invalid
 	 * @param col
@@ -842,6 +843,7 @@ class Animate {
 		curRow = row;
 
 	}
+
 	/**
 	 * draw the animation of each kind of movement
 	 * @param col
@@ -977,6 +979,7 @@ class Animate {
 			setZero();
 		}
 		if (states[col][row] == 12) {
+			//change here TODO:
 			if (movement[0][curRow][1] >= size) {
 				states[0][row] = 13;
 				states[1][row] = 13;
@@ -1044,7 +1047,7 @@ class Animate {
 			movement[4][curRow][2] = 0;
 			movement[4][curRow][3] = movement[4][curRow][3] + 6;
 		}
-		// mode 4 wave
+		// mode 4
 		if (states[col][row] == 4) {
 			states[0][row] = 15;
 			states[1][row] = 15;
@@ -1117,9 +1120,7 @@ class Animate {
 		}
 
 	}
-	/**
-	 * set their movement to initial
-	 */
+	
 	private void setZero() {
 		movement[0][curRow][0] = 0;
 		movement[0][curRow][1] = 0;
@@ -1147,6 +1148,7 @@ class Animate {
 		movement[4][curRow][3] = 0;
 
 	}
+
 	/**
 	 * get desX
 	 * @param col
@@ -1156,6 +1158,7 @@ class Animate {
 	public int get1(int col, int row) {
 		return movement[col][row][0];
 	}
+
 	/**
 	 * get setY
 	 * @param col
@@ -1165,6 +1168,7 @@ class Animate {
 	public int get2(int col, int row) {
 		return movement[col][row][1];
 	}
+
 	/**
 	 * get desWeight
 	 * @param col
@@ -1174,6 +1178,7 @@ class Animate {
 	public int get3(int col, int row) {
 		return movement[col][row][2];
 	}
+
 	/**
 	 * get desHeight
 	 * @param col

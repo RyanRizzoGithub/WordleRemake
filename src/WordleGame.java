@@ -1,6 +1,3 @@
-import java.io.IOException;
-import java.util.HashMap;
-
 /**
  * AUTHOR(S):		Katelen Tellez & Ryan Rizzo
  * FILE:		WordleGame.java
@@ -8,8 +5,15 @@ import java.util.HashMap;
  * DATE:		12/6/22
  * PURPOSE:		Responsible for storing the game state, and well as handling user input
  */
+
+import java.io.IOException;
+import java.util.HashMap;
+
+
+// @Katelen Tellez added (below)
 public class WordleGame {
-	private static WordleGameUI gameUI = null;
+	private static WordleGameUI gameUI;
+	
 	private String word;
 	private String secondWord;
 	private String guess;
@@ -20,6 +24,9 @@ public class WordleGame {
 	private boolean guessIsCorrect;
 	private int guessNum;
 	private boolean oneFound;
+	
+	
+	// Ryan
 	private HashMap<String,Integer> charStatus;
 	private WordleDictionary dic;
 	private String mode;
@@ -85,8 +92,8 @@ public class WordleGame {
 		// convert input chars into a string
 		for (int i=0; i<5; i++) {
 			
-		// input at row guessNum so we know which is the current row to look at
-		guess = guess + Character.toString(input[i][guessNum]).toUpperCase();
+			// input at row guessNum so we know which is the current row to look at
+			guess = guess + Character.toString(input[i][guessNum]).toUpperCase();
 		}
 		
 		System.out.println("Guess: " + guess);
@@ -102,11 +109,17 @@ public class WordleGame {
 		
 		// if they did not, compare each character of the guess to the word
 		else {
+		
 			for(int guessIdx = 0; guessIdx < 5; guessIdx++) {
+				
 				char guessChar = guess.charAt(guessIdx);
+				
 				for(int wordIdx = 0; wordIdx < 5; wordIdx++) {
+					
 					char wordChar = word.charAt(wordIdx);
+    				
 					if((wordChar == guessChar) && (wordIdx == guessIdx)) {
+						
 						if(charFoundStatus[wordIdx] == false) {
 							guessResults[guessIdx] = 0;
 							charFoundStatus[wordIdx] = true;
@@ -114,6 +127,7 @@ public class WordleGame {
 						}
 					}
 					else if(wordChar == guessChar) {
+						
 						if(charFoundStatus[wordIdx] == false) {
 							guessResults[guessIdx] = 1;
 							charFoundStatus[wordIdx] = true;
@@ -122,9 +136,12 @@ public class WordleGame {
 					}
 					else if(charFoundStatus[wordIdx] == false){
 						guessResults[guessIdx] = -1;
-					}		
+					}
+							
 				}
+				
 			}
+			
 		}
 		guessNum++;
 		
@@ -155,6 +172,14 @@ public class WordleGame {
 			return true;
 		}
 		return guessIsCorrect;
+	}
+	
+	/** - - - - - - GUESS IS CORRECT - - - - - - - - - - - - - - - - - - - - - - - -
+ 	* Returns the state of the guess
+ 	* @return Katelen Tellez
+ 	*/
+	public boolean guessIsCorrect() {
+		return guessCorrect;
 	}
 	
 	/** - - - - - - CHECK CHAR - - - - - - - - - - - - - - - - - - - - - - - -
@@ -269,56 +294,48 @@ public class WordleGame {
 	 * @author Ryan Rizzo
 	 */
 	public void setGameUI(WordleGameUI g) {
-        	gameUI = g;
-    	}
-	
+        gameUI = g;
+    }
+
 	/** - - - - - - GET GAME UI - - - - - - - - - - - - - - - - - - - - - - - - -
 	 * REturns the WordleGameUI object which is displaying this game
 	 * @param WordleGameUI g
 	 * @author Ryan Rizzo
 	 */
-    	public static WordleGameUI getGameUI() {
-        	return gameUI;
-    	}
-    	
+    public static WordleGameUI getGameUI() {
+        return gameUI;
+    }
+    
 	/** - - - - - - SET GUESS CORRECT - - - - - - - - - - - - - - - - - - - - - -
 	 * Sets the state of the guess to correct or true
 	 * @author Katelen Tellex
 	 */
-    	public void setGuessCorrect() {
-    		this.guessIsCorrect = true;
-    	}
-    	
+    public void setGuessCorrect() {
+    	this.guessIsCorrect = true;
+    }
+    
 	/** - - - - - - ADD GUESS - - - - - - - - - - - - - - - - - - - - - - - - -
    	 * Increases the guess counter
    	 * @author Katelen Tellex
    	 */
-    	public void addGuess() {
-    		this.guessNum++;
-    	}
-    	
+    public void addGuess() {
+    	this.guessNum++;
+    }
+    
 	/** - - - - - - GET ONE FOUND - - - - - - - - - - - - - - - - - - - - - - - -
    	 * Returns the state for one of two words being found
    	 * @return boolean oneFound
    	 * @author Ryan Rizzo
    	 */
-    	public boolean getOneFound() {
-    		return oneFound;
-    	}
-    	
+    public boolean getOneFound() {
+    	return oneFound;
+    }
+    
 	/** - - - - - - SET ONE FOUND - - - - - - - - - - - - - - - - - - - - - - - -
-    	 * Sets the state for one of two words being found
-   	 * @author Ryan Rizzo
-     	 */
-    	public void setOneFound() {
-    		oneFound = true;
-    	}
-	
-	/** - - - - - - GUESS IS CORRECT - - - - - - - - - - - - - - - - - - - - - - - -
-     	* Returns the state of the guess
-     	* @return Katelen Tellez
-     	*/
-    	public boolean guessIsCorrect() {
-		return guessCorrect;
-	}
+	 * Sets the state for one of two words being found
+	 * @author Ryan Rizzo
+ 	 */
+    public void setOneFound() {
+    	oneFound = true;
+    }
 }
