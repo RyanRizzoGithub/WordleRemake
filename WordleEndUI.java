@@ -1,7 +1,7 @@
 
 /*
- * Displays player statistics. Starts a new game if chosen. 
- * Goes to main menu if chosen. 
+ * This class displays the player statistics, can start a new game, 
+ * can return to the main menu, and can utilize the share function.
  * 
  * @author Katelen Tellez
  */
@@ -51,6 +51,9 @@ public class WordleEndUI {
 		}
 	}
 
+	/*
+	 * This method creates the displayed contents of the statistics page.
+	 */
 	protected void createContents() {
 
 		shell = new Shell();
@@ -67,6 +70,9 @@ public class WordleEndUI {
 
 	}
 
+	/*
+	 * This method displays the statistics of the current player.
+	 */
 	private void displayStats() {
 		Font font = new Font(shell.getDisplay(), new FontData("Arial", 15, SWT.BOLD));
 
@@ -132,6 +138,9 @@ public class WordleEndUI {
 	}
 
 	// - - - - - - - - - - guess distribution labels - - - - - - - - - - - - - -
+	/*
+	 * This method creates the labels for the guess distribution.
+	 */
 	private void displayGuessDistr() {
 
 		Font font = new Font(shell.getDisplay(), new FontData("Arial", 15, SWT.BOLD));
@@ -181,44 +190,47 @@ public class WordleEndUI {
 		// - - - - - - - - guess distribution bars - - - - - - - - - - - - - - - - -
 		drawGuessDistrBars();
 	}
-	
+
+	/*
+	 * This method creates and displays the bars for the guess distribution.
+	 */
 	private void drawGuessDistrBars() {
-		
+
 		Font font = new Font(shell.getDisplay(), new FontData("Arial", 15, SWT.BOLD | SWT.COLOR_WHITE));
-		
+
 		int x = 65;
-		int y = 150; 
+		int y = 150;
 		int width = 20;
 		int height = 20;
 		int guessNum = 1;
-		
-		for(int guess : Wordle.player.getGuessDistribution()) {
-			
-			for(int i = guess; i > 0; i--) {
-				width+=20;
+
+		for (int guess : Wordle.player.getGuessDistribution()) {
+
+			for (int i = guess; i > 0; i--) {
+				width += 20;
 			}
-			
+
 			Label guessBar = new Label(canvas, SWT.RIGHT);
 			guessBar.setBounds(x, y, width, height);
 			guessBar.setText("" + guess);
 			guessBar.setFont(font);
 			guessBar.setForeground(canvas.getDisplay().getSystemColor(SWT.COLOR_WHITE));
-			
-			if(Wordle.player.wonLastGame() && Wordle.player.lastGameMoves() == guessNum)
+
+			if (Wordle.player.wonLastGame() && Wordle.player.lastGameMoves() == guessNum)
 				guessBar.setBackground(canvas.getDisplay().getSystemColor(SWT.COLOR_GREEN));
 			else
 				guessBar.setBackground(canvas.getDisplay().getSystemColor(SWT.COLOR_DARK_GRAY));
-			
-			y+=30;
+
+			y += 30;
 			width = 20;
 			guessNum++;
 		}
-		
-		
-		
 	}
 
 	// - - - - - - - main menu, new game, & share buttons - - - - - - - - - - - -
+	/*
+	 * This method creates the main menu, new game, and share buttons.
+	 */
 	private void createButtons() {
 
 		// Main Menu button
