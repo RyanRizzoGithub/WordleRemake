@@ -202,6 +202,7 @@ public class WordleGameUI {
 					if (col != 5 && row != 7) {
 						for (int i = 0; i < qwerty.length; i++) {
 							if (e.character == qwerty[i].charAt(0)) {
+								System.out.println("ADDING " + e.character + " to input[" + col + "][" + row + "]");
 								input[col][row] = e.character;
 
 								// @Qianwen Wang added
@@ -355,6 +356,7 @@ public class WordleGameUI {
 				x++;
 				if(flag && game.gameIsOver()) {
 					flag = false;
+					copyStats();
 					WordleUI.startEnd();
 				}
 				
@@ -680,33 +682,25 @@ public class WordleGameUI {
 		
 		for (int j=0; j<7; j++) {
 			for (int x=0; x<5; x++) {
-				System.out.println("x: " + x + " j: " + j);
 				// Check if cell is occupied
 				if (input[x][j] != '?') {
-					System.out.println("NOT ?");
 
 					// Update the square
 					if (rowSubmitted[j] == true) {		
-						System.out.println("ROW SUBMITTED");
 						//Incorrect letter
 						if (game.checkChar(input[x][j], x) == -1 ) {
 							output += "⬜";
-							System.out.println("GRAY");
 						}
 						//Incorrect location
 						if (game.checkChar(input[x][j], x) == 0 ) {
 							output += "🟨";
-							System.out.println("YELLOW");
 						}
 						//Correct letter and location
 						if (game.checkChar(input[x][j], x) == 1 ) {
 							output += "🟩";
-							System.out.println("GREEN");
 						}
 					} 
-				} else {
-					System.out.println(input[x][j]);
-				}
+				} 
 			}
 			output += "\n";
 		}

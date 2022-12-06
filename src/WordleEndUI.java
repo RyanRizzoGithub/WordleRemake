@@ -278,7 +278,7 @@ public class WordleEndUI {
 		shareButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 
-				gameUI.copyStats();
+				//gameUI.copyStats();
 			}
 		});
 	}
