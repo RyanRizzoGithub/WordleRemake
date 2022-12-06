@@ -17,7 +17,6 @@ public class Wordle {
 		player.setFace(2);
 		playClip();
 		loadPlayers();
-		printPlayers();
 		WordleMenuUI menuUI = new WordleMenuUI(WordleUI.DARK_THEME);
 		WordleUI.startMenu(menuUI);
 	}
@@ -46,6 +45,7 @@ public class Wordle {
 	public static void loadPlayers() {
 		File dir = new File("./Players/");
 		File[] files = dir.listFiles();
+		players = new ArrayList<>();
 		
 		if (files != null) {
 			for(File file : files) {
