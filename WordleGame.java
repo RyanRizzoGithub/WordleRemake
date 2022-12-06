@@ -4,9 +4,9 @@ public class WordleGame {
 	
 	String word;
 	private int guess;
-	private boolean result;
 	private boolean guessIsCorrect;
 	private boolean gameOver;
+	private static WordleGameUI gameUI = null;
 	
 	
 	// Ryan
@@ -18,10 +18,9 @@ public class WordleGame {
 		
 		// generate random word from dictionary (no repeats)
 		dic = new WordleDictionary();
-		// word = dic.getRandomWord();
+		word = dic.getRandomWord();
 		word = "PARTY";
 		guess = 0;
-		result = false;
 		gameOver = false;
 		guessIsCorrect = false;
 		this.theme = theme;
@@ -93,5 +92,14 @@ public class WordleGame {
 	
 	public void setOver() {
 		this.gameOver = true;
+	}
+	
+	// helpers for end game
+	public void setGameUI(WordleGameUI g) {
+		gameUI = g;
+	}
+	
+	public static WordleGameUI getGameUI() {
+		return gameUI;
 	}
 }
