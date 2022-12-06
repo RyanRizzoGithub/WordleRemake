@@ -365,6 +365,11 @@ public class WordleGameUI {
 		display.timerExec(-1, runnable);
 		display.dispose();
 	}
+	
+	// @Katelen Tellez added
+	public String getWord() {
+		return game.word;
+	}
 
 	/*
 	 * - - - - - - DRAW USER INPUT - - - - - - - - - - - - - - - - - - - - - - - - -
