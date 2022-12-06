@@ -1,5 +1,4 @@
-
-/*
+/**
  * This class displays the player statistics, can start a new game, 
  * can return to the main menu, and can utilize the share function.
  * 
@@ -50,7 +49,7 @@ public class WordleEndUI {
 		}
 	}
 
-	/*
+	/**
 	 * This method creates the displayed contents of the statistics page.
 	 */
 	protected void createContents() {
@@ -110,7 +109,7 @@ public class WordleEndUI {
 
 		// player win %
 		Label winPercentage = new Label(canvas, SWT.NONE);
-		winPercentage.setText("" + Wordle.player.getWinPercentage());
+		winPercentage.setText("" + Math.round(Wordle.player.getWinPercentage()));
 		winPercentage.setBounds(170, 50, 125, 50);
 		winPercentage.setFont(font);
 
@@ -138,7 +137,7 @@ public class WordleEndUI {
 		// win percentage label
 		Label winPercLabel = new Label(canvas, SWT.NONE);
 		winPercLabel.setText("Win %");
-		winPercLabel.setBounds(200, 80, 50, 50);
+		winPercLabel.setBounds(180, 80, 50, 50);
 		winPercLabel.setFont(font);
 
 		// curStreak label
