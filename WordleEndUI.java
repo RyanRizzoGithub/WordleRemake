@@ -34,13 +34,14 @@ public class WordleEndUI {
 
 	protected Shell shell;
 	private WordleGameUI gameUI;
+	private Canvas canvas;
 
 	public void start() {
 		Display display = Display.getDefault();
 		createContents();
 		shell.open();
 		shell.layout();
-		
+
 		gameUI = WordleGame.getGameUI();
 
 		while (!shell.isDisposed()) {
@@ -57,9 +58,16 @@ public class WordleEndUI {
 		shell.setText("GAME OVER");
 		shell.setLayout(new GridLayout(2, false));
 
-		Canvas canvas = new Canvas(shell, SWT.NONE);
+		canvas = new Canvas(shell, SWT.NONE);
 		canvas.setSize(500, 500);
 
+		displayStats();
+		displayGuessDistr();
+		createButtons();
+
+	}
+
+	private void displayStats() {
 		Font font = new Font(shell.getDisplay(), new FontData("Arial", 15, SWT.BOLD));
 
 		// statistics label
@@ -121,9 +129,12 @@ public class WordleEndUI {
 		maxStreakLabel.setText("   Max \n Streak");
 		maxStreakLabel.setBounds(330, 80, 50, 50);
 		maxStreakLabel.setFont(font);
+	}
 
-		// - - - - - - - - - - guess distribution labels - - - - - - - - - - - - - -
-		font = new Font(shell.getDisplay(), new FontData("Arial", 15, SWT.BOLD));
+	// - - - - - - - - - - guess distribution labels - - - - - - - - - - - - - -
+	private void displayGuessDistr() {
+
+		Font font = new Font(shell.getDisplay(), new FontData("Arial", 15, SWT.BOLD));
 
 		// statistics label
 		Label guessDistrLabel = new Label(canvas, SWT.FILL);
@@ -166,11 +177,50 @@ public class WordleEndUI {
 		guess6.setText("6");
 		guess6.setBounds(50, 300, 50, 50);
 		guess6.setFont(font);
-		
-		// - - - - - - - - guess distribution bars - - - - - - - - - - - - - - - - -
-		
 
-		// - - - - - - - main menu, new game, & share buttons - - - - - - - - - - - -
+		// - - - - - - - - guess distribution bars - - - - - - - - - - - - - - - - -
+		drawGuessDistrBars();
+	}
+	
+	private void drawGuessDistrBars() {
+		
+		Font font = new Font(shell.getDisplay(), new FontData("Arial", 15, SWT.BOLD | SWT.COLOR_WHITE));
+		
+		int x = 65;
+		int y = 150; 
+		int width = 20;
+		int height = 20;
+		int guessNum = 1;
+		
+		for(int guess : Wordle.player.getGuessDistribution()) {
+			
+			for(int i = guess; i > 0; i--) {
+				width+=20;
+			}
+			
+			Label guessBar = new Label(canvas, SWT.RIGHT);
+			guessBar.setBounds(x, y, width, height);
+			guessBar.setText("" + guess);
+			guessBar.setFont(font);
+			guessBar.setForeground(canvas.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+			
+			if(Wordle.player.wonLastGame() && Wordle.player.lastGameMoves() == guessNum)
+				guessBar.setBackground(canvas.getDisplay().getSystemColor(SWT.COLOR_GREEN));
+			else
+				guessBar.setBackground(canvas.getDisplay().getSystemColor(SWT.COLOR_DARK_GRAY));
+			
+			y+=30;
+			width = 20;
+			guessNum++;
+		}
+		
+		
+		
+	}
+
+	// - - - - - - - main menu, new game, & share buttons - - - - - - - - - - - -
+	private void createButtons() {
+
 		// Main Menu button
 		Button mainMenuButton = new Button(canvas, SWT.PUSH | SWT.CENTER);
 		mainMenuButton.setText("Main Menu");
@@ -197,7 +247,6 @@ public class WordleEndUI {
 				WordleUI.startGame(gameUI);
 			}
 		});
-		
 
 		// Share Button
 		Button shareButton = new Button(canvas, SWT.PUSH | SWT.CENTER);
@@ -205,10 +254,9 @@ public class WordleEndUI {
 		shareButton.setBounds(300, 400, 100, 50);
 		shareButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-				
+
 				gameUI.copyStats();
 			}
 		});
-
 	}
 }
