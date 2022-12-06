@@ -2,6 +2,7 @@
  * Player object class. Stores the players name, game history, and preferences.
  * 
  * @author Gregory Jenkins
+ * @author Katelen Tellez
  */
 import java.io.File;
 import java.io.FileOutputStream;
@@ -61,12 +62,21 @@ public class WordlePlayer implements Comparable<WordlePlayer>, Serializable {
 		
 	}
 	
+	/**
+	 * Randomly sets the user profile icon preferences.
+	 * The user can change these in the login menu.
+	 */
 	private void setRandomPrefs() {
 		this.shirt = rand.nextInt(16);
 		this.face = rand.nextInt(16);
 		this.background = rand.nextInt(16);
 	}
 	
+	/**
+	 * 
+	 * @param Password Password being checked
+	 * @return Boolean true if password matches
+	 */
 	public boolean checkPassword(String password) {
 		return this.password.equals(password);
 	}
@@ -75,8 +85,8 @@ public class WordlePlayer implements Comparable<WordlePlayer>, Serializable {
 	/**
 	 * Adds a game to the player history
 	 * 
-	 * @param result
-	 * @param moves
+	 * @param result True if game was won
+	 * @param moves Number of guesses
 	 */
 	public void addGame(boolean result, int moves) {
 		this.historyMoves.add(moves);
@@ -92,6 +102,10 @@ public class WordlePlayer implements Comparable<WordlePlayer>, Serializable {
 		savePlayer();
 	}
 	
+	/**
+	 * Calculates the distribution of guesses for the profiles game history.
+	 * @return An array of ints containing the number of guesses
+	 */
 	public int[] getGuessDistribution() {
 		int[] guessDistr = {0,0,0,0,0,0};
 		
@@ -124,6 +138,9 @@ public class WordlePlayer implements Comparable<WordlePlayer>, Serializable {
 		}
 	}
 	
+	/**
+	 * Saves the player profile as a serialized .txt file in ./Players/
+	 */
 	public void savePlayer() {
 		
 		try {
@@ -147,26 +164,50 @@ public class WordlePlayer implements Comparable<WordlePlayer>, Serializable {
 		this.theme = theme;
 	}
 	
+	/**
+	 * Sets the player face preference
+	 * @param face
+	 */
 	public void setFace(int face) {
 		this.face = face;
 	}
 	
+	/**
+	 * Sets the player shirt preference
+	 * @param shirt
+	 */
 	public void setShirt(int shirt) {
 		this.shirt = shirt;
 	}
 	
+	/**
+	 * Sets the player background preference
+	 * @param background
+	 */
 	public void setBackground(int background) {
 		this.background = background;
 	}
 	
+	/**
+	 * Returns the background preference
+	 * @return Background int
+	 */
 	public int getBackground() {
 		return this.background;
 	}
 	
+	/**
+	 * Returns the face preference
+	 * @return Face int
+	 */
 	public int getFace() {
 		return this.face;
 	}
 	
+	/**
+	 * Returns the shirt preference
+	 * @return Shirt int
+	 */
 	public int getShirt() {
 		return this.shirt;
 	}
@@ -189,7 +230,7 @@ public class WordlePlayer implements Comparable<WordlePlayer>, Serializable {
 	}
 	
 	/**
-	 * @return Name
+	 * @return Name of player profile
 	 */
 	public String getName() {
 		return this.name;
@@ -230,6 +271,9 @@ public class WordlePlayer implements Comparable<WordlePlayer>, Serializable {
 		return this.winPercentage;
 	}
 	
+	/**
+	 * Prints all the profiles stats. Used for testing.
+	 */
 	public void printStats() {
 		System.out.println("NAME: " + name);
 		System.out.println("GAMES PLAYED: " + gamesPlayed);
@@ -240,6 +284,10 @@ public class WordlePlayer implements Comparable<WordlePlayer>, Serializable {
 		System.out.println("MOVE HISTORY: " + historyMoves);
 	}
 	
+	/**
+	 * Returns if the last game played was won.
+	 * @return Boolean, true if won
+	 */
 	public boolean wonLastGame() {
 		if (this.gamesPlayed > 0) {
 			return this.historyWins.get(this.gamesPlayed-1);
@@ -247,6 +295,10 @@ public class WordlePlayer implements Comparable<WordlePlayer>, Serializable {
 		return false;
 	}
 	
+	/**
+	 * Returns the number of guesses from the last game
+	 * @return Int number of guesses
+	 */
 	public int lastGameMoves() {
 		if (this.gamesPlayed > 0) {
 			return this.historyMoves.get(this.gamesPlayed-1);
@@ -255,6 +307,10 @@ public class WordlePlayer implements Comparable<WordlePlayer>, Serializable {
 	}
 
 
+	/**
+	 * Compares the players based off of the max streak. If a tie,
+	 * uses the win percentage.
+	 */
 	@Override
 	public int compareTo(WordlePlayer o) {
 		if (this.getMaxStreak() < o.getMaxStreak()) {
