@@ -86,8 +86,8 @@ public class WordleGame {
 		// convert input chars into a string
 		for (int i=0; i<5; i++) {
 			
-			// input at row guessNum so we know which is the current row to look at
-			guess = guess + Character.toString(input[i][guessNum]).toUpperCase();
+		// input at row guessNum so we know which is the current row to look at
+		guess = guess + Character.toString(input[i][guessNum]).toUpperCase();
 		}
 		
 		System.out.println("Guess: " + guess);
@@ -103,17 +103,11 @@ public class WordleGame {
 		
 		// if they did not, compare each character of the guess to the word
 		else {
-		
 			for(int guessIdx = 0; guessIdx < 5; guessIdx++) {
-				
 				char guessChar = guess.charAt(guessIdx);
-				
 				for(int wordIdx = 0; wordIdx < 5; wordIdx++) {
-					
 					char wordChar = word.charAt(wordIdx);
-    				
 					if((wordChar == guessChar) && (wordIdx == guessIdx)) {
-						
 						if(charFoundStatus[wordIdx] == false) {
 							guessResults[guessIdx] = 0;
 							charFoundStatus[wordIdx] = true;
@@ -121,7 +115,6 @@ public class WordleGame {
 						}
 					}
 					else if(wordChar == guessChar) {
-						
 						if(charFoundStatus[wordIdx] == false) {
 							guessResults[guessIdx] = 1;
 							charFoundStatus[wordIdx] = true;
@@ -130,12 +123,9 @@ public class WordleGame {
 					}
 					else if(charFoundStatus[wordIdx] == false){
 						guessResults[guessIdx] = -1;
-					}
-							
+					}		
 				}
-				
 			}
-			
 		}
 		guessNum++;
 		
