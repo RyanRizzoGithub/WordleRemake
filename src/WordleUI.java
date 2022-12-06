@@ -66,6 +66,11 @@ public interface WordleUI {
 		helpUI.start();
 	}
 	
+	public static void startEnd() {
+		WordleEndUI endUI = new WordleEndUI();
+		endUI.start();
+	}
+	
 	/* - - - - - - GET THEME COLORS - - - - - - - - - - - - - - - - - - -
 	 * This method is responsible for setting the colors for the interfaces,
 	 * given the theme
@@ -108,6 +113,13 @@ public interface WordleUI {
 		return colors;
 	}
 	
+	
+	/* - - - - - - GET PROFILE COLORS - - - - - - - - - - - - - - - - - - -
+	 * This method is responsible for returning the array of colors which are 
+	 * used in each users profile image
+	 * @return colors, an array of Color objects
+	 * Author: Ryan Rizzo
+	 */
 	public static Color[] getProfileColors() {
 		Color[] colors = new Color[16];
 		colors[0] = new Color(237, 126, 119);

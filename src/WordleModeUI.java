@@ -3,6 +3,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -10,6 +12,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 public class WordleModeUI {
 
 	protected Shell shell;
+	private static int modeSelected = 0;
 
 	/**
 	 * Launch the application.
@@ -54,6 +57,7 @@ public class WordleModeUI {
 		
 		Label lblDescription = new Label(shell, SWT.NONE);
 		lblDescription.setFont(SWTResourceManager.getFont(".AppleSystemUIFont", 14, SWT.BOLD));
+		
 		GridData gd_lblDescription = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_lblDescription.widthHint = 396;
 		lblDescription.setLayoutData(gd_lblDescription);
@@ -72,20 +76,42 @@ public class WordleModeUI {
 		lblSeeHowMany.setText("See how many words you can get in a row!");
 		
 		Button btnMode = new Button(shell, SWT.RADIO);
-		btnMode.setText("Mode3");
+		btnMode.setText("Dordle");
 		
-		Label label = new Label(shell, SWT.NONE);
-		label.setText("...");
-		
-		Button btnMode_1 = new Button(shell, SWT.RADIO);
-		btnMode_1.setText("Mode4");
-		
-		Label label_1 = new Label(shell, SWT.NONE);
-		label_1.setText("...");
+		Label lblTryToGuess = new Label(shell, SWT.NONE);
+		lblTryToGuess.setText("Try to guess two words with 7 guesses");
 		
 		Button btnSubmit = new Button(shell, SWT.NONE);
 		btnSubmit.setText("Submit");
 		new Label(shell, SWT.NONE);
+		
+		
+		btnSubmit.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {}
+			public void widgetSelected(SelectionEvent e) {
+				if (btnWotd.getSelection()) {
+					modeSelected = 0;
+				}
+				if (btnSurvival.getSelection()) {
+					modeSelected = 1;
+				}
+				if (btnMode.getSelection()) {
+					modeSelected = 2;
+				}
+				shell.dispose();
+			}
+		});
 
+	}
+	
+	public static String getMode() {
+		String mode = "WOTD";
+		if (modeSelected == 1) {
+			mode = "SURVIVAL";
+		}
+		if (modeSelected == 2) {
+			mode = "DORDLE";
+		}
+		return mode;
 	}
 }

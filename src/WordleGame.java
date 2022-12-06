@@ -4,15 +4,18 @@ import java.util.HashMap;
 
 // @Katelen Tellez added (below)
 public class WordleGame {
+	private static WordleGameUI gameUI = null;
 	
 	private String word;
 	private String secondWord;
 	private String guess;
-	private int guessNum;
 	private boolean guessCorrect;
 	private int [] guessResults;
 	private boolean [] charFoundStatus = new boolean [5];
 	private boolean gameOver;
+	private boolean guessIsCorrect;
+	private int guessNum;
+	private boolean oneFound;
 	
 	
 	// Ryan
@@ -28,13 +31,14 @@ public class WordleGame {
 		// generate random word from dictionary (no repeats)
 		dic = new WordleDictionary();
 		guess = "";
-		guessNum = 0;
 		guessCorrect = false;
 		gameOver = false;
 		this.theme = Wordle.player.getTheme();
 		this.mode = mode;
+		this.guessIsCorrect = false;
+		this.guessNum = 0;
 		
-		if (mode.equals("Survival")) {
+		if (mode.equals("SURVIVAL")) {
 			word = dic.getRandomWord();
 		}
 		if (mode.equals("WOTD")) {
@@ -44,6 +48,8 @@ public class WordleGame {
 			word = dic.getRandomWord();
 			secondWord = dic.getRandomWord();
 		}
+		word = "PARTY";
+		gameUI = new WordleGameUI(this);
 		
 		// prevents double chars from being found when there are none
 		for(int i = 0; i < 5; i++)
@@ -203,4 +209,28 @@ public class WordleGame {
 	public String getSecondWord() {
 		return secondWord;
 	}
+	
+	public void setGameUI(WordleGameUI g) {
+        gameUI = g;
+    }
+
+    public static WordleGameUI getGameUI() {
+        return gameUI;
+    }
+    
+    public void setGuessCorrect() {
+    	this.guessIsCorrect = true;
+    }
+    
+    public void addGuess() {
+    	this.guessNum++;
+    }
+    
+    public boolean getOneFound() {
+    	return oneFound;
+    }
+    
+    public void setOneFound() {
+    	oneFound = true;
+    }
 }

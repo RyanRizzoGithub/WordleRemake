@@ -36,8 +36,11 @@ public class WordleMenuUI {
 		shell.setBackground(WordleUI.getThemeColors(theme)[WordleUI.BACKGROUND_COLOR]);
 	}
 	
+	/* - - - - - - START - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	 * This function is responsible for building and opening a WordleMenuUI
+	 * (Ryan Rizzo)
+	 */
 	public void start() {
-		System.out.println("start");
 		Composite menuComp = new Composite(shell, SWT.NO_FOCUS);
 		
 		canvas = new Canvas(menuComp, SWT.NONE);
@@ -45,14 +48,14 @@ public class WordleMenuUI {
 		
 		
 		canvas.addPaintListener(e -> {
+			// Draw the background animation
 			drawAnimation(e);
+			
 			// Set the color of the background and font
 			shell.setBackground(WordleUI.getThemeColors(theme)[WordleUI.BACKGROUND_COLOR]);
 			canvas.setBackground(WordleUI.getThemeColors(theme)[WordleUI.BACKGROUND_COLOR]);
 			e.gc.setBackground(WordleUI.getThemeColors(theme)[WordleUI.KEY_FILL_COLOR]);
 			e.gc.setForeground(WordleUI.getThemeColors(theme)[WordleUI.KEY_CHAR_COLOR]);
-			
-			
 			
 			// Draw the user profile
 			Font font = new Font(shell.getDisplay(), new FontData("Times New Roman", 18, SWT.NONE));
@@ -69,6 +72,7 @@ public class WordleMenuUI {
 			
 			e.gc.drawRoundRectangle(250, 100, 100, 100, 15, 15);
 			
+			// Draw title information
 			String name = "Guest";
 			if (Wordle.player != null) {
 				name = Wordle.player.getName();
@@ -157,7 +161,7 @@ public class WordleMenuUI {
 					setVisible(false);
 					WordleGame newGame;
 					try {
-						newGame = new WordleGame("WOTD");
+						newGame = new WordleGame(WordleModeUI.getMode());
 						WordleGameUI gameUI = new WordleGameUI(newGame);
 						WordleUI.startGame(gameUI);
 					} catch (IOException e1) {
@@ -183,9 +187,7 @@ public class WordleMenuUI {
 				if (Wordle.player != null) {
 					Wordle.player.setTheme(theme);
 				}
-				
 			}
-			
 			public void mouseDoubleClick(MouseEvent e) {}
 			public void mouseUp(MouseEvent e) {}
 		});
@@ -207,7 +209,6 @@ public class WordleMenuUI {
 	 */
 	private void drawAnimation(PaintEvent e) {
 		int time = Math.abs(((int) System.currentTimeMillis()/100));
-		
 		Image background = new Image(shell.getDisplay(), "./images/background.png");
 		e.gc.drawImage(background, 0,WordleUI.SHELL_HEIGHT - (WordleUI.SHELL_HEIGHT + time) % (WordleUI.SHELL_HEIGHT * 2));
 		e.gc.drawImage(background, 0,0 - (WordleUI.SHELL_HEIGHT + time) % (WordleUI.SHELL_HEIGHT * 2));

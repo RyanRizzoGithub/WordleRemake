@@ -33,8 +33,12 @@ public class WordlePlayer implements Comparable<WordlePlayer>, Serializable {
 	public WordlePlayer(String name, String password, File file) {
 		this.file = file;
 		
+		if (name.compareTo("Guest") == 0) {
+			file.delete();
+		}
+		
 		try {
-			if (file.createNewFile()) {
+			if ((name.compareTo("guest") != 0 || name.compareTo("Guest") != 0) && file.createNewFile()) {
 				this.historyWins = new ArrayList<>();
 				this.historyMoves = new ArrayList<>();
 				this.name = name;
@@ -91,8 +95,12 @@ public class WordlePlayer implements Comparable<WordlePlayer>, Serializable {
 	public int[] getGuessDistribution() {
 		int[] guessDistr = {0,0,0,0,0,0};
 		
-		for (int num : historyMoves) {
-			guessDistr[num - 1]++;
+		for (int i = 0; i < gamesPlayed; i++) {
+			int num = historyMoves.get(i);
+			
+			if (num > 0 && historyWins.get(i)) {
+				guessDistr[num - 1]++;
+			}
 		}
 		return guessDistr;
 	}
@@ -235,18 +243,18 @@ public class WordlePlayer implements Comparable<WordlePlayer>, Serializable {
 
 	@Override
 	public int compareTo(WordlePlayer o) {
-		if (this.getMaxStreak() > o.getMaxStreak()) {
+		if (this.getMaxStreak() < o.getMaxStreak()) {
 			return 1;
 		}
-		if (this.getMaxStreak() < o.getMaxStreak()) {
+		if (this.getMaxStreak() > o.getMaxStreak()) {
 			return -1;
 		}
 		//If max streak is a tie, compare win percentage 
 		if (this.getMaxStreak() == o.getMaxStreak()) {
-			if (this.getWinPercentage() > o.getWinPercentage()) {
+			if (this.getWinPercentage() < o.getWinPercentage()) {
 				return 1;
 			}
-			if (this.getWinPercentage() < o.getWinPercentage()) {
+			if (this.getWinPercentage() > o.getWinPercentage()) {
 				return -1;
 			}
 		}
