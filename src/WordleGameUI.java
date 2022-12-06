@@ -725,10 +725,11 @@ public class WordleGameUI {
  * - - - - - - INPUT ANIMATOR - - - - - - - - - - - - - - - - - - - - - - - - -
  * - - - - - - - - - - This function is change the movement of keyboard mode 1:
  * enter the input -- get bigger and smaller mode 2: not valid words -- shake
- * left and right 5 times mode 3: enter valid words -- fold in the middle and
+ * left and right mode 3: enter valid words -- fold in the middle and
  * replace with new one that bigger from middle mode 4: when win -- wave
  * 
- * @param e, the paint event which calls this function (Qianwen Wang)
+ * @param e, the paint event which calls this function 
+ * (Qianwen Wang)
  */
 
 class Animate {
@@ -743,7 +744,6 @@ class Animate {
 	private int[][][] movement;
 	private int curRow = 0;
 	private int[] count = new int[5];
-	private String model = "A";
 	private int size = 30;
 
 	public Animate() {
@@ -751,11 +751,17 @@ class Animate {
 		movement = new int[5][7][4];
 		initialStates = new int[5][7];
 	}
-
+	/**
+	 * set model for duoble screen
+	 * @param height
+	 */
 	public void setModel(int height) {
 		size = (int) (60 * 0.8) /2;
 	}
-
+	/**
+	 * set the correct row
+	 * @param row
+	 */
 	public void setWin(int row) {
 		states[0][row] = 4;
 		states[1][row] = 4;
@@ -770,15 +776,18 @@ class Animate {
 		count[3] = 0;
 		count[4] = 0;
 	}
-
+	/**
+	 * get current row's index
+	 * @return
+	 */
 	public int getCurRow() {
 		return curRow;
 	}
-
-	public int getState(int col, int row) {
-		return initialStates[col][row];
-	}
-
+	/**
+	 * add input state to list and set up their movement
+	 * @param col
+	 * @param row
+	 */
 	public void add(int col, int row) {
 		states[col][row] = 1;
 		initialStates[col][row] = 1;
@@ -789,20 +798,32 @@ class Animate {
 			movement[col][row][3] = 0;
 		}
 	}
-
+	/**
+	 * update if the word is valid
+	 * @param col
+	 * @param row
+	 */
 	public void updateValid(int col, int row) {
 		states[col][row] = 3;
 		initialStates[col][row] = 3;
 		curRow = row;
 	}
-
+	/**
+	 * update if the word is invalid
+	 * @param col
+	 * @param row
+	 */
 	public void updateInvalid(int col, int row) {
 		states[col][row] = 2;
 		initialStates[col][row] = 2;
 		curRow = row;
 
 	}
-
+	/**
+	 * draw the animation of each kind of movement
+	 * @param col
+	 * @param row
+	 */
 	public void draw(int col, int row) {
 		// mode 1: enter input letter--> bigger and smaller
 		if (states[col][row] == 1) {
@@ -933,7 +954,6 @@ class Animate {
 			setZero();
 		}
 		if (states[col][row] == 12) {
-			//change here TODO:
 			if (movement[0][curRow][1] >= size) {
 				states[0][row] = 13;
 				states[1][row] = 13;
@@ -1001,7 +1021,7 @@ class Animate {
 			movement[4][curRow][2] = 0;
 			movement[4][curRow][3] = movement[4][curRow][3] + 6;
 		}
-		// mode 4
+		// mode 4 wave
 		if (states[col][row] == 4) {
 			states[0][row] = 15;
 			states[1][row] = 15;
@@ -1074,7 +1094,9 @@ class Animate {
 		}
 
 	}
-	
+	/**
+	 * set their movement to initial
+	 */
 	private void setZero() {
 		movement[0][curRow][0] = 0;
 		movement[0][curRow][1] = 0;
@@ -1102,19 +1124,39 @@ class Animate {
 		movement[4][curRow][3] = 0;
 
 	}
-
+	/**
+	 * get desX
+	 * @param col
+	 * @param row
+	 * @return
+	 */
 	public int get1(int col, int row) {
 		return movement[col][row][0];
 	}
-
+	/**
+	 * get setY
+	 * @param col
+	 * @param row
+	 * @return
+	 */
 	public int get2(int col, int row) {
 		return movement[col][row][1];
 	}
-
+	/**
+	 * get desWeight
+	 * @param col
+	 * @param row
+	 * @return
+	 */
 	public int get3(int col, int row) {
 		return movement[col][row][2];
 	}
-
+	/**
+	 * get desHeight
+	 * @param col
+	 * @param row
+	 * @return
+	 */
 	public int get4(int col, int row) {
 		return movement[col][row][3];
 	}
