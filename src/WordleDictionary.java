@@ -1,3 +1,9 @@
+/**
+ * Stores the answers and possible guesses for Wordle. Both are stored in a HashSet for fast guess checking.
+ * An array is also used in order to get a random word for the answer. 
+ * 
+ * @author Gregory Jenkins
+ */
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -23,6 +29,10 @@ public class WordleDictionary {
 		guessesArray = guesses.toArray(new String[guesses.size()]);
 	}
 	
+	/**
+	 * Returns a random word to be used as the answer.
+	 * @return String random word
+	 */
 	public String getRandomWord() {
 		int size = guessesArray.length;
 		Random rand = new Random();
@@ -32,10 +42,20 @@ public class WordleDictionary {
 		return guessesArray[index];
 	}
 	
+	/**
+	 * Checks if a guess is valid
+	 * @param guess being checked
+	 * @return Boolean true if guess is valid
+	 */
 	public boolean isValidGuess(String guess) {
 		return guesses.contains(guess);
 	}
 	
+	/**
+	 * Loads the words from .txt files into HashSets
+	 * @param filePath File path of the files
+	 * @param set Set being loaded into
+	 */
 	private void loadWords(String filePath, HashSet<String> set) {
 		
 		File file = new File(filePath);
@@ -51,6 +71,11 @@ public class WordleDictionary {
 		}
 	}
 	
+	/**
+	 * Returns the word of the day.
+	 * @return String word
+	 * @throws IOException
+	 */
 	public String getWOTD() throws IOException {
 		WordOfTheDay WOTD = new WordOfTheDay();
 		return WOTD.getWOTD();
