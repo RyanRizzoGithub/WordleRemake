@@ -71,6 +71,17 @@ public interface WordleUI {
 		endUI.start();
 	}
 	
+	/* - - - - - - START LEADERBOARD - - - - - - - - - - - - - - - - - - - - - - - - -
+	 * This method is responsible for starting the user login interface
+	 * Author: Gregory Jenkins
+	 */
+	public static void startLeaderboard() {
+		// Create a new login ui
+		WordleLeaderboardUI leaderboardUI = new WordleLeaderboardUI();
+		// Open the interface
+		leaderboardUI.open();
+	}
+	
 	/* - - - - - - GET THEME COLORS - - - - - - - - - - - - - - - - - - -
 	 * This method is responsible for setting the colors for the interfaces,
 	 * given the theme

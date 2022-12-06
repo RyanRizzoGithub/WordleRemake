@@ -67,6 +67,8 @@ public class WordleGame {
 		}
 	}
 	
+	
+	
 	public int[] makeAGuess(char[][] input) {
 		
 		// convert input chars into a string
@@ -136,8 +138,18 @@ public class WordleGame {
 		return guessResults;
 	}
 	
+	// Katelen Tellez
 	public boolean gameIsOver() {
-		return gameOver;
+		
+		// update player stats
+		if(guessNum == 6 || guessIsCorrect) {
+			Wordle.player.addGame(guessIsCorrect, guessNum);
+		}
+		
+		if (guessNum == 6) {
+			return true;
+		}
+		return guessIsCorrect;
 	}
 	
 	public boolean guessIsCorrect() {

@@ -346,11 +346,15 @@ public class WordleGameUI {
 			}
 		};
 		display.timerExec(10, runnable);
+		
+		boolean flag = true;
+		
 		while (!shell.isDisposed())
 			if (!display.readAndDispatch()) {
 				display.sleep();
 				x++;
-				if(game.gameIsOver()) {
+				if(flag && game.gameIsOver()) {
+					flag = false;
 					WordleUI.startEnd();
 				}
 				
@@ -674,26 +678,34 @@ public class WordleGameUI {
 	private String generateShareString() {
 		String output = "Results:\n";
 		
-		for (int j=0; j<6; j++) {
+		for (int j=0; j<7; j++) {
 			for (int x=0; x<5; x++) {
+				System.out.println("x: " + x + " j: " + j);
 				// Check if cell is occupied
 				if (input[x][j] != '?') {
+					System.out.println("NOT ?");
 
 					// Update the square
 					if (rowSubmitted[j] == true) {		
+						System.out.println("ROW SUBMITTED");
 						//Incorrect letter
 						if (game.checkChar(input[x][j], x) == -1 ) {
 							output += "⬜";
+							System.out.println("GRAY");
 						}
 						//Incorrect location
 						if (game.checkChar(input[x][j], x) == 0 ) {
 							output += "🟨";
+							System.out.println("YELLOW");
 						}
 						//Correct letter and location
 						if (game.checkChar(input[x][j], x) == 1 ) {
 							output += "🟩";
+							System.out.println("GREEN");
 						}
 					} 
+				} else {
+					System.out.println(input[x][j]);
 				}
 			}
 			output += "\n";

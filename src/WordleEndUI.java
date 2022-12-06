@@ -91,6 +91,8 @@ public class WordleEndUI {
 		// player played stat
 		Label gamesPlayed = new Label(canvas, SWT.NONE);
 		gamesPlayed.setText("" + Wordle.player.getGamesPlayed());
+		Wordle.player.printStats();
+		System.out.println("GAMES PLAYED: " + Wordle.player.getGamesPlayed());
 		gamesPlayed.setBounds(120, 50, 50, 50);
 		gamesPlayed.setFont(font);
 
@@ -245,7 +247,7 @@ public class WordleEndUI {
 
 				gameUI.setVisible(false);
 				WordleMenuUI menuUI = new WordleMenuUI(0);
-				shell.close();
+				shell.dispose();
 				WordleUI.startMenu(menuUI);
 			}
 		});
@@ -260,7 +262,7 @@ public class WordleEndUI {
 						try {
 							newGame = new WordleGame("WOTD");
 							WordleGameUI gameUI = new WordleGameUI(newGame);
-							shell.close();
+							shell.dispose();
 							WordleUI.startGame(gameUI);
 						} catch (IOException e) {
 							e.printStackTrace();
