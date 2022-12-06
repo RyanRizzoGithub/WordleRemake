@@ -33,12 +33,15 @@ import org.eclipse.swt.widgets.Canvas;
 public class WordleEndUI {
 
 	protected Shell shell;
+	private WordleGameUI gameUI;
 
 	public void start() {
 		Display display = Display.getDefault();
 		createContents();
 		shell.open();
 		shell.layout();
+		
+		gameUI = WordleGame.getGameUI();
 
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
@@ -175,7 +178,6 @@ public class WordleEndUI {
 		mainMenuButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 
-				WordleGameUI gameUI = WordleGame.getGameUI();
 				gameUI.setVisible(false);
 				WordleMenuUI menuUI = new WordleMenuUI(0);
 				shell.close();
@@ -204,6 +206,7 @@ public class WordleEndUI {
 		shareButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				
+				gameUI.copyStats();
 			}
 		});
 

@@ -147,10 +147,17 @@ public class WordleGameUI {
 						if (guess.equals(game.word)) {
 							game.setOver();
 							game.setGuessCorrect();
+							
+							rowSubmitted[row] = true;
+							row++;
+							guessNum++;
+							game.addGuess();
 						}
 
 						// Check if word is in guess dictionary
 						else if (dic.guesses.contains(guess)) {
+							
+							
 							rowSubmitted[row] = true;
 							row++;
 							col = 0;
@@ -224,6 +231,11 @@ public class WordleGameUI {
 						if (guess.equals(game.word)) {
 							game.setOver();
 							game.setGuessCorrect();
+							
+							rowSubmitted[row] = true;
+							row++;
+							guessNum++;
+							game.addGuess();
 						}
 
 						// Check if word is in guess dictionary
@@ -255,6 +267,7 @@ public class WordleGameUI {
 					setVisible(false);
 					// TODO: WordleMenuUI = new WordleMenuUI(WordlePlayer player);
 					WordleMenuUI menuUI = new WordleMenuUI(0);
+					shell.dispose();
 					WordleUI.startMenu(menuUI);
 				}
 
@@ -474,4 +487,12 @@ public class WordleGameUI {
 		
 		return output;
 	}
+	
+	public void copyStats() {
+		String copyString = generateShareString();
+		StringSelection stringSelectionObj = new StringSelection(copyString);
+		Clipboard clipboardObj = Toolkit.getDefaultToolkit().getSystemClipboard();
+		clipboardObj.setContents(stringSelectionObj, null);
+	}
+
 }
