@@ -284,7 +284,7 @@ public class WordleGame {
 	 * @author Ryan Rizzo
 	 */
 	public void setGameUI(WordleGameUI g) {
-        gameUI = g;
+        	gameUI = g;
     	}
 	
 	/** - - - - - - GET GAME UI - - - - - - - - - - - - - - - - - - - - - - - - -
