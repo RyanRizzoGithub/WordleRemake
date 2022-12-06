@@ -5,25 +5,19 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 
+/**
+ * AUTHOR(S):	Ryan Rizzo
+ * FILE:		WordleHelpUI.java
+ * CLASS:		CSC 335 - Final Project
+ * DATE:		12/6/22
+ * PURPOSE:		Responsible for displaying all the help screen information
+ */
 public class WordleHelpUI {
-
 	protected Shell shell;
 
-	/**
-	 * Launch the application.
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		try {
-			WordleHelpUI window = new WordleHelpUI();
-			window.start();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Open the window.
+	/** - - - - - - START - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	 *  Generates the content and displays the help screen
+	 *  @author Ryan Rizzo
 	 */
 	public void start() {
 		Display display = Display.getDefault();
@@ -37,10 +31,13 @@ public class WordleHelpUI {
 		}
 	}
 
-	/**
-	 * Create contents of the window.
+	/** - - - - - - CREATE CONTENTS - - - - - - - - - - - - - - - - - - - - - - - -
+	 * Responsible for adding all of the SWT widgets and text content to the help page
+	 * @author Ryan Rizzo
 	 */
+	@SuppressWarnings("unused")
 	protected void createContents() {
+		// Setup the shell
 		shell = new Shell();
 		shell.setSize(475, 550);
 		shell.setText("HELP PAGE");
