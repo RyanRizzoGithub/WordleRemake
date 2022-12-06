@@ -1,7 +1,6 @@
 import java.io.IOException;
 import java.util.HashMap;
 
-
 /**
  * AUTHOR(S):		Katelen Tellez & Ryan Rizzo
  * FILE:		WordleGame.java
