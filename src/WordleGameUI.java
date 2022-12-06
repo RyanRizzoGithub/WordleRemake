@@ -27,7 +27,7 @@ public class WordleGameUI {
 	// @Katelen Tellez added
 	private WordleGame game;
 	private int[] guessResults = null;
-	private int[][] allGuesses = new int[6][5];
+	private int[][] allGuesses = new int[7][5];
 	private int guessNum = 0;
 
 	// @Qianwen Wang added
@@ -48,36 +48,18 @@ public class WordleGameUI {
 		row = 0;
 		col = 0;
 
-		input = new char[5][6];
+		input = new char[5][7];
 		for (int i = 0; i < 5; i++) {
-			for (int j = 0; j < 6; j++) {
+			for (int j = 0; j < 7; j++) {
 				input[i][j] = '?';
 			}
 		}
-		rowSubmitted = new boolean[6];
+		rowSubmitted = new boolean[7];
 		for (int i = 0; i < 6; i++) {
 			rowSubmitted[i] = false;
 		}
 		shell.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.BACKGROUND_COLOR]);
-
 	}
-	// TODO:
-	/*
-	 * public WordleGameUI(WordleGame game, WordlePlayer player) { display =
-	 * Display.getDefault(); shell = new Shell(display); shell.setText("Wordle");
-	 * shell.setLayout( new GridLayout()); shell.setBounds(WordleUI.SHELL_X,
-	 * WordleUI.SHELL_Y, WordleUI.SHELL_WIDTH, WordleUI.SHELL_HEIGHT);
-	 * 
-	 * dic = new WordleDictionary();
-	 * 
-	 * this.game = game; row = 0; col = 0;
-	 * 
-	 * input = new char[5][6]; for (int i=0; i<5; i++) { for (int j=0; j<6; j++) {
-	 * input[i][j] = '?'; } } rowSubmitted = new boolean[6]; for (int i=0; i<6; i++)
-	 * { rowSubmitted[i] = false; }
-	 * shell.setBackground(WordleUI.getThemeColors(player.getTheme())[WordleUI.
-	 * BACKGROUND_COLOR]); }
-	 */
 
 	public void start() {
 		Composite upperComp = new Composite(shell, SWT.NO_FOCUS);
@@ -139,11 +121,11 @@ public class WordleGameUI {
 						for (int i = 0; i < 5; i++) {
 							guess = guess + Character.toString(input[i][guessNum]).toUpperCase();
 						}
-						if (guess.equals(game.word)) {
+						if (guess.equals(game.getWord())) {
 							// @Qianwen Wang added
-							// TODO: add wave, mode 4
+							// add wave, mode 4
 							animate.setWin(row);
-							if(x - curX >=60)
+							if (x - curX >= 60)
 								game.setOver();
 						}
 
@@ -185,6 +167,7 @@ public class WordleGameUI {
 							System.out.println();
 						} else {
 							System.out.println("Invalid word: " + guess);
+							// TODO: shake animation and warning
 
 							// @Qianwen Wang added
 							// Add mode 2, shake
@@ -192,6 +175,7 @@ public class WordleGameUI {
 								animate.updateInvalid(i, row);
 							}
 						}
+
 					}
 				}
 				// If DELETE key
@@ -205,13 +189,13 @@ public class WordleGameUI {
 				else if (e.keyCode == 27) {
 					setVisible(false);
 					// TODO: WordleMenuUI = new WordleMenuUI(WordlePlayer player);
-					WordleMenuUI menuUI = new WordleMenuUI();
+					WordleMenuUI menuUI = new WordleMenuUI(Wordle.player.getTheme());
 					WordleUI.startMenu(menuUI);
 				}
 
 				// If CHARACTER
 				else {
-					if (col != 5 && row != 6) {
+					if (col != 5 && row != 7) {
 						for (int i = 0; i < qwerty.length; i++) {
 							if (e.character == qwerty[i].charAt(0)) {
 								input[col][row] = e.character;
@@ -219,6 +203,7 @@ public class WordleGameUI {
 								// @Qianwen Wang added
 								animate.add(col, row);
 								col++;
+
 							}
 						}
 					}
@@ -257,7 +242,7 @@ public class WordleGameUI {
 						for (int i = 0; i < 5; i++) {
 							guess = guess + Character.toString(input[i][guessNum]).toUpperCase();
 						}
-						if (guess.equals(game.word)) {
+						if (guess.equals(game.getWord())) {
 
 						}
 
@@ -302,8 +287,8 @@ public class WordleGameUI {
 							for (int i = 0; i < 5; i++) {
 								animate.updateInvalid(i, row);
 							}
+
 							System.out.println("Invalid word: " + guess);
-							// TODO: shake animation and warning
 						}
 
 					}
@@ -321,7 +306,7 @@ public class WordleGameUI {
 				if (e.y > 15 && e.y < 40 && e.x > 15 && e.x < 90) {
 					setVisible(false);
 					// TODO: WordleMenuUI = new WordleMenuUI(WordlePlayer player);
-					WordleMenuUI menuUI = new WordleMenuUI();
+					WordleMenuUI menuUI = new WordleMenuUI(Wordle.player.getTheme());
 					WordleUI.startMenu(menuUI);
 				}
 
@@ -329,12 +314,13 @@ public class WordleGameUI {
 				if (index >= 0 && index < 30) {
 					if (col != 5 && row != 6) {
 						input[col][row] = qwerty[index].toUpperCase().charAt(0);
+
 						// @Qianwen Wang added
 						animate.add(col, row);
+
 						col++;
 					}
 				}
-
 				canvas.redraw();
 			}
 
@@ -376,60 +362,162 @@ public class WordleGameUI {
 		Font font = new Font(shell.getDisplay(), new FontData("Times New Roman", 40, SWT.BOLD));
 		e.gc.setFont(font);
 
-		// Iterate over each cell in the input array
-		for (int x = 0; x < 5; x++) {
-			for (int j = 0; j < 6; j++) {
-				// Check if cell is occupied
-				if (input[x][j] != '?') {
+		if (game.getMode() == "DORDLE") {
+			// Iterate over each cell in the input array
+			for (int x = 0; x < 5; x++) {
+				for (int j = 0; j < 7; j++) {
+					// Check if cell is occupied
+					if (input[x][j] != '?') {
+						// Update the left side
+						Image character = new Image(shell.getDisplay(),
+								"./images/" + input[x][j] + "/" + input[x][j] + "Black.png");
+						if (rowSubmitted[j] == true) {
+							if (game.checkChar(input[x][j], x) == -1) {
+								character = new Image(shell.getDisplay(),
+										"./images/" + input[x][j] + "/" + input[x][j] + "Gray.png");
+							}
 
-					// Update the square
-					Image character = new Image(shell.getDisplay(),
-							"./images/" + input[x][j] + "/" + input[x][j] + "Black.png");
-					if (rowSubmitted[j] == true) {
-						if (game.checkChar(input[x][j], x) == -1) {
-							character = new Image(shell.getDisplay(),
-									"./images/" + input[x][j] + "/" + input[x][j] + "Gray.png");
+							// @Qianwen Wang added
+							if (animate.getCurRow() == j) {
+								if (this.x - curX > 4) {
+
+									if (game.checkChar(input[x][j], x) == 0) {
+										character = new Image(shell.getDisplay(),
+												"./images/" + input[x][j] + "/" + input[x][j] + "Yellow.png");
+									}
+									if (game.checkChar(input[x][j], x) == 1) {
+										character = new Image(shell.getDisplay(),
+												"./images/" + input[x][j] + "/" + input[x][j] + "Green.png");
+									}
+								}
+							}
+							// @Qianwen Wang added
+							else {
+								if (game.checkChar(input[x][j], x) == 0) {
+									character = new Image(shell.getDisplay(),
+											"./images/" + input[x][j] + "/" + input[x][j] + "Yellow.png");
+								}
+								if (game.checkChar(input[x][j], x) == 1) {
+									character = new Image(shell.getDisplay(),
+											"./images/" + input[x][j] + "/" + input[x][j] + "Green.png");
+								}
+
+							}
+
 						}
-						// @Qianwen Wang added
-						if (animate.getCurRow() == j) {
-							if(this.x - curX > 4 ) {
-							
-							if (game.checkChar(input[x][j], x) == 0) {
+
+						int width = character.getImageData().width;
+						int height = character.getImageData().height;
+						// e.gc.drawImage(character, 0, 0, width, height, 30 + (50 * x), 60 + (50 * j),
+						// (int) (width * 0.8), (int) (height * 0.8));
+
+						// @Qianwen Wang
+						animate.setModel(height);
+						animate.draw(x, j);
+						e.gc.drawImage(character, 0, 0, width, width, 30 + (50 * x) + animate.get1(x, j),
+								60 + (50 * j) + animate.get2(x, j), (int) (width * 0.8) + animate.get3(x, j),
+								(int) (height * 0.8) + animate.get4(x, j));
+
+						// Update the right side
+						if (rowSubmitted[j] == true) {
+							if (game.checkSecondChar(input[x][j], x) == -1) {
 								character = new Image(shell.getDisplay(),
-										"./images/" + input[x][j] + "/" + input[x][j] + "Yellow.png");
+										"./images/" + input[x][j] + "/" + input[x][j] + "Gray.png");
 							}
-							if (game.checkChar(input[x][j], x) == 1) {
-								character = new Image(shell.getDisplay(),
-										"./images/" + input[x][j] + "/" + input[x][j] + "Green.png");
+
+							// @Qianwen Wang added
+							if (animate.getCurRow() == j) {
+								if (this.x - curX > 4) {
+
+									if (game.checkSecondChar(input[x][j], x) == 0) {
+										character = new Image(shell.getDisplay(),
+												"./images/" + input[x][j] + "/" + input[x][j] + "Yellow.png");
+									}
+									if (game.checkSecondChar(input[x][j], x) == 1) {
+										character = new Image(shell.getDisplay(),
+												"./images/" + input[x][j] + "/" + input[x][j] + "Green.png");
+									}
+								}
 							}
+							// @Qianwen Wang added
+							else {
+
+								if (game.checkChar(input[x][j], x) == 0) {
+									character = new Image(shell.getDisplay(),
+											"./images/" + input[x][j] + "/" + input[x][j] + "Yellow.png");
+								}
+								if (game.checkChar(input[x][j], x) == 1) {
+									character = new Image(shell.getDisplay(),
+											"./images/" + input[x][j] + "/" + input[x][j] + "Green.png");
+								}
+
 							}
+
 						}
-						else {
-							
-							if (game.checkChar(input[x][j], x) == 0) {
-								character = new Image(shell.getDisplay(),
-										"./images/" + input[x][j] + "/" + input[x][j] + "Yellow.png");
-							}
-							if (game.checkChar(input[x][j], x) == 1) {
-								character = new Image(shell.getDisplay(),
-										"./images/" + input[x][j] + "/" + input[x][j] + "Green.png");
-							}
-							
-						}
+
+						// @Qianwen Wang
+						animate.draw(x, j);
+						e.gc.drawImage(character, 0, 0, width, height, 315 + (50 * x) + animate.get1(x, j),
+								60 + (50 * j) + animate.get2(x, j), (int) (width * 0.8) + animate.get3(x, j),
+								(int) (height * 0.8) + animate.get4(x, j));
+
+						// e.gc.drawImage(character, 0, 0, width, height, 315 + (50 * x), 60 + (50 * j),
+						// (int) (width * 0.8), (int) (height * 0.8));
 					}
-					// @Qianwen Wang
-					animate.draw(x, j);
-					e.gc.drawImage(character, 0, 0, 60, 60, 
-							120 + (70 * x) + animate.get1(x, j),
-							60 + (70 * j) + animate.get2(x, j), 
-							60 + animate.get3(x, j), 
-							60 + animate.get4(x, j));
+				}
+			}
+		} else {
+			// Iterate over each cell in the input array
+			for (int x = 0; x < 5; x++) {
+				for (int j = 0; j < 6; j++) {
+					// Check if cell is occupied
+					if (input[x][j] != '?') {
 
-					// e.gc.drawImage(character, 120 + (70 * x), 60 + (70 * j));
+						// Update the square
+						Image character = new Image(shell.getDisplay(),
+								"./images/" + input[x][j] + "/" + input[x][j] + "Black.png");
+						if (rowSubmitted[j] == true) {
+							if (game.checkChar(input[x][j], x) == -1) {
+								character = new Image(shell.getDisplay(),
+										"./images/" + input[x][j] + "/" + input[x][j] + "Gray.png");
+							}
+							// @Qianwen Wang added
+							if (animate.getCurRow() == j) {
+								if (this.x - curX > 4) {
+
+									if (game.checkChar(input[x][j], x) == 0) {
+										character = new Image(shell.getDisplay(),
+												"./images/" + input[x][j] + "/" + input[x][j] + "Yellow.png");
+									}
+									if (game.checkChar(input[x][j], x) == 1) {
+										character = new Image(shell.getDisplay(),
+												"./images/" + input[x][j] + "/" + input[x][j] + "Green.png");
+									}
+								}
+							} else {
+
+								if (game.checkChar(input[x][j], x) == 0) {
+									character = new Image(shell.getDisplay(),
+											"./images/" + input[x][j] + "/" + input[x][j] + "Yellow.png");
+								}
+								if (game.checkChar(input[x][j], x) == 1) {
+									character = new Image(shell.getDisplay(),
+											"./images/" + input[x][j] + "/" + input[x][j] + "Green.png");
+								}
+
+							}
+						}
+						// @Qianwen Wang
+						animate.draw(x, j);
+						e.gc.drawImage(character, 0, 0, 60, 60, 120 + (70 * x) + animate.get1(x, j),
+								60 + (70 * j) + animate.get2(x, j), 60 + animate.get3(x, j), 60 + animate.get4(x, j));
+						// e.gc.drawImage(character, 120 + (70 * x), 60 + (70 * j));
+					}
 				}
 			}
 		}
 	}
+
 	/*
 	 * - - - - - - DRAW INPUT RECTANGLES - - - - - - - - - - - - - - - - - - - - - -
 	 * - - - - - - - - - - - This function is responsible displaying the rectangles
@@ -438,11 +526,33 @@ public class WordleGameUI {
 	 * @param e, the paint event which calls this function (Ryan Rizzo)
 	 */
 	private void drawInputRectangles(PaintEvent e) {
-		// Iterate over 5 columns and 6 rows
-		for (int i = 0; i < 5; i++) {
-			for (int j = 0; j < 6; j++) {
-				Image empty = new Image(shell.getDisplay(), "./images/empty.png");
-				e.gc.drawImage(empty, 120 + (70 * i), 60 + (70 * j));
+		if (game.getMode() == "DORDLE") {
+			// Iterate over 5 columns and 6 rows
+			for (int i = 0; i < 5; i++) {
+				for (int j = 0; j < 7; j++) {
+					Image empty = new Image(shell.getDisplay(), "./images/empty.png");
+					int width = empty.getImageData().width;
+					int height = empty.getImageData().height;
+					e.gc.drawImage(empty, 0, 0, width, height, 30 + (50 * i), 60 + (50 * j), (int) (width * 0.8),
+							(int) (height * 0.8));
+				}
+			}
+			for (int i = 0; i < 5; i++) {
+				for (int j = 0; j < 7; j++) {
+					Image empty = new Image(shell.getDisplay(), "./images/empty.png");
+					int width = empty.getImageData().width;
+					int height = empty.getImageData().height;
+					e.gc.drawImage(empty, 0, 0, width, height, 315 + (50 * i), 60 + (50 * j), (int) (width * 0.8),
+							(int) (height * 0.8));
+				}
+			}
+		} else {
+			// Iterate over 5 columns and 6 rows
+			for (int i = 0; i < 5; i++) {
+				for (int j = 0; j < 6; j++) {
+					Image empty = new Image(shell.getDisplay(), "./images/empty.png");
+					e.gc.drawImage(empty, 120 + (70 * i), 60 + (70 * j));
+				}
 			}
 		}
 		canvas.redraw();
@@ -534,7 +644,6 @@ public class WordleGameUI {
 
 	private void drawAnimation(PaintEvent e) {
 		int time = Math.abs(((int) System.currentTimeMillis() / 100));
-		System.out.println(WordleUI.SHELL_HEIGHT - ((time - 400) % WordleUI.SHELL_HEIGHT));
 
 		Image background = new Image(shell.getDisplay(), "./images/background.png");
 		e.gc.drawImage(background, 0,
@@ -555,7 +664,8 @@ public class WordleGameUI {
  * left and right 5 times mode 3: enter valid words -- fold in the middle and
  * replace with new one that bigger from middle mode 4: when win -- wave
  * 
- * @param e, the paint event which calls this function (Qianwen Wang)
+ * @param e, the paint event which calls this function 
+ * @Author: Qianwen Wang 
  */
 
 class Animate {
@@ -564,17 +674,27 @@ class Animate {
 	// move
 	// for mode 2 --> 8: mode 2 start to move, 9: mode 2 move right, 10: mode 2 move
 	// back
-	// for mode 3 --> 12: mode 2 start to fold,
-	private int[][] states;
+	// for mode 3 --> 12: mode 3 start to fold, 13: mode 3 fold back, 14: mode 3 end fold
+	// for mode 4 --> 15: mode 4 start to wave, and [] count to count the waving by 1-5 times
+	private int[][] states; 
 	private int[][] initialStates;
 	private int[][][] movement;
 	private int curRow = 0;
-	private int[] count = new int[5];
+	private int count = 0;
+	private int size = 30;
+	private int w = 6;
+	private int h = 1;
 
 	public Animate() {
-		states = new int[5][6];
-		movement = new int[5][6][4];
-		initialStates = new int[5][6];
+		states = new int[5][7];
+		movement = new int[5][7][4];
+		initialStates = new int[5][7];
+	}
+
+	public void setModel(int height) {
+		size = (int) (60 * 0.8) / 2;
+		w = 6;
+		h = 4;
 	}
 
 	public void setWin(int row) {
@@ -585,11 +705,6 @@ class Animate {
 		states[4][row] = 4;
 		initialStates[0][row] = 4;
 		curRow = row;
-		count[0] = 0;
-		count[1] = 0;
-		count[2] = 0;
-		count[3] = 0;
-		count[4] = 0;
 	}
 
 	public int getCurRow() {
@@ -684,7 +799,7 @@ class Animate {
 		}
 		// move to right
 		else if (states[col][row] == 9) {
-			if (movement[0][curRow][0] >= 3) {
+			if (movement[0][curRow][0] >= 0) {
 				states[col][row] = 10;
 			}
 			movement[0][curRow][0] = movement[0][curRow][0] + 1;
@@ -754,7 +869,8 @@ class Animate {
 			setZero();
 		}
 		if (states[col][row] == 12) {
-			if (movement[0][curRow][1] >= 30) {
+			// change here TODO:
+			if (movement[0][curRow][1] >= size) {
 				states[0][row] = 13;
 				states[1][row] = 13;
 				states[2][row] = 13;
@@ -765,30 +881,30 @@ class Animate {
 			movement[0][curRow][0] = 0;
 			movement[0][curRow][1] = movement[0][curRow][1] + 3;
 			movement[0][curRow][2] = 0;
-			movement[0][curRow][3] = movement[0][curRow][3] - 6;
+			movement[0][curRow][3] = movement[0][curRow][3] - w;
 
 			movement[1][curRow][0] = 0;
 			movement[1][curRow][1] = movement[1][curRow][1] + 3;
 			movement[1][curRow][2] = 0;
-			movement[1][curRow][3] = movement[1][curRow][3] - 6;
+			movement[1][curRow][3] = movement[1][curRow][3] - w;
 
 			movement[2][curRow][0] = 0;
 			movement[2][curRow][1] = movement[2][curRow][1] + 3;
 			movement[2][curRow][2] = 0;
-			movement[2][curRow][3] = movement[2][curRow][3] - 6;
+			movement[2][curRow][3] = movement[2][curRow][3] - w;
 
 			movement[3][curRow][0] = 0;
 			movement[3][curRow][1] = movement[3][curRow][1] + 3;
 			movement[3][curRow][2] = 0;
-			movement[3][curRow][3] = movement[3][curRow][3] - 6;
+			movement[3][curRow][3] = movement[3][curRow][3] - w;
 
 			movement[4][curRow][0] = 0;
 			movement[4][curRow][1] = movement[4][curRow][1] + 3;
 			movement[4][curRow][2] = 0;
-			movement[4][curRow][3] = movement[4][curRow][3] - 6;
+			movement[4][curRow][3] = movement[4][curRow][3] - w;
 		}
-		if(states[col][row] == 13) {
-			if (movement[0][curRow][1] <= 3) {
+		if (states[col][row] == 13) {
+			if (movement[0][curRow][1] <= h) {
 				states[0][row] = 14;
 				states[1][row] = 14;
 				states[2][row] = 14;
@@ -799,29 +915,29 @@ class Animate {
 			movement[0][curRow][0] = 0;
 			movement[0][curRow][1] = movement[0][curRow][1] - 3;
 			movement[0][curRow][2] = 0;
-			movement[0][curRow][3] = movement[0][curRow][3] + 6;
+			movement[0][curRow][3] = movement[0][curRow][3] + w;
 
 			movement[1][curRow][0] = 0;
 			movement[1][curRow][1] = movement[1][curRow][1] - 3;
 			movement[1][curRow][2] = 0;
-			movement[1][curRow][3] = movement[1][curRow][3] + 6;
+			movement[1][curRow][3] = movement[1][curRow][3] + w;
 
 			movement[2][curRow][0] = 0;
 			movement[2][curRow][1] = movement[2][curRow][1] - 3;
 			movement[2][curRow][2] = 0;
-			movement[2][curRow][3] = movement[2][curRow][3] + 6;
+			movement[2][curRow][3] = movement[2][curRow][3] + w;
 
 			movement[3][curRow][0] = 0;
 			movement[3][curRow][1] = movement[3][curRow][1] - 3;
 			movement[3][curRow][2] = 0;
-			movement[3][curRow][3] = movement[3][curRow][3] + 6;
+			movement[3][curRow][3] = movement[3][curRow][3] + w;
 
 			movement[4][curRow][0] = 0;
 			movement[4][curRow][1] = movement[4][curRow][1] - 3;
 			movement[4][curRow][2] = 0;
-			movement[4][curRow][3] = movement[4][curRow][3] + 6;
+			movement[4][curRow][3] = movement[4][curRow][3] + w;
 		}
-		//mode 4
+		// mode 4
 		if (states[col][row] == 4) {
 			states[0][row] = 15;
 			states[1][row] = 15;
@@ -830,69 +946,69 @@ class Animate {
 			states[4][row] = 15;
 			setZero();
 		}
-		if(states[col][row] == 15) {
-			//1
-			if (count[0] == 0) {
+		if (states[col][row] == 15) {
+			// 1
+			if (count == 0) {
 				movement[0][curRow][1] = movement[0][curRow][1] - 1;
 				if (movement[0][curRow][1] <= -10) {
-					count[0] = 1;
+					count = 1;
 				}
-			}else if (count[0] == 1) {
+			} else if (count == 1) {
 				movement[0][curRow][1] = movement[0][curRow][1] + 1;
 				if (movement[0][curRow][1] >= 0) {
-					count[0] = 2;
+					count = 2;
 				}
 			}
-			//2
-			if (count[0] == 2) {
-				movement[1][curRow][1] = movement[1][curRow][1] + 1;
-				if (movement[1][curRow][1] >= 10) {
-					count[0] = 3;
-				}
-			}else if (count[0] == 3) {
+			// 2
+			if (count == 2) {
 				movement[1][curRow][1] = movement[1][curRow][1] - 1;
-				if (movement[1][curRow][1] <= 0) {
-					count[0] = 4;
+				if (movement[1][curRow][1] <= -10) {
+					count = 3;
+				}
+			} else if (count == 3) {
+				movement[1][curRow][1] = movement[1][curRow][1] + 1;
+				if (movement[1][curRow][1] >= 0) {
+					count = 4;
 				}
 			}
-			//3
-			if (count[0] == 4) {
-				movement[2][curRow][1] = movement[2][curRow][1] + 1;
-				if (movement[2][curRow][1] >= 10) {
-					count[0] = 5;
-				}
-			}else if (count[0] == 5) {
+			// 3
+			if (count == 4) {
 				movement[2][curRow][1] = movement[2][curRow][1] - 1;
-				if (movement[2][curRow][1] <= 0) {
-					count[0] = 6;
+				if (movement[2][curRow][1] <= -10) {
+					count = 5;
+				}
+			} else if (count == 5) {
+				movement[2][curRow][1] = movement[2][curRow][1] + 1;
+				if (movement[2][curRow][1] >= 0) {
+					count = 6;
 				}
 			}
-			//4
-			if (count[0] == 6) {
-				movement[3][curRow][1] = movement[3][curRow][1] + 1;
-				if (movement[3][curRow][1] >= 10) {
-					count[0] = 7;
-				}
-			}else if (count[0] == 7) {
+			// 4
+			if (count == 6) {
 				movement[3][curRow][1] = movement[3][curRow][1] - 1;
-				if (movement[3][curRow][1] <= 0) {
-					count[0] = 8;
+				if (movement[3][curRow][1] <= -10) {
+					count = 7;
+				}
+			} else if (count == 7) {
+				movement[3][curRow][1] = movement[3][curRow][1] + 1;
+				if (movement[3][curRow][1] >= 0) {
+					count = 8;
 				}
 			}
-			//5
-			if (count[0] == 8) {
-				movement[4][curRow][1] = movement[4][curRow][1] + 1;
-				if (movement[4][curRow][1] >= 10) {
-					count[0] = 9;
-				}
-			}else if (count[0] == 9) {
+			// 5
+			if (count == 8) {
 				movement[4][curRow][1] = movement[4][curRow][1] - 1;
-				if (movement[4][curRow][1] <= 0) {
-					count[0] = 10;
+				if (movement[4][curRow][1] <= -10) {
+					count = 9;
+				}
+			} else if (count == 9) {
+				movement[4][curRow][1] = movement[4][curRow][1] + 1;
+				if (movement[4][curRow][1] >= 0) {
+					count = 10;
 				}
 			}
 		}
-		
+
 	}
 
 	private void setZero() {
