@@ -1,11 +1,14 @@
+/**
+ * UI for the leaderboard. Shows the top 10 player profiles.
+ * 
+ * @author Gregory Jenkins
+ */
+
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
-import org.eclipse.swt.widgets.Canvas;
 
 public class WordleLeaderboardUI {
 
@@ -50,12 +53,14 @@ public class WordleLeaderboardUI {
 		
 		Wordle.loadPlayers();
 		
+		// Top 10
 		Label lblTop = new Label(shell, SWT.NONE);
 		lblTop.setFont(SWTResourceManager.getFont(".AppleSystemUIFont", 20, SWT.NORMAL));
 		lblTop.setAlignment(SWT.CENTER);
 		lblTop.setBounds(181, 44, 87, 24);
 		lblTop.setText("Top 10");
 		
+		// 1-10 labels
 		Label label_1 = new Label(shell, SWT.NONE);
 		label_1.setFont(SWTResourceManager.getFont(".AppleSystemUIFont", 15, SWT.NORMAL));
 		label_1.setBounds(61, 102, 29, 24);
@@ -108,6 +113,7 @@ public class WordleLeaderboardUI {
 		
 		String playerName = "";
 		
+		// Checks if a player is in the list, and draws it to the screen
 		Label lblNewLabel = new Label(shell, SWT.NONE);
 		lblNewLabel.setFont(SWTResourceManager.getFont(".AppleSystemUIFont", 15, SWT.NORMAL));
 		lblNewLabel.setBounds(96, 102, 296, 24);
