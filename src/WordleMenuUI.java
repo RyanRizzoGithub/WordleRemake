@@ -1,5 +1,4 @@
 import java.io.IOException;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -14,6 +13,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * AUTHOR(S):	Ryan Rizzo
+ * FILE:		WordleMenuUI.java
+ * CLASS:		CSC 335 - Final Project
+ * DATE:		12/6/22
+ * PURPOSE:		Responsible for displaying and adding function to the main menu ui
+ */
 public class WordleMenuUI {
 	private Shell shell;
 	private Canvas canvas;
@@ -21,6 +27,11 @@ public class WordleMenuUI {
 	private boolean[] hovered;
 	private int theme;
 	
+	/** - - - - - - WORDLE MENU UI - - - - - - - - - - - - - - - - - - - - - - - - 
+	 * WordleGameUI Constructor
+	 * @param int theme
+	 * @author Ryan Rizzo
+	 */
 	public WordleMenuUI(int theme) {
 		display = Display.getDefault();
 		shell = new Shell(display);
@@ -36,17 +47,17 @@ public class WordleMenuUI {
 		shell.setBackground(WordleUI.getThemeColors(theme)[WordleUI.BACKGROUND_COLOR]);
 	}
 	
-	/* - - - - - - START - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	 * This function is responsible for building and opening a WordleMenuUI
-	 * (Ryan Rizzo)
+	/** - - - - - - START - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	 * Responsible for building and opening a WordleMenuUI
+	 * @author Ryan Rizzo
 	 */
 	public void start() {
 		Composite menuComp = new Composite(shell, SWT.NO_FOCUS);
-		
+		// Setup canvas
 		canvas = new Canvas(menuComp, SWT.NONE);
 		canvas.setSize(600, 1000);
 		
-		
+		// Add paint listener to redraw canavs
 		canvas.addPaintListener(e -> {
 			// Draw the background animation
 			drawAnimation(e);
@@ -154,6 +165,7 @@ public class WordleMenuUI {
 			}
 		});
 		
+		// Add mouse listener to select the buttons
 		canvas.addMouseListener(new MouseListener() {
 			public void mouseDown(MouseEvent e) {
 				// If play button
@@ -176,9 +188,7 @@ public class WordleMenuUI {
 				else if (e.x > 210 && e.x < 390 && e.y > 370 && e.y < 420) WordleUI.startMode();
 				
 				// If LEADERBOARD button
-				else if (e.x > 210 && e.x < 390 && e.y > 440 && e.y < 490) {
-					WordleUI.startLeaderboard();
-				}
+				else if (e.x > 210 && e.x < 390 && e.y > 440 && e.y < 490) WordleUI.startLeaderboard();
 				
 				// If THEME button
 				else if (e.x > 210 && e.x < 390 && e.y > 510 && e.y < 560) theme++;
@@ -206,11 +216,11 @@ public class WordleMenuUI {
 		}
 	}
 	
-	/* - - - - - - DRAW ANIMATION - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	/** - - - - - - DRAW ANIMATION - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	 * This function is responsible displaying background falling letters animation
 	 * 
 	 * @param e, the paint event which calls this function
-	 * (Ryan Rizzo)
+	 * @author Ryan Rizzo
 	 */
 	private void drawAnimation(PaintEvent e) {
 		int time = Math.abs(((int) System.currentTimeMillis()/100));
@@ -219,6 +229,11 @@ public class WordleMenuUI {
 		e.gc.drawImage(background, 0,0 - (WordleUI.SHELL_HEIGHT + time) % (WordleUI.SHELL_HEIGHT * 2));
 	}
 	
+	/** - - - - - - SET VISIBLE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	 * Sets the visibility of the menu ui
+	 * @param boolean vis
+	 * @author Ryan Rizzo
+	 */
 	public void setVisible(boolean vis) {
 		shell.setVisible(vis);
 	}
