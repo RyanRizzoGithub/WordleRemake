@@ -714,7 +714,8 @@ public class WordleGameUI {
  * left and right 5 times mode 3: enter valid words -- fold in the middle and
  * replace with new one that bigger from middle mode 4: when win -- wave
  * 
- * @param e, the paint event which calls this function (Qianwen Wang)
+ * @param e, the paint event which calls this function 
+ * @Author: Qianwen Wang 
  */
 
 class Animate {
@@ -723,14 +724,16 @@ class Animate {
 	// move
 	// for mode 2 --> 8: mode 2 start to move, 9: mode 2 move right, 10: mode 2 move
 	// back
-	// for mode 3 --> 12: mode 2 start to fold,
-	private int[][] states;
+	// for mode 3 --> 12: mode 3 start to fold, 13: mode 3 fold back, 14: mode 3 end fold
+	// for mode 4 --> 15: mode 4 start to wave, and [] count to count the waving by 1-5 times
+	private int[][] states; 
 	private int[][] initialStates;
 	private int[][][] movement;
 	private int curRow = 0;
-	private int[] count = new int[5];
-	private String model = "A";
+	private int count = 0;
 	private int size = 30;
+	private int w = 6;
+	private int h = 1;
 
 	public Animate() {
 		states = new int[5][7];
@@ -739,7 +742,9 @@ class Animate {
 	}
 
 	public void setModel(int height) {
-		size = (int) (60 * 0.8) /2;
+		size = (int) (60 * 0.8) / 2;
+		w = 6;
+		h = 4;
 	}
 
 	public void setWin(int row) {
@@ -750,11 +755,6 @@ class Animate {
 		states[4][row] = 4;
 		initialStates[0][row] = 4;
 		curRow = row;
-		count[0] = 0;
-		count[1] = 0;
-		count[2] = 0;
-		count[3] = 0;
-		count[4] = 0;
 	}
 
 	public int getCurRow() {
@@ -919,7 +919,7 @@ class Animate {
 			setZero();
 		}
 		if (states[col][row] == 12) {
-			//change here TODO:
+			// change here TODO:
 			if (movement[0][curRow][1] >= size) {
 				states[0][row] = 13;
 				states[1][row] = 13;
@@ -931,30 +931,30 @@ class Animate {
 			movement[0][curRow][0] = 0;
 			movement[0][curRow][1] = movement[0][curRow][1] + 3;
 			movement[0][curRow][2] = 0;
-			movement[0][curRow][3] = movement[0][curRow][3] - 6;
+			movement[0][curRow][3] = movement[0][curRow][3] - w;
 
 			movement[1][curRow][0] = 0;
 			movement[1][curRow][1] = movement[1][curRow][1] + 3;
 			movement[1][curRow][2] = 0;
-			movement[1][curRow][3] = movement[1][curRow][3] - 6;
+			movement[1][curRow][3] = movement[1][curRow][3] - w;
 
 			movement[2][curRow][0] = 0;
 			movement[2][curRow][1] = movement[2][curRow][1] + 3;
 			movement[2][curRow][2] = 0;
-			movement[2][curRow][3] = movement[2][curRow][3] - 6;
+			movement[2][curRow][3] = movement[2][curRow][3] - w;
 
 			movement[3][curRow][0] = 0;
 			movement[3][curRow][1] = movement[3][curRow][1] + 3;
 			movement[3][curRow][2] = 0;
-			movement[3][curRow][3] = movement[3][curRow][3] - 6;
+			movement[3][curRow][3] = movement[3][curRow][3] - w;
 
 			movement[4][curRow][0] = 0;
 			movement[4][curRow][1] = movement[4][curRow][1] + 3;
 			movement[4][curRow][2] = 0;
-			movement[4][curRow][3] = movement[4][curRow][3] - 6;
+			movement[4][curRow][3] = movement[4][curRow][3] - w;
 		}
 		if (states[col][row] == 13) {
-			if (movement[0][curRow][1] <= 1) {
+			if (movement[0][curRow][1] <= h) {
 				states[0][row] = 14;
 				states[1][row] = 14;
 				states[2][row] = 14;
@@ -965,27 +965,27 @@ class Animate {
 			movement[0][curRow][0] = 0;
 			movement[0][curRow][1] = movement[0][curRow][1] - 3;
 			movement[0][curRow][2] = 0;
-			movement[0][curRow][3] = movement[0][curRow][3] + 6;
+			movement[0][curRow][3] = movement[0][curRow][3] + w;
 
 			movement[1][curRow][0] = 0;
 			movement[1][curRow][1] = movement[1][curRow][1] - 3;
 			movement[1][curRow][2] = 0;
-			movement[1][curRow][3] = movement[1][curRow][3] + 6;
+			movement[1][curRow][3] = movement[1][curRow][3] + w;
 
 			movement[2][curRow][0] = 0;
 			movement[2][curRow][1] = movement[2][curRow][1] - 3;
 			movement[2][curRow][2] = 0;
-			movement[2][curRow][3] = movement[2][curRow][3] + 6;
+			movement[2][curRow][3] = movement[2][curRow][3] + w;
 
 			movement[3][curRow][0] = 0;
 			movement[3][curRow][1] = movement[3][curRow][1] - 3;
 			movement[3][curRow][2] = 0;
-			movement[3][curRow][3] = movement[3][curRow][3] + 6;
+			movement[3][curRow][3] = movement[3][curRow][3] + w;
 
 			movement[4][curRow][0] = 0;
 			movement[4][curRow][1] = movement[4][curRow][1] - 3;
 			movement[4][curRow][2] = 0;
-			movement[4][curRow][3] = movement[4][curRow][3] + 6;
+			movement[4][curRow][3] = movement[4][curRow][3] + w;
 		}
 		// mode 4
 		if (states[col][row] == 4) {
@@ -998,69 +998,69 @@ class Animate {
 		}
 		if (states[col][row] == 15) {
 			// 1
-			if (count[0] == 0) {
+			if (count == 0) {
 				movement[0][curRow][1] = movement[0][curRow][1] - 1;
 				if (movement[0][curRow][1] <= -10) {
-					count[0] = 1;
+					count = 1;
 				}
-			} else if (count[0] == 1) {
+			} else if (count == 1) {
 				movement[0][curRow][1] = movement[0][curRow][1] + 1;
 				if (movement[0][curRow][1] >= 0) {
-					count[0] = 2;
+					count = 2;
 				}
 			}
 			// 2
-			if (count[0] == 2) {
-				movement[1][curRow][1] = movement[1][curRow][1] + 1;
-				if (movement[1][curRow][1] >= 10) {
-					count[0] = 3;
-				}
-			} else if (count[0] == 3) {
+			if (count == 2) {
 				movement[1][curRow][1] = movement[1][curRow][1] - 1;
-				if (movement[1][curRow][1] <= 0) {
-					count[0] = 4;
+				if (movement[1][curRow][1] <= -10) {
+					count = 3;
+				}
+			} else if (count == 3) {
+				movement[1][curRow][1] = movement[1][curRow][1] + 1;
+				if (movement[1][curRow][1] >= 0) {
+					count = 4;
 				}
 			}
 			// 3
-			if (count[0] == 4) {
-				movement[2][curRow][1] = movement[2][curRow][1] + 1;
-				if (movement[2][curRow][1] >= 10) {
-					count[0] = 5;
-				}
-			} else if (count[0] == 5) {
+			if (count == 4) {
 				movement[2][curRow][1] = movement[2][curRow][1] - 1;
-				if (movement[2][curRow][1] <= 0) {
-					count[0] = 6;
+				if (movement[2][curRow][1] <= -10) {
+					count = 5;
+				}
+			} else if (count == 5) {
+				movement[2][curRow][1] = movement[2][curRow][1] + 1;
+				if (movement[2][curRow][1] >= 0) {
+					count = 6;
 				}
 			}
 			// 4
-			if (count[0] == 6) {
-				movement[3][curRow][1] = movement[3][curRow][1] + 1;
-				if (movement[3][curRow][1] >= 10) {
-					count[0] = 7;
-				}
-			} else if (count[0] == 7) {
+			if (count == 6) {
 				movement[3][curRow][1] = movement[3][curRow][1] - 1;
-				if (movement[3][curRow][1] <= 0) {
-					count[0] = 8;
+				if (movement[3][curRow][1] <= -10) {
+					count = 7;
+				}
+			} else if (count == 7) {
+				movement[3][curRow][1] = movement[3][curRow][1] + 1;
+				if (movement[3][curRow][1] >= 0) {
+					count = 8;
 				}
 			}
 			// 5
-			if (count[0] == 8) {
-				movement[4][curRow][1] = movement[4][curRow][1] + 1;
-				if (movement[4][curRow][1] >= 10) {
-					count[0] = 9;
-				}
-			} else if (count[0] == 9) {
+			if (count == 8) {
 				movement[4][curRow][1] = movement[4][curRow][1] - 1;
-				if (movement[4][curRow][1] <= 0) {
-					count[0] = 10;
+				if (movement[4][curRow][1] <= -10) {
+					count = 9;
+				}
+			} else if (count == 9) {
+				movement[4][curRow][1] = movement[4][curRow][1] + 1;
+				if (movement[4][curRow][1] >= 0) {
+					count = 10;
 				}
 			}
 		}
 
 	}
-	
+
 	private void setZero() {
 		movement[0][curRow][0] = 0;
 		movement[0][curRow][1] = 0;
@@ -1104,5 +1104,5 @@ class Animate {
 	public int get4(int col, int row) {
 		return movement[col][row][3];
 	}
+
 }
-	
