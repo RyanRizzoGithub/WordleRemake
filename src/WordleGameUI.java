@@ -20,11 +20,11 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * AUTHOR(S):	Qianwen Wang, Katelen Tellez & Ryan Rizzo
- * FILE:		WordleGame.java
+ * AUTHOR(S):		Qianwen Wang, Katelen Tellez & Ryan Rizzo
+ * FILE:		WordleGameUI.java
  * CLASS:		CSC 335 - Final Project
  * DATE:		12/6/22
- * PURPOSE:		Responsible for storing the game state, and well as handling user input
+ * PURPOSE:		Responsible for displaying the game state
  */
 public class WordleGameUI {
 	// @Ryan Rizzo added
