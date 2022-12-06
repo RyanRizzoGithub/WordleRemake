@@ -2,10 +2,15 @@ import java.io.IOException;
 import java.util.HashMap;
 
 
-// @Katelen Tellez added (below)
+/**
+ * AUTHOR(S):		Katelen Tellez & Ryan Rizzo
+ * FILE:		WordleGame.java
+ * CLASS:		CSC 335 - Final Project
+ * DATE:		12/6/22
+ * PURPOSE:		Responsible for storing the game state, and well as handling user input
+ */
 public class WordleGame {
 	private static WordleGameUI gameUI = null;
-	
 	private String word;
 	private String secondWord;
 	private String guess;
@@ -16,16 +21,18 @@ public class WordleGame {
 	private boolean guessIsCorrect;
 	private int guessNum;
 	private boolean oneFound;
-	
-	
-	// Ryan
 	private HashMap<String,Integer> charStatus;
 	private WordleDictionary dic;
 	private String mode;
 	private int theme;
 	
 	
-	
+	/** - - - - - - WORDLE GAME - - - - - - - - - - - - - - - - - - - - - - - - 
+	 * WordleGame Constructor
+	 * @param mode
+	 * @throws IOException
+	 * @author Katelen Tellez & Ryan Rizzo
+	 */
 	public WordleGame(String mode) throws IOException {
 		
 		// generate random word from dictionary (no repeats)
@@ -68,7 +75,12 @@ public class WordleGame {
 	}
 	
 	
-	
+	/** - - - - - - MAKE A GUESS - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	 * Handles game function when user submits a word
+	 * @param input
+	 * @return int[] guessResult
+	 * @author Katelen Tellez
+	 */
 	public int[] makeAGuess(char[][] input) {
 		
 		// convert input chars into a string
@@ -138,7 +150,11 @@ public class WordleGame {
 		return guessResults;
 	}
 	
-	// Katelen Tellez
+	/** - - - - - - GAME IS OVER - - - - - - - - - - - - - - - - - - - - - - -
+	 * Returns true if the game is over
+	 * @return boolean guessIsCorrect
+	 * @author Katelen Tellez
+	 */
 	public boolean gameIsOver() {
 		
 		// update player stats
@@ -155,8 +171,12 @@ public class WordleGame {
 	public boolean guessIsCorrect() {
 		return guessCorrect;
 	}
-	/*
-	 * Ryan Rizzo
+	
+	/** - - - - - - CHECK CHAR - - - - - - - - - - - - - - - - - - - - - - - -
+	 * Checks the validity of a single character for the first word
+	 * @param char c
+	 * @param int index
+	 * @return int result
 	 */
 	public int checkChar(char c, int index) {
 		c = Character.toUpperCase(c);
@@ -178,6 +198,13 @@ public class WordleGame {
 		return result;
 	}
 	
+	/** - - - - - - CHECK SECOND CHAR - - - - - - - - - - - - - - - - - - - - - 
+	 * Checks the validity of a single character for the second word
+	 * @param char c
+	 * @param int index
+	 * @return int result
+	 * @author Ryan Rizzo
+	 */
 	public int checkSecondChar(char c, int index) {
 		c = Character.toUpperCase(c);
 		
@@ -198,51 +225,115 @@ public class WordleGame {
 		return result;
 	}
 	
+	/** - - - - - - GET CHAR STATUS - - - - - - - - - - - - - - - - - - - - - -
+	 * Returns the status of each character in the word
+	 * @return HashMap<String, Integer> charStatus
+	 * @author Ryan Rizzo
+	 */
 	public HashMap<String, Integer> getCharStatus() {
 		return this.charStatus;
 	}
 	
+	/** - - - - - - GET THEME - - - - - - - - - - - - - - - - - - - - - - - - -
+	 * Returns the current theme being used in the game
+	 * @return int theme
+	 * @author Ryan Rizzo
+	 */
 	public int getTheme() {
 		return this.theme;
 	}
 	
+	/** - - - - - - GET MODE - - - - - - - - - - - - - - - - - - - - - - - - -
+	 * Returns the current mode being used in the game
+	 * @return String mode
+	 * @author Ryan Rizzo
+	 */
 	public String getMode() {
 		return this.mode;
 	}
 	
+	/** - - - - - - SET OVER - - - - - - - - - - - - - - - - - - - - - - - - -
+	 * Sets the state of the game to over
+	 * @author Ryan Rizzo
+	 */
 	public void setOver() {
 		this.gameOver = true;
 	}
 	
+	/** - - - - - - GET WORD - - - - - - - - - - - - - - - - - - - - - - - - -
+	 * Returns the current word being solved in the game
+	 * @return String word
+	 * @author Ryan Rizzo
+	 */
 	public String getWord() {
 		return word;
 	}
 	
+	/** - - - - - - GET SECOND WORD - - - - - - - - - - - - - - - - - - - - - -
+	 * Returns the current word being solved in the game
+	 * @return String word
+	 * @author Ryan Rizzo
+	 */
 	public String getSecondWord() {
 		return secondWord;
 	}
 	
+	/** - - - - - - SET GAME UI - - - - - - - - - - - - - - - - - - - - - - - - -
+	 * Sets the WordleGameUI object which will display this game
+	 * @param WordleGameUI g
+	 * @author Ryan Rizzo
+	 */
 	public void setGameUI(WordleGameUI g) {
         gameUI = g;
-    }
-
-    public static WordleGameUI getGameUI() {
-        return gameUI;
-    }
-    
-    public void setGuessCorrect() {
-    	this.guessIsCorrect = true;
-    }
-    
-    public void addGuess() {
-    	this.guessNum++;
-    }
-    
-    public boolean getOneFound() {
-    	return oneFound;
-    }
-    
-    public void setOneFound() {
-    	oneFound = true;
-    }
+    	}
+	
+	/** - - - - - - GET GAME UI - - - - - - - - - - - - - - - - - - - - - - - - -
+	 * REturns the WordleGameUI object which is displaying this game
+	 * @param WordleGameUI g
+	 * @author Ryan Rizzo
+	 */
+    	public static WordleGameUI getGameUI() {
+        	return gameUI;
+    	}
+    	
+	/** - - - - - - SET GUESS CORRECT - - - - - - - - - - - - - - - - - - - - - -
+	 * Sets the state of the guess to correct or true
+	 * @author Katelen Tellex
+	 */
+    	public void setGuessCorrect() {
+    		this.guessIsCorrect = true;
+    	}
+    	
+	/** - - - - - - ADD GUESS - - - - - - - - - - - - - - - - - - - - - - - - -
+   	 * Increases the guess counter
+   	 * @author Katelen Tellex
+   	 */
+    	public void addGuess() {
+    		this.guessNum++;
+    	}
+    	
+	/** - - - - - - GET ONE FOUND - - - - - - - - - - - - - - - - - - - - - - - -
+   	 * Returns the state for one of two words being found
+   	 * @return boolean oneFound
+   	 * @author Ryan Rizzo
+   	 */
+    	public boolean getOneFound() {
+    		return oneFound;
+    	}
+    	
+	/** - - - - - - SET ONE FOUND - - - - - - - - - - - - - - - - - - - - - - - -
+    	 * Sets the state for one of two words being found
+   	 * @author Ryan Rizzo
+     	 */
+    	public void setOneFound() {
+    		oneFound = true;
+    	}
+	
+	/** - - - - - - GUESS IS CORRECT - - - - - - - - - - - - - - - - - - - - - - - -
+     	* Returns the state of the guess
+     	* @return Katelen Tellez
+     	*/
+    	public boolean guessIsCorrect() {
+		return guessCorrect;
+	}
 }
