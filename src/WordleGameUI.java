@@ -105,6 +105,7 @@ public class WordleGameUI {
 		canvas.addPaintListener(e -> {
 			drawAnimation(e);
 
+			
 			// Draw back button
 			e.gc.setForeground(WordleUI.getThemeColors(game.getTheme())[WordleUI.KEY_EDGE_COLOR]);
 			e.gc.setBackground(WordleUI.getThemeColors(game.getTheme())[WordleUI.KEY_FILL_COLOR]);
@@ -221,8 +222,16 @@ public class WordleGameUI {
 						if (guess.equals(game.word)) {
 							game.setOver();
 							game.setGuessCorrect();
+							
+							rowSubmitted[row] = true;
+							row++;
+							guessNum++;
+							game.addGuess();
+							
 						}
 
+						
+						
 						// Check if word is in guess dictionary
 						else if (dic.guesses.contains(guess)) {
 							rowSubmitted[row] = true;
@@ -298,6 +307,11 @@ public class WordleGameUI {
 						if (guess.equals(game.word)) {
 							game.setOver();
 							game.setGuessCorrect();
+							
+							rowSubmitted[row] = true;
+							row++;
+							guessNum++;
+							game.addGuess();
 						}
 
 						// Check if word is in guess dictionary
@@ -329,7 +343,9 @@ public class WordleGameUI {
 					setVisible(false);
 					// TODO: WordleMenuUI = new WordleMenuUI(WordlePlayer player);
 					WordleMenuUI menuUI = new WordleMenuUI(0);
+					shell.dispose();
 					WordleUI.startMenu(menuUI);
+					canvas.dispose();
 				}
 
 				// Handle character
@@ -355,13 +371,18 @@ public class WordleGameUI {
 				if(flag && game.gameIsOver()) {
 					flag = false;
 					WordleUI.endGame();
-					String copyString = generateShareString();
-					StringSelection stringSelectionObj = new StringSelection(copyString);
-					Clipboard clipboardObj = Toolkit.getDefaultToolkit().getSystemClipboard();
-					clipboardObj.setContents(stringSelectionObj, null);
+					copyStats();
 				}
+				
 			}
 		display.dispose();
+	}
+	
+	private void copyStats() {
+		String copyString = generateShareString();
+		StringSelection stringSelectionObj = new StringSelection(copyString);
+		Clipboard clipboardObj = Toolkit.getDefaultToolkit().getSystemClipboard();
+		clipboardObj.setContents(stringSelectionObj, null);
 	}
 
 
@@ -429,6 +450,8 @@ public class WordleGameUI {
 	 * (Ryan Rizzo)
 	 */
 	private void drawKeyboard(PaintEvent e) {		
+		
+		
 		// Create a index variable
 		int y=0;
 		int x=0;
@@ -520,6 +543,7 @@ public class WordleGameUI {
 	
 	private String generateShareString() {
 		String output = "Results:\n";
+		
 		
 		for (int j=0; j<6; j++) {
 			for (int x=0; x<5; x++) {

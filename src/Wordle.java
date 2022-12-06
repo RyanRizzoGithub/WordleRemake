@@ -10,6 +10,8 @@ public class Wordle {
 	protected static WordlePlayer player;
 	protected static ArrayList<WordlePlayer> players = new ArrayList<>();
 	
+	
+	
 	public static void main(String[] args) {	
 		player = new WordlePlayer("Guest",  "Password", new File( "./txt/guest.txt"));
 		player.setBackground(0);
@@ -39,9 +41,10 @@ public class Wordle {
 		}).start();
     }
 	
-	private static void loadPlayers() {
+	public static void loadPlayers() {
 		File dir = new File("./Players/");
 		File[] files = dir.listFiles();
+		players = new ArrayList<>();
 		
 		if (files != null) {
 			for(File file : files) {

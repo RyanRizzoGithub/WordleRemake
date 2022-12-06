@@ -23,39 +23,15 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
 
 
-public class WordleLeaderboardUI {
+public class WordleStatisticsUI {
 
 	protected Shell shell;
-
-	private Color[] colors;
-
 
 	public void start() {
 		Display display = Display.getDefault();
 		createContents();
 		shell.open();
 		shell.layout();
-
-
-
-		colors = new Color[16];
-		colors[0] = new Color(237, 126, 119);
-		colors[1] = new Color(237, 170, 119);
-		colors[2] = new Color(237, 211, 119);
-		colors[3] = new Color(213, 237, 119);
-		colors[4] = new Color(174, 237, 119);
-		colors[5] = new Color(119, 237, 150);
-		colors[6] = new Color(119, 237, 196);
-		colors[7] = new Color(119, 217, 237);
-		colors[8] = new Color(119, 147, 237);
-		colors[9] = new Color(139, 119, 237);
-		colors[10] = new Color(188, 119, 237);
-		colors[11] = new Color(223, 119, 237);
-		colors[12] = new Color(237, 119, 215);
-		colors[13] = new Color(237, 119, 176);
-		colors[14] = new Color(255, 255, 255);
-		colors[15] = new Color(0, 0, 0);
-
 
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
@@ -67,7 +43,7 @@ public class WordleLeaderboardUI {
 	protected void createContents() {
 		shell = new Shell();
 		shell.setSize(450, 600);
-		shell.setText("Leaderboard");
+		shell.setText("Statistics");
 		shell.setLayout(new GridLayout(2, false));
 
 		Composite comp = new Composite(shell, SWT.CENTER);
@@ -75,17 +51,41 @@ public class WordleLeaderboardUI {
 		grid.numColumns = 1;
 		comp.setLayout(grid);
 		
-		Wordle.loadPlayers();
+		int[] guessDistribution = Wordle.player.getGuessDistribution();
 		
-		int place = 0;
 		
-		for (WordlePlayer p : Wordle.players) {
-			place++;
-			
-			Label label = new Label(comp, SWT.CENTER);
-			label.setText(place + ":\t" + p.getName());
-			
-		}
+		Label name = new Label(comp, SWT.CENTER);
+		name.setText("Name:\t" + Wordle.player.getName());
+		
+		Label gamesPlayed = new Label(comp, SWT.CENTER);
+		gamesPlayed.setText("Games Played:\t" + Wordle.player.getGamesPlayed() );
+		
+		Label currentStreak = new Label(comp, SWT.CENTER);
+		currentStreak.setText("Current Streak:\t" + Wordle.player.getCurrentStreak());
+		
+		Label maxStreak = new Label(comp, SWT.CENTER);
+		maxStreak.setText("Max Streak:\t" + Wordle.player.getMaxStreak() );
+		
+		Label guesses = new Label(comp, SWT.CENTER);
+		guesses.setText("Guesses:");
+		
+		Label one = new Label(comp, SWT.CENTER);
+		one.setText("1:\t" + guessDistribution[0] );
+		
+		Label two = new Label(comp, SWT.CENTER);
+		two.setText("2:\t" + guessDistribution[1] );
+		
+		Label three = new Label(comp, SWT.CENTER);
+		three.setText("3:\t" + guessDistribution[2] );
+		
+		Label four = new Label(comp, SWT.CENTER);
+		four.setText("4:\t" + guessDistribution[3] );
+		
+		Label five = new Label(comp, SWT.CENTER);
+		five.setText("5:\t" + guessDistribution[4] );
+		
+		Label six = new Label(comp, SWT.CENTER);
+		six.setText("6:\t" + guessDistribution[5] );
 
 
 	}	

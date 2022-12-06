@@ -95,8 +95,12 @@ public class WordlePlayer implements Comparable<WordlePlayer>, Serializable {
 	public int[] getGuessDistribution() {
 		int[] guessDistr = {0,0,0,0,0,0};
 		
-		for (int num : historyMoves) {
-			guessDistr[num - 1]++;
+		for (int i = 0; i < gamesPlayed; i++) {
+			int num = historyMoves.get(i);
+			
+			if (num > 0 && historyWins.get(i)) {
+				guessDistr[num - 1]++;
+			}
 		}
 		return guessDistr;
 	}

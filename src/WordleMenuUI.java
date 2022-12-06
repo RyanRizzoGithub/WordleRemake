@@ -44,6 +44,7 @@ public class WordleMenuUI {
 		canvas.setSize(600, 1000);
 		
 		
+		
 		canvas.addPaintListener(e -> {
 			drawAnimation(e);
 			// Set the color of the background and font
@@ -122,7 +123,7 @@ public class WordleMenuUI {
 		
 		// Add mouse move listener to highlight buttons once hovered
 		canvas.addMouseMoveListener(new MouseMoveListener() {
-			public void mouseMove(MouseEvent e) {				
+			public void mouseMove(MouseEvent e) {	
 				// If Play button
 				if (e.x > 200 && e.x < 400 && e.y > 230 && e.y < 280) hovered[0] = true;
 				
@@ -159,10 +160,15 @@ public class WordleMenuUI {
 					newGame = new WordleGame(0);
 					WordleGameUI gameUI = new WordleGameUI(newGame);
 					WordleUI.startGame(gameUI);
+					
 				}
 				
 				// If LOGIN button
-				else if (e.x > 210 && e.x < 390 && e.y > 300 && e.y < 350) WordleUI.startLogin();
+				else if (e.x > 210 && e.x < 390 && e.y > 300 && e.y < 350) {
+					WordleUI.startLogin();
+					WordleStatisticsUI stats = new WordleStatisticsUI();
+					stats.start();
+				}
 				
 				// If MODE button
 				else if (e.x > 210 && e.x < 390 && e.y > 370 && e.y < 420) WordleUI.startMode();
@@ -193,9 +199,9 @@ public class WordleMenuUI {
 		
 		// Event loop
 		shell.open();
-		while(shell.isVisible()) {
+		while( shell.isVisible()) {
 			canvas.redraw();
-			if(!display.readAndDispatch()) {		
+			if(!display.readAndDispatch()) {	
 			}
 		}
 	}
