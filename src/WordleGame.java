@@ -60,8 +60,6 @@ public class WordleGame {
 		if (mode.equals("DORDLE")) {
 			word = dic.getRandomWord();
 			secondWord = dic.getRandomWord();
-			word = "HAPPY";
-			secondWord = "APPLE";
 		}
 		gameUI = new WordleGameUI(this);
 		
