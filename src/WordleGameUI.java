@@ -218,7 +218,7 @@ public class WordleGameUI {
 
 				// If CHARACTER
 				else {
-					if (col != 5 && row != 7) {
+					if (col != 5 && row != 6) {
 						for (int i = 0; i < qwerty.length; i++) {
 							if (e.character == qwerty[i].charAt(0)) {
 								System.out.println("ADDING " + e.character + " to input[" + col + "][" + row + "]");
@@ -403,7 +403,7 @@ public class WordleGameUI {
 		if (game.getMode() == "DORDLE") {
 			// Iterate over each cell in the input array
 			for (int x = 0; x < 5; x++) {
-				for (int j = 0; j < 7; j++) {
+				for (int j = 0; j < 6; j++) {
 					// Check if cell is occupied
 					if (input[x][j] != '?') {
 						// Update the left side
@@ -571,7 +571,7 @@ public class WordleGameUI {
 		if (game.getMode() == "DORDLE") {
 			// Iterate over 5 columns and 6 rows
 			for (int i = 0; i < 5; i++) {
-				for (int j = 0; j < 7; j++) {
+				for (int j = 0; j < 6; j++) {
 					Image empty = new Image(shell.getDisplay(), "./images/empty.png");
 					int width = empty.getImageData().width;
 					int height = empty.getImageData().height;
@@ -580,7 +580,7 @@ public class WordleGameUI {
 				}
 			}
 			for (int i = 0; i < 5; i++) {
-				for (int j = 0; j < 7; j++) {
+				for (int j = 0; j < 6; j++) {
 					Image empty = new Image(shell.getDisplay(), "./images/empty.png");
 					int width = empty.getImageData().width;
 					int height = empty.getImageData().height;
@@ -758,8 +758,8 @@ class Animate {
 	private int[][][] movement;
 	private int curRow = 0;
 	private int[] count = new int[5];
-	private String model = "A";
 	private int size = 30;
+	private int h = 1;
 
 	public Animate() {
 		states = new int[5][7];
@@ -773,6 +773,7 @@ class Animate {
 	 */
 	public void setModel(int height) {
 		size = (int) (60 * 0.8) /2;
+		h =  4;
 	}
 	/**
 	 * set the correct row
@@ -1014,7 +1015,7 @@ class Animate {
 			movement[4][curRow][3] = movement[4][curRow][3] - 6;
 		}
 		if (states[col][row] == 13) {
-			if (movement[0][curRow][1] <= 1) {
+			if (movement[0][curRow][1] <= h) {
 				states[0][row] = 14;
 				states[1][row] = 14;
 				states[2][row] = 14;
