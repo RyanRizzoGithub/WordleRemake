@@ -83,7 +83,7 @@ public class WordleModeUI {
 		
 		// Add label for dordle description
 		Label lblTryToGuess = new Label(shell, SWT.NONE);
-		lblTryToGuess.setText("Try to guess two words with 7 guesses");
+		lblTryToGuess.setText("Try to guess two words with 6 guesses");
 		
 		// Add button to submit selection
 		Button btnSubmit = new Button(shell, SWT.NONE);
