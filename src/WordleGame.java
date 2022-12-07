@@ -61,7 +61,6 @@ public class WordleGame {
 			word = dic.getRandomWord();
 			secondWord = dic.getRandomWord();
 		}
-		word = "PARTY";
 		gameUI = new WordleGameUI(this);
 		
 		// prevents double chars from being found when there are none
