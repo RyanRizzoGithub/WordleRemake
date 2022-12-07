@@ -1,10 +1,21 @@
+/**
+ * AUTHOR(S):	Ryan Rizzo
+ * FILE:		WordleLoginUI.java
+ * CLASS:		CSC 335 - Final Project
+ * DATE:		12/6/22
+ * PURPOSE:		Responsible for allowing users to create an account or login, as well as
+ * 				edit their profile image
+ */
+
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Composite;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -21,15 +32,9 @@ import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
 
-/**
- * AUTHOR(S):	Ryan Rizzo
- * FILE:		WordleLoginUI.java
- * CLASS:		CSC 335 - Final Project
- * DATE:		12/6/22
- * PURPOSE:		Responsible for allowing users to create an account or login, as well as
- * 				edit their profile image
- */
+// Ryan Rizzo
 public class WordleLoginUI {
+
 	protected Shell shell;
 	private Text loginUsername;
 	private Text loginPassword;
@@ -38,26 +43,17 @@ public class WordleLoginUI {
 	private int faceIndex;
 	private int shirtIndex;
 	private int backgroundIndex;
-	private boolean userTaken;
-	private boolean userNotFound;
 
+	
 	/** - - - - - - START - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	 *  Generates the content and displays the login screen
 	 *  @author Ryan Rizzo
 	 */
 	public void start() {
 		Display display = Display.getDefault();
-		userTaken = false;
-		userNotFound = false;
-		
-		// Setup the shell
-		shell = new Shell();
-		shell.setSize(450, 334);
-		shell.setText("Login");
-		shell.setLayout(new GridLayout(2, false));
-		shell.setBackground(new Color(50, 50, 50));
-		
 		createContents();
+		shell.open();
+		shell.layout();
 
 		if (Wordle.player == null) {
 			faceIndex = 0;
@@ -68,12 +64,10 @@ public class WordleLoginUI {
 			shirtIndex = Wordle.player.getShirt();
 			backgroundIndex = Wordle.player.getBackground();
 		}
-		
-		shell.open();
-		shell.layout();
+
+
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
-				createContents();
 				display.sleep();
 			}
 		}
@@ -89,6 +83,11 @@ public class WordleLoginUI {
 	 * @author Ryan Rizzo
 	 */
 	protected void createContents() {
+		shell = new Shell();
+		shell.setSize(450, 334);
+		shell.setText("Login");
+		shell.setLayout(new GridLayout(2, false));
+		shell.setBackground(new Color(50, 50, 50));
 
 		// Left composite used to take user input
 		Composite leftComp = new Composite(shell, SWT.NONE);
@@ -149,17 +148,6 @@ public class WordleLoginUI {
 		Button submitCreate = new Button(leftComp, SWT.NONE);
 		submitCreate.setText("Submit");
 		new Label(leftComp, SWT.NONE);
-		
-		Label warningLabel = new Label(leftComp, SWT.CENTER);
-		warningLabel.setFont(new Font(shell.getDisplay(), ".AppleSystemUIFont", 16, SWT.BOLD));
-		warningLabel.setForeground(new Color(255, 0, 0));
-		
-		if (userTaken) {
-			warningLabel.setText("Username is taken");	
-		}
-		if (userNotFound) {
-			warningLabel.setText("Username not found");
-		}
 		
 		// Add format data
 		FormData fd_canvas = new FormData();
@@ -236,9 +224,8 @@ public class WordleLoginUI {
 			// Set the color of the face
 			e.gc.setBackground(WordleUI.getProfileColors()[faceIndex]);
 			e.gc.fillOval(60, 30, 70, 70);
+
 		});
-		
-		
 		
 		// Add listener to decrease face color index
 		faceMinus.addSelectionListener(new SelectionListener() {
@@ -326,11 +313,9 @@ public class WordleLoginUI {
 							shirtIndex = Wordle.player.getShirt();
 							backgroundIndex = Wordle.player.getBackground();
 							canvas.redraw();
-							userNotFound = false;
 							
 						} else {
 							System.out.println("WRONG PASSWORD");
-							userNotFound = true;
 						}
 						
 						ios.close();
@@ -339,9 +324,8 @@ public class WordleLoginUI {
 					}
 				} else {
 					System.out.println("Username not found");
-					userNotFound = true;
 				}
-				canvas.redraw();
+				
 			}
 		});
 		
@@ -353,12 +337,9 @@ public class WordleLoginUI {
 				if (!file.exists()) {
 
 					Wordle.player = new WordlePlayer(createUsername.getText(), createPassword.getText(), file);
-					userTaken = false;
 				} else if (!loginPassword.getText().equals("")) {
 					System.out.println("Username is taken");
-					userTaken = true;
 				}
-				canvas.redraw();
 			}
 		});
 	}	
